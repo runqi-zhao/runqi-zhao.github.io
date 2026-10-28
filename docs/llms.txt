@@ -2,9 +2,10 @@
 
 > 后端开发、计算机基础、AI 工程与个人方法论的长期笔记库。每条知识都标注了来源与有效期（frontmatter: source / kind / review_after）。
 
-共 450 篇笔记。以下为按路径排序的完整目录，每行格式：`[标题](绝对链接)：一句话摘要`。
+共 452 篇笔记。以下为按路径排序的完整目录，每行格式：`[标题](绝对链接)：一句话摘要`。
 
 - [2024 新年建议 - 陈思远](https://runqi-zhao.github.io/-1.-捕获/2024-新年建议---陈思远)：大家都快开工了，总结了几条实质性的建议，希望在新的一年，所有关注我的朋友们都能变的越来越好。
+- [硅谷顶尖 AI 大佬如何搭建个人AI知识库？从0开始用Claude Code + Obsidian搭建Karpathy的LLM Wiki知识库](https://runqi-zhao.github.io/-1.-捕获/20261028-硅谷顶尖-ai-大佬如何搭建个人ai知识库？从0开始用claude-code-+-obsidian搭建karpathy的)：用 Claude Code + Obsidian 搭建硅谷顶尖AI大佬的 LLM Wiki 知识库，让 AI 帮你持续整理、学习和进化知识。
 - [Electronics Lab Bench Setup Guide](https://runqi-zhao.github.io/-1.-捕获/electronics-lab-bench-setup-guide)：April 30, 2023
 - [捕获箱](https://runqi-zhao.github.io/-1.-捕获/readme)：返回 首页 · 规则见 知识库使用指南
 - [The Linux Boot Process  From Power Button to Kernel](https://runqi-zhao.github.io/-1.-捕获/the-linux-boot-process-from-power-button-to-kernel)：^smrnjn
@@ -35,7 +36,7 @@
 - [后端开发 MOC](https://runqi-zhao.github.io/3.-资源/_导航/后端开发-moc)：返回 首页 · 相关 计算机基础 MOC · 分布式系统 MOC · AI MOC
 - [计算机基础 MOC](https://runqi-zhao.github.io/3.-资源/_导航/计算机基础-moc)：返回 首页 · 相关 后端开发 MOC · 分布式系统 MOC
 - [01_FastAPI](https://runqi-zhao.github.io/3.-资源/人工智能/01_fastapi)
-- [函数调用](https://runqi-zhao.github.io/3.-资源/人工智能/agent基本概念)：5个基本概念
+- [工具调用](https://runqi-zhao.github.io/3.-资源/人工智能/agent基本概念)：5个基本概念
 - [Python 基础](https://runqi-zhao.github.io/3.-资源/人工智能/python基础/python-基础)：返回 AI MOC
 - [函数调用基本概念](https://runqi-zhao.github.io/3.-资源/人工智能/函数调用基本概念)
 - [1.1 分布式系统的驱动力和挑战](https://runqi-zhao.github.io/3.-资源/分布式/mit6.824/01-introduction/1.1-分布式系统的驱动力和挑战)：首先，我们需要知道为什么出现了分布式系统。
@@ -441,6 +442,7 @@
 - [求职看板](https://runqi-zhao.github.io/jobs-moc)：返回 首页 · 领域 2. 领域/找工作/找工作.README.md
 - [我的知识库](https://runqi-zhao.github.io/readme)：从 首页 开始。
 - [Runqi 的知识库](https://runqi-zhao.github.io)：后端开发、计算机基础、AI 工程与长期方法论的笔记库。每条知识都带 `source`（出处）和 `kind` / `review_after`（有效期），过期会被复核或归档。
+- [浏览器剪藏（Obsidian Web Clipper）配置](https://runqi-zhao.github.io/templates/web-clipper-配置)：给 知识库使用指南 配套的浏览器端配置。装一次，之后看到任何网页/公众号都是两次点击进库。
 - [{{title}}](https://runqi-zhao.github.io/templates/jobs_template)：返回 Jobs MOC
 - [<% tp.file.title %>](https://runqi-zhao.github.io/templates/剪藏-pdf)：-
 - [<% tp.file.title %>](https://runqi-zhao.github.io/templates/剪藏-网页)：-

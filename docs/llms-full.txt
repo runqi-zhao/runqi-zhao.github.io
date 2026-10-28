@@ -46,6 +46,39 @@
 最后的最后，比起新年快乐，我更想祝福我的朋友们：攻击快乐，心理快乐，身心快乐，身体快乐，赚钱快乐，自己快乐。
 
 
+<!-- source: -1. 捕获\20261028 硅谷顶尖 AI 大佬如何搭建个人AI知识库？从0开始用Claude Code + Obsidian搭建Karpathy的.md | url: https://runqi-zhao.github.io/-1.-捕获/20261028-硅谷顶尖-ai-大佬如何搭建个人ai知识库？从0开始用claude-code-+-obsidian搭建karpathy的 -->
+# 硅谷顶尖 AI 大佬如何搭建个人AI知识库？从0开始用Claude Code + Obsidian搭建Karpathy的LLM Wiki知识库
+
+# 硅谷顶尖 AI 大佬如何搭建个人AI知识库？从0开始用Claude Code + Obsidian搭建Karpathy的LLM Wiki知识库
+
+> 视频：https://www.bilibili.com/video/BV1k6QvBYEVA/  
+> 作者：杰森的效率工坊  
+> 时长：14.0 分 22.94799999999998 秒
+
+## 简介 / 原文描述
+
+用 Claude Code + Obsidian 搭建硅谷顶尖AI大佬的 LLM Wiki 知识库，让 AI 帮你持续整理、学习和进化知识。
+这套方法来自 Karpathy - OpenAI联合创始人，前特斯拉AI Director。
+你会看到完整流程：从知识摄取（ingest）、查询学习（query），到知识库巡检（lint），一步步搭出一个能“自我维护”的知识系统。
+我还把所有 skill、CLAUDE.md 配置文件，以及完整知识库结构都打包放在 GitHub，可以直接下载使用。
+
+## 逐字稿
+
+（暂无字幕；需要转写就装 whisper-ctranslate2 后加 --whisper 重跑）
+
+## 可复用的结论
+
+- 
+
+## 落地动作
+
+- [ ] 
+
+## 连接
+
+- 主题导航：[[]]
+
+
 <!-- source: -1. 捕获\Electronics Lab Bench Setup Guide.md | url: https://runqi-zhao.github.io/-1.-捕获/electronics-lab-bench-setup-guide -->
 # Electronics Lab Bench Setup Guide
 
@@ -2562,7 +2595,7 @@ FileListByTag
 
 
 <!-- source: 3. 资源\人工智能\agent基本概念.md | url: https://runqi-zhao.github.io/3.-资源/人工智能/agent基本概念 -->
-# 函数调用
+# 工具调用
 
 5个基本概念
 
@@ -2837,7 +2870,7 @@ Agent以及Workflow都是一种模式，不是规范
 
 #### 多智能体
 
-# 函数调用
+# 工具调用
 
 
 
@@ -101302,6 +101335,93 @@ public class TransactionPropagationInterceptor implements HandlerInterceptorAdap
 - 想被 AI 引用：本站在根目录提供 `llms.txt`（全站目录 + 摘要）和 `llms-full.txt`（全文）。
 
 
+<!-- source: templates\Web Clipper 配置.md | url: https://runqi-zhao.github.io/templates/web-clipper-配置 -->
+# 浏览器剪藏（Obsidian Web Clipper）配置
+
+# 浏览器剪藏（Obsidian Web Clipper）配置
+
+给 [[知识库使用指南]] 配套的浏览器端配置。装一次，之后看到任何网页/公众号都是两次点击进库。
+
+## 1. 安装
+
+- Chrome / Edge：应用商店搜 **Obsidian Web Clipper**（作者 Obsidian.md）安装；
+- Safari / iOS：App Store 搜 **Obsidian Web Clipper**；
+- 装好后点扩展图标 → 设置 → 把 Vault 选成 `my-obsidian`。
+
+## 2. 新建模板「知识库剪藏」
+
+设置 → Templates → New template，然后逐项粘：
+
+**Name**
+```
+知识库剪藏
+```
+
+**Note name**（文件名）
+```
+{{date|date:"YYYYMMDD"}} {{title|safe_name}}
+```
+
+**Note location**（保存目录）
+```
+-1. 捕获
+```
+
+**Properties**（属性，一行一个）
+```
+type
+capture
+status
+inbox
+source
+{{url}}
+author
+{{author}}
+created
+{{date|date:"YYYY-MM-DD"}}
+kind
+tech
+review_after
+{{date|date:"YYYY-MM-DD"|add_days:90}}
+last_reviewed
+{{date|date:"YYYY-MM-DD"}}
+```
+
+> `add_days` 不是官方内置函数。官方支持 `{{date|date:"YYYY-MM-DD"}}`，
+> 如果 `review_after` 填不上，就先留空，写完这篇在 Obsidian 里跑一次
+> `python scripts/kb_review.py --apply` 会自动补上。
+
+**Note content**（正文模板）
+```
+# {{title}}
+
+> 来源：{{url}}
+> 作者：{{author}} · 抓取于 {{date|date:"YYYY-MM-DD HH:mm"}}
+> 我为什么存它：
+
+## 原文要点
+
+{{content}}
+
+## 我的判断
+
+- 可信度：一手经验 / 官方文档 / 二手转述
+- 适用边界：
+- 三个月后还成立吗：
+
+## 连接
+
+- 主题导航：[[]]
+- 相关笔记：[[]]
+```
+
+## 3. 用
+
+- 网页上按扩展快捷键（默认 `Alt+Shift+O`）→ 选「知识库剪藏」→ 保存；
+- 微信公众号文章在电脑浏览器打开后同样可剪；手机微信里「用浏览器打开」再剪；
+- 剪完的内容在 `-1. 捕获`，用 [[知识关联体检]] 的「收件箱积压」盯着别让它堆。
+
+
 <!-- source: templates\jobs_template.md | url: https://runqi-zhao.github.io/templates/jobs_template -->
 # {{title}}
 
@@ -101724,8 +101844,9 @@ review_after: 2027-01-26   # = last_reviewed + 有效期，脚本算
 |---|---|---|
 | [[任务]] | [[后端开发 MOC]] | [[知识库使用指南]] |
 | [[1. 项目/README\|项目工作]] | [[计算机基础 MOC]] | [[待整理清单]] |
-| [[-1. 捕获/README\|收件箱]] | [[分布式系统 MOC]] | [[整理报告-2026-09-27]] |
-| [[0. 周期笔记/README\|周期复盘]] | [[AI MOC]] | [[Jobs MOC\|求职看板]] |
+| [[-1. 捕获/README\|收件箱]] | [[分布式系统 MOC]] | [[知识保鲜看板]] |
+| [[0. 周期笔记/README\|周期复盘]] | [[AI MOC]] | [[知识关联体检]] |
+| — | — | [[整理报告-2026-09-27]] · [[Jobs MOC\|求职看板]] |
 
 ## 今日事项
 

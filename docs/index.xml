@@ -6,65 +6,65 @@
       <description>Last 10 notes on Runqi 的知识库</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
-    <title>-1. 捕获</title>
-    <link>https://runqi-zhao.github.io/-1.-%E6%8D%95%E8%8E%B7/</link>
-    <guid>https://runqi-zhao.github.io/-1.-%E6%8D%95%E8%8E%B7/</guid>
+    <title>第1章 并发编程的挑战</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC1%E7%AB%A0-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E6%8C%91%E6%88%98/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC1%E7%AB%A0-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E6%8C%91%E6%88%98/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>Apache Seata</title>
-    <link>https://runqi-zhao.github.io/1.-%E9%A1%B9%E7%9B%AE/apache-seata/</link>
-    <guid>https://runqi-zhao.github.io/1.-%E9%A1%B9%E7%9B%AE/apache-seata/</guid>
+    <title>第2章 Java并发机制的底层实现原理</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC2%E7%AB%A0-java%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC2%E7%AB%A0-java%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>1. 项目</title>
-    <link>https://runqi-zhao.github.io/1.-%E9%A1%B9%E7%9B%AE/</link>
-    <guid>https://runqi-zhao.github.io/1.-%E9%A1%B9%E7%9B%AE/</guid>
+    <title>第3章 Java内存模型</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC3%E7%AB%A0-java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC3%E7%AB%A0-java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>2. 领域</title>
-    <link>https://runqi-zhao.github.io/2.-%E9%A2%86%E5%9F%9F/</link>
-    <guid>https://runqi-zhao.github.io/2.-%E9%A2%86%E5%9F%9F/</guid>
+    <title>第4章 Java并发编程基础</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC4%E7%AB%A0-java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC4%E7%AB%A0-java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>找工作</title>
-    <link>https://runqi-zhao.github.io/2.-%E9%A2%86%E5%9F%9F/%E6%89%BE%E5%B7%A5%E4%BD%9C/</link>
-    <guid>https://runqi-zhao.github.io/2.-%E9%A2%86%E5%9F%9F/%E6%89%BE%E5%B7%A5%E4%BD%9C/</guid>
+    <title>第5章 Java中的锁</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC5%E7%AB%A0-java%E4%B8%AD%E7%9A%84%E9%94%81/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC5%E7%AB%A0-java%E4%B8%AD%E7%9A%84%E9%94%81/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>春招</title>
-    <link>https://runqi-zhao.github.io/2.-%E9%A2%86%E5%9F%9F/%E6%89%BE%E5%B7%A5%E4%BD%9C/%E6%98%A5%E6%8B%9B/</link>
-    <guid>https://runqi-zhao.github.io/2.-%E9%A2%86%E5%9F%9F/%E6%89%BE%E5%B7%A5%E4%BD%9C/%E6%98%A5%E6%8B%9B/</guid>
+    <title>第6章 java并发编程艺术</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC6%E7%AB%A0-java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/%E7%AC%AC6%E7%AB%A0-java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E8%89%BA%E6%9C%AF/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>3. 资源</title>
-    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/</link>
-    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/</guid>
+    <title>MySQL实战45讲</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/mysql%E5%AE%9E%E6%88%9845%E8%AE%B2/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>_导航</title>
-    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/_%E5%AF%BC%E8%88%AA/</link>
-    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/_%E5%AF%BC%E8%88%AA/</guid>
+    <title>Netty</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/netty/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/netty/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>人工智能</title>
-    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
-    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
+    <title>RPC专栏</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/rpc%E4%B8%93%E6%A0%8F/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/rpc%E4%B8%93%E6%A0%8F/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item><item>
-    <title>python基础</title>
-    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/python%E5%9F%BA%E7%A1%80/</link>
-    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/python%E5%9F%BA%E7%A1%80/</guid>
+    <title>Redis</title>
+    <link>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/redis/</link>
+    <guid>https://runqi-zhao.github.io/3.-%E8%B5%84%E6%BA%90/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/redis/</guid>
     <description><![CDATA[  ]]></description>
-    <pubDate>Wed, 28 Oct 2026 07:17:04 GMT</pubDate>
+    <pubDate>Wed, 28 Oct 2026 07:50:13 GMT</pubDate>
   </item>
     </channel>
   </rss>
