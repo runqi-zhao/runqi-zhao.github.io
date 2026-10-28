@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr"><head><title>逐字稿</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Runqi 的知识库"/><meta property="og:title" content="逐字稿"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="逐字稿"/><meta name="twitter:description" content="加粗部分为卡顿点 第一部分 4min30, 5min, 4min30, 5min45, 5min 大家早上好，我叫林宜丙，今天带来的分享主题是『字节跳动的前端工程化实践』； 简单介绍下我自己，我是一名来 Web Infra 部门的前端架构工程师，拥有多年前端工程化的经验，致力于帮助前端工程师更好地管理和治理工程；目前负责工程治理方向的方案设计和落地工作。 今天的分享包括以下四个部分 首先分析『当下前端开发领域的趋势』，并引出字节跳动前端开发所面临的新挑战； 其次分享我们目前通过哪些实践来应对这些新挑战； 接着分享自研的方案在字节跳动的整体落地情况； 最后总结和展望前端工程化的发展规律； OK..."/><meta property="og:description" content="加粗部分为卡顿点 第一部分 4min30, 5min, 4min30, 5min45, 5min 大家早上好，我叫林宜丙，今天带来的分享主题是『字节跳动的前端工程化实践』； 简单介绍下我自己，我是一名来 Web Infra 部门的前端架构工程师，拥有多年前端工程化的经验，致力于帮助前端工程师更好地管理和治理工程；目前负责工程治理方向的方案设计和落地工作。 今天的分享包括以下四个部分 首先分析『当下前端开发领域的趋势』，并引出字节跳动前端开发所面临的新挑战； 其次分享我们目前通过哪些实践来应对这些新挑战； 接着分享自研的方案在字节跳动的整体落地情况； 最后总结和展望前端工程化的发展规律； OK..."/><meta property="og:image:alt" content="加粗部分为卡顿点 第一部分 4min30, 5min, 4min30, 5min45, 5min 大家早上好，我叫林宜丙，今天带来的分享主题是『字节跳动的前端工程化实践』； 简单介绍下我自己，我是一名来 Web Infra 部门的前端架构工程师，拥有多年前端工程化的经验，致力于帮助前端工程师更好地管理和治理工程；目前负责工程治理方向的方案设计和落地工作。 今天的分享包括以下四个部分 首先分析『当下前端开发领域的趋势』，并引出字节跳动前端开发所面临的新挑战； 其次分享我们目前通过哪些实践来应对这些新挑战； 接着分享自研的方案在字节跳动的整体落地情况； 最后总结和展望前端工程化的发展规律； OK..."/><meta property="twitter:domain" content="runqi-zhao.github.io"/><meta property="og:url" content="https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/逐字稿"/><meta property="twitter:url" content="https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/逐字稿"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="加粗部分为卡顿点 第一部分 4min30, 5min, 4min30, 5min45, 5min 大家早上好，我叫林宜丙，今天带来的分享主题是『字节跳动的前端工程化实践』； 简单介绍下我自己，我是一名来 Web Infra 部门的前端架构工程师，拥有多年前端工程化的经验，致力于帮助前端工程师更好地管理和治理工程；目前负责工程治理方向的方案设计和落地工作。 今天的分享包括以下四个部分 首先分析『当下前端开发领域的趋势』，并引出字节跳动前端开发所面临的新挑战； 其次分享我们目前通过哪些实践来应对这些新挑战； 接着分享自研的方案在字节跳动的整体落地情况； 最后总结和展望前端工程化的发展规律； OK..."/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/逐字稿-og-image.webp"/><meta property="og:image:url" content="https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/逐字稿-og-image.webp"/><meta name="twitter:image" content="https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/逐字稿-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="4.-存档/个人品牌-wot-分享会/演讲排练/逐字稿" data-basepath><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Runqi 的知识库</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="搜索" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>搜索</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="搜索内容..." placeholder="搜索内容..."/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="暗色模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="暗色模式"><title>暗色模式</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="亮色模式"><title>亮色模式</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="阅读模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="阅读模式"><title>阅读模式</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-402" aria-label="探索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>探索</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-402" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../4.-存档/">4. 存档</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../4.-存档/个人品牌-wot-分享会/">个人品牌-WOT-分享会</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../4.-存档/个人品牌-wot-分享会/演讲排练/">演讲排练</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>逐字稿</a></div></nav><h1 class="article-title">逐字稿</h1><p show-comma="true" class="content-meta"><time datetime="2026-10-28T07:14:34.309Z">2026年10月28日</time><span>27分钟阅读</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><blockquote>
+<p>加粗部分为卡顿点</p>
+</blockquote>
+<h2 id="第一部分">第一部分<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#第一部分" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>4min30, 5min, 4min30, 5min45, 5min</p>
+</blockquote>
+<ul>
+<li>大家早上好，我叫林宜丙，今天带来的分享主题是『字节跳动的前端工程化实践』；</li>
+<li>简单介绍下我自己，我是一名来 Web Infra 部门的前端架构工程师，拥有多年前端工程化的经验，致力于帮助前端工程师更好地管理和治理工程；目前负责工程治理方向的方案设计和落地工作。</li>
+<li>今天的分享包括以下四个部分
+<ul>
+<li>首先分析『当下前端开发领域的趋势』，并引出字节跳动前端开发所面临的新挑战；</li>
+<li>其次分享我们目前通过哪些实践来应对这些新挑战；</li>
+<li>接着分享自研的方案在字节跳动的整体落地情况；</li>
+<li>最后总结和展望前端工程化的发展规律；</li>
+<li><strong>OK，在分享之前，我们先来看看『什么是前端工程化？』</strong></li>
+</ul>
+</li>
+<li>所谓前端工程化，就是在前端开发过程中，采用一系列的<strong>技术手段和工具</strong>，来提高开发效率、保证代码质量、提高代码复用性、<strong>实现自动化流程和促进团队协作等方面的目标，是现代前端开发不可或缺的一部分</strong>；
+<ul>
+<li>在这里呢我要特别说明一下，本次主题所要分享的并不是大而全的前端工程化，而是分享为了应对当前『新趋势』下的『新挑战』，我们所做的『新实践』，接下来一起看看，前端开发出现了哪些新趋势呢？</li>
+</ul>
+</li>
+<li>首先是前端工种的趋势
+<ul>
+<li>第一个<strong>趋势</strong>是涉及的平台越来越多，Web，Node，客户端和跨平台等</li>
+<li>第二个趋势是所能支撑的业务也越来越多，复杂度越来越大，特别是近年来<strong>前端侧涌现出</strong>不少重前端交互的应用</li>
+<li>第三个的话，是随着上述两个趋势而来地、不可避免地使得<strong>前端团队的规模增大</strong></li>
+</ul>
+</li>
+<li>上述三个趋势又客观上造成了前端工程的四个趋势，也就是：
+<ul>
+<li>第一个是，代码规模增大，内部已经出现代码量超过 10G 的大型工程，同时一个应用的上下游依赖所涉及的项目数量也是非常的多</li>
+<li>第二个，维护人数增多，一个工程少则十来人，多则四五十人</li>
+<li>第三个，应用体积增加，随着应用功能的迭代，体积越来越庞大</li>
+<li>第四个，治理难度增高，复杂的依赖关系难以治理，复杂的构建产物难以诊断</li>
+</ul>
+</li>
+<li>那么，在上述这些趋势下，我们的前端开发面临了哪些新的挑战呢？主要有四个：
+<ul>
+<li>第一个是多项目维护成本比较高，项目基建重复、代码复用困难、工作流程割裂等</li>
+<li>第二个是多人开发协作成本比较高，相互依赖的流程、级联的依赖升级，都增加了协作成本</li>
+<li>第三个是巨型应用构建速度比较慢，构建耗时随着应用增大而变慢</li>
+<li>第四个是大型应用劣化速度比较快，我们缺乏有效的防劣化手段</li>
+</ul>
+</li>
+<li>为了解决上述新挑战，我们投资如下工具来应对
+<ul>
+<li>第一个是自研 Monorepo 工具，用于降低多项目的维护成本</li>
+<li>第二个是对原有的微前端框架进行升级，进一步降低多人开发的协作成本</li>
+<li>第三个是开发 Bundler 和 Build System，来加快巨型应用的构建速度</li>
+<li>第四个是提供诊断工具，来有效地防止应用劣化</li>
+<li>接下来将从这四个主题展开聊聊，为了达到上述目标，我们是如何实践的</li>
+</ul>
+</li>
+</ul>
+<h2 id="第二部分">第二部分<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#第二部分" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>6min, 5min, 5min, 7min, 6min</p>
+</blockquote>
+<ul>
+<li>什么是 Monorepo？
+<ul>
+<li>它是一种源代码管理的模式，其形式就是将多个项目集中到一个仓库中管理；</li>
+<li>与之相对的是 Polyrepo 模式，这种模式下各个项目都有独立的仓库；</li>
+<li><strong>简而言之</strong>，Monorepo 就是将多个不同的项目以良好地组织关系，放到单个仓库中维护；</li>
+</ul>
+</li>
+<li>那么 Monorepo 是如何降低多项目的维护成本的？他通过
+<ul>
+<li>复用基建，让开发人员重新专注于应用本身</li>
+<li>代码共享，能够低成本的做到代码复用</li>
+<li>原子提交，使用自动化的多项目工作流</li>
+</ul>
+</li>
+<li>首先是通过复用基建，让开发人员重新专注于应用本身：
+<ul>
+<li>在传统的 Polyrepo 模式下，每个项目都需要有开发人员创建和维护；而在 Monorepo 中，只需要一两个开发人员负责建立 Monorepo 工程，所有的项目都能够在一个仓库中统一维护，通过复用一套基建（比如 CI 配置、Lint 规则、构建脚本等），<strong>从而</strong>降低多项目维护成本</li>
+<li>此外，复用基建也使得统一改造和升级基建变得方便，比如想在 CI 流程中为所有项目加入类型检查，来提高下项目的质量，在 Polyrepo 下需要修改每一个项目，<strong>这样成本其实是很高的</strong>。而在 Monorepo 下，基建的调整和维护，能够很容易地应用到多个项目中。</li>
+</ul>
+</li>
+<li>其次是通过代码共享，让开发人员能够低成本地复用代码：
+<ul>
+<li>Polyrepo 中，维护公用模块的成本比较高，首先是调试很繁琐，公用模块的调试需要手动执行 npm link，与当前调试的项目关联起来，如果公用模块较多的话，npm link 步骤将非常繁琐低效。</li>
+<li>其次公用模块的升级很繁琐，需要手动管理这种依赖关系，先升级底层的模块，然后发布，最后再升级顶层模块，<strong>如果中途出错了，我还得再来一遍这个过程</strong>。</li>
+<li>而在 Monorepo 中，可以直接一键创建公用模块，顶层的模块一键引入公用模块进行开发、调试，底层模块的更改能够直接被上层感知，甚至不需要经过 link 和 npm 发布，减少了很多重复的工作，大大降低了抽离新的『复用代码』的成本，这使得大家更愿意做这类抽离工作，这反过来又提高了代码复用率。</li>
+</ul>
+</li>
+<li>再次，是通过原子提交，让开发人员享受自动化的多项目工作流
+<ul>
+<li>如果我的业务需求要涉及到多个项目，在 Polyrepo 模式中，例如需要修改图中的三个项目，需要先修改提交底层模块，跑每个模块的 CI 流程，在处理顶层模块时，还得更新底层依赖，接着再跑一次 CI 流程，这一套流程非常繁琐且不连续。</li>
+<li>而在 Monorpeo 中，我们可以直接一次性调整并提交多个项目，CI 和发布流程也都是一次搞定的，<strong>从而将多项目的工作流自动化。</strong></li>
+</ul>
+</li>
+<li>我们简单的做一个总结：
+<ul>
+<li>在 Polyrepo 的模式下，每一个项目都有各自的一套基建，且代码复用困难、工作流程割裂，但是在 Monorepo 里面，我们可以让多个项目复用一套基建；方便地共享代码，使用一致的工作流。</li>
+<li><strong>很多时候一个团队的项目往往不是割裂的，而是相互联系的，Monorepo 可以很方便地将这些项目组织到一个大仓库中维护，从而极大地降低了多项目的维护成本。</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="第三部分">第三部分<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#第三部分" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>8min, 9min, 11min, 11min30</p>
+</blockquote>
+<ul>
+<li>接下来分享下 bunlder 和 build stystem 的工程化实践，因为无论是单仓项目还是多仓项目，随着代码规模和子应用数量的增加，都会导致构建性能下降，<strong>为了应对这种情况</strong>，我们分别建设了 Bundler 和 Build System 工具。
+<ul>
+<li>其中 Bundler 是为了解决单个巨石应用构建速度慢的问题；</li>
+<li>而 Build System 则是为了解决 Monorepo 下构建速度慢的问题。</li>
+</ul>
+</li>
+<li>在前端领域，Bundler 是一种工具，<strong>用于将多个前端资源（例如 JS、CSS、图像等文件）打包到一个或多个文件中，从而让浏览器能够直接运行</strong>；
+<ul>
+<li>常见的 Bundler 工具有 Webpack、Rollup、Vite、Parcel、Esbuild。</li>
+</ul>
+</li>
+<li>接下来介绍一下我们自研的 Rspack Bundler，它是一个基于 Rust 语言的高性能构建引擎， 具备与 Webpack 生态系统的互操作性。
+<ul>
+<li>从这句介绍中，我们可以知道，Rspack 有两个特性，一个是高性能，另一个是与 Webpack 生态的兼容性。</li>
+</ul>
+</li>
+<li>首先第一个特性，即采用 Rust 语言实现，由于 JS 是单线程的，虽然在 JS 中也有些方式做到并发，但这些方法都有种带着镣铐跳舞的感觉，<strong>而在 Rust 中我们能很好地支持并发特性</strong>，所以我们将构建过程中的任务，<strong>利用并发的特性去执行，这极大提升了构建性能</strong>；
+<ul>
+<li>这两张图片是 Webpack 与 RSpack 在构建过程中的线程情况对比，我们可以明显地看出，Webpack 其实只是一个单线程，而 Rspack 则能充分发挥多核 CPU 的优势，极致地压榨出性能。</li>
+<li>这是我们官网上的一个对比图，在相同的项目下，RSpack 只需要 4.2秒，而 Webpack 需要 34.8秒</li>
+</ul>
+</li>
+<li>Rspack 第二个特性就是与 webpack 部分兼容，目前的实现可以理解为是一个 webpack 的子集，这套子集里包含了大部分的常用配置，满足了日常的业务开发，<strong>那么，为什么要与 webpack 生态兼容？</strong>
+<ul>
+<li><strong>首先. webpack 的插件机制满足了项目对定制化的要求</strong></li>
+<li><strong>其次.复用 webpack 丰富的生态，相当于用最小的成本优化巨型项目的开发体验</strong></li>
+<li><strong>最后. 存量的 webpack 项目非常多，兼容 webpack 能大大降低迁移成本</strong></li>
+</ul>
+</li>
+<li>这是两个典型业务上的收益，两个项目原本 dev 启动耗时5分钟左右，使用 Rspack 后只需 20 秒左右，原本 hmr 需要 20 秒左右，使用 Rspack 后只需要 1 秒左右，性能收益基本都在 10 倍左右</li>
+<li>简单介绍下 Build System，它通过处理 Monorepo 下的项目依赖关系图，并根据这个关系图调度构建任务；
+<ul>
+<li>为什么 Monorepo 下需要一个 Build System 呢？ 因为 Monorepo 不是简单的将多个项目直接维护到单个仓库而已，<strong>它还需要借助 Build System 来管理整个代码仓库中的多个项目，并根据项目之间的依赖关系进行构建；</strong></li>
+<li>常见的 Build System 工具有 Bazel、NX、Turborepo、Lage 等</li>
+</ul>
+</li>
+<li>接下来介绍下在我们自研的 Monorepo 工具中，如何实践 Build System，我们通过
+<ul>
+<li>支持『任务并行能力』，采用最大限度的并行任务加速</li>
+<li>支持『多级缓存能力』，对构建任务实现了多级缓存</li>
+<li>支持『按需构建能力』，根据代码更改的影响面来构建</li>
+</ul>
+</li>
+<li>如图所示，根据子项目的依赖关系转成一个任务依赖图，它的构建顺序必须符合这样一种要求，即上层的项目构建，需要等待底层项目构建的完成。
+<ul>
+<li>OK，我们看方式一，即通过串行排成 DEBCA，这是能够符合构建要求的；但是它的性能是比较低的，比如 D 和 E 是可以并行的，所以第二种方式就是通过把 DE 以及 BC 进行并行处理，这样便能把前面的 5 个步骤加速到 3 个步骤。</li>
+<li>此时我们发现任务 C 呢，它不依赖任务 D 的完成，但是方式二下，任务 C 却得等待 D 和 E 都完成才开始执行。</li>
+<li>因此便引出第三种方式，在任务 E 完成后，D 和 C 以并行方式执行；</li>
+</ul>
+</li>
+<li><strong>当 monorepo 子项目规模增大后，每一次开发或者上线都会涉及多个子项目，如果每次都需要对这些子项目进行重新构建，这将会极大地拖慢构建和部署速度</strong>。
+<ul>
+<li><strong>我们提供了对构建产物进行缓存的能力，能够同时将产物缓存到本地和远程，当相关的子项目没有修改过代码时，将会复用之前的构建产物以减少构建时间</strong>。</li>
+</ul>
+</li>
+<li><strong>按需构建能力方面的实践，我们支持按影响面执行 CI 流程，通过 git diff 当前有改动的代码进行依赖分析，从而只构建受影响的项目，否则每次 CI 都会完整的构建所有的子项目</strong>。</li>
+<li>此处以一个简单的 Monorepo 为例，<strong>依赖关系如图所示</strong>
+<ol>
+<li>如果一次性全量构建所有项目，耗时约为 17.72秒</li>
+<li>如果仅仅改动了 component 模块，那么按需构建的话，我只需要构建 component, app1, app2，此时耗时 8.94秒，节约 50% 的时间</li>
+<li>再来看看无缓存的情况下，我仅仅构建 App1, App2, App3 它们的耗时在 10.77秒到16.94秒之间</li>
+<li>如果有缓存的话，比如 component, sdk, util 已经构建过，那么再单独构建 App1, App2, App3 时，构建耗时在 7.55秒到9.74秒之间，大约节约 45% 的时间</li>
+</ol>
+</li>
+<li>通过 Builder 和 Build System 的建设，我们分别借助 Rust 语言的高性能和远程构建缓存能力，极大地加速了巨型应用的构建速度，但这又不仅仅是开发速度上的提升，它同时给我们的业务带来两个巨大的收益
+<ol>
+<li>拉高了一个巨石应用上限：使得我们能够开发一个更巨型更强大的应用</li>
+<li>加快迭代速度：使得我们可以更快更多地做 AB 测试和功能发布</li>
+</ol>
+</li>
+</ul>
+<h2 id="第四部分">第四部分<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#第四部分" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p>10min 10min 14min</p>
+</blockquote>
+<ul>
+<li>所谓微前端，就是前端领域的应用分治解决方案，字节跳动的微前端实践也经过 iframe, spa, 框架阶段；在实践中遇到不少问题，为了进一步降低多人协作的成本，目前进入一个新方案的探索阶段。</li>
+<li>接下来看下微前端的工程化实践，新方案是如何降低多人开发的协作成本的
+<ul>
+<li>首先，通过减轻基座负担，将基座应用与业务逻辑解耦</li>
+<li>其次，采用细粒度的组合，在更细粒度的模块上独立开发、部署</li>
+<li>最后，通过约定模块协议标准，我们搭建了模块中心，甚至可以结合低代码平台，从而带来更高的模块复用率；并支持模块级别的灰度和AB能力；</li>
+</ul>
+</li>
+<li>它是如何减轻基座负担的呢？传统的微前端，通过建立一个公共的基座来承载公共逻辑，这种复用方式，除了工具库以外，往往导致不少业务逻辑耦合到基座中，这导致基座更频繁的改动和发布，更容易出现更大的故障影响面和更容易失效的缓存；
+<ul>
+<li>这又让子应用从独立开发、部署重新回到某种程度上地相互依赖，因此，新方案通过两种方式消除了这类基座的存在，一个是消费机制，另一个是共享机制，前者一般用于复用业务逻辑，后者用于复用业务无关的工具库</li>
+</ul>
+</li>
+<li>那么，新方案的机制是如何起作用的？
+<ul>
+<li>传统的微前端架构中，多个子应用之间是相对隔离的，往往都会通过一套沙箱机制来保证这种隔离性；</li>
+<li>但随着前端子应用的规模增大，人员增多，如此粗粒度的隔离又会反过来制约每个子应用内外的人员协作；</li>
+<li>因此，我们新的应对方式就是通过提供更细粒度的<strong>模块消费和共享方案</strong>，从而让开发人员能够以更小的单位进行独立开发、测试、部署</li>
+</ul>
+</li>
+<li><strong>模块协议标准约定了模块的元信息，通过该协议在各个平台之间流转，来达到特定的功能</strong>
+<ol>
+<li>比如构建平台会根据配置文件构建出这份协议文件</li>
+<li><strong>比如部署平台会将元信息转成包含具体 cdn 地址的数据，直接回填到 html 里下发，这步操作也是能做到模块灰度和AB的前提</strong></li>
+<li>再比如应用运行时也会根据这份协议动态加载模块</li>
+</ol>
+<ul>
+<li>有了细粒度组合和模块协议标准的<strong>特性</strong>，我们又能够十分方便地建立一个在线模块中心，无论是业务相关的组件，还是业务无关的工具库，都能<strong>以极低的成本</strong>在团队内部，甚至跨团队复用；</li>
+<li>此外，<strong>基于这套机制</strong>，我们还尝试了与低代码平台的配合，通过低代码平台搭建出符合模块协议标准的组件，并注册为在线模块后，能够极大的提高业务开发的效率。</li>
+</ul>
+</li>
+<li>这是一个典型的接入业务，接入之后我们发现从构建耗时、部署耗时，甚至迭代速度和需求吞吐量都有了显著的提升效果。</li>
+<li>接下来分享下诊断工具，<strong>市面上的工具大多面向构建产物进行诊断和分析，无法对构建过程进行更深入诊断和分析</strong>，作用十分有限</li>
+<li>那么我们自研的诊断工具，是如何有效地防止应用劣化的呢？
+<ul>
+<li>首先，提供面向构建过程的分析能力，由于记录了构建过程的数据，我们会有更细粒度和更丰富的分析；</li>
+<li>其次，提供一套可扩展的规则机制，<strong>让不同的</strong>垂直场景和业务场景能够扩展自身的规则；</li>
+<li>最后，通过与核心研发流程结合，让规则真正发生作用；</li>
+</ul>
+</li>
+<li>这是一份 statoscope 的分析结果页面，它是典型面向构建产物分析的，<strong>即通过消费 stats.json 来分析产物</strong>；
+<ul>
+<li><strong>它没有 loader、resolver、plugin 等和构建过程相关的分析和诊断；</strong></li>
+<li>展示图片…
+<ul>
+<li>webpack loader 时序分析</li>
+<li>webpack loader 分析</li>
+<li>webpack plugin 分析</li>
+</ul>
+</li>
+<li>那我们是如何做到的呢？我们通过监听插件钩子和劫持 Loader 等方式介入构建过程，并收集和生成专门用于诊断和分析场景的数据结构，比如依赖图、模块图、三方包图、源码、loader、plugin、resolver 等数据，<strong>从而获得更完善的构建上下文信息，以便我们后续进行深度的诊断和分析</strong></li>
+</ul>
+</li>
+<li>我们提供了一些默认的诊断规则，比如
+<ol>
+<li>重复包检查 - Duplicate Packages</li>
+<li>包规范语句匹配 - Default Import Check</li>
+<li>Loader 性能优化 - Loader Performance Optimization</li>
+</ol>
+<ul>
+<li>此外，我们还提供一套可扩展的诊断规则机制，我们将重新生成的数据结构作为上下文传递给自定义的规则，<strong>便能轻松的做到如下能力</strong>：
+<ol>
+<li>依赖的引用方式检查</li>
+<li>特定依赖的版本检查</li>
+<li>禁止使用特定的语句</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>光有上述两个能力还不够，我们还谋求与核心研发流程结合，在 CI 中支持基于分支的 diff 拦截，从而让规则真正发生作用</li>
+<li>总结一下，这是一些典型的业务收益情况</li>
+<li>这是目前上述几个工具的整体落地情况，其中 Monorepo 工具接入工程x个，微前端活跃用户y个，Bundler 开源工具 Rspack z stars，诊断工具的周下载量达到n次</li>
+<li>接下来做一个简单的总结和展望：
+<ul>
+<li>当上述一系列工具链支撑了更大的工程规模，更多的人员规模，更加快速的构建速度，更可维护的前端工程之后；</li>
+<li>我相信<strong>未来一定会</strong>催生出更『强大』的前端应用，<strong>当这个更强大的前端应用继续增大工程规模</strong>，增加团队人员，渐渐地<strong>拉低了构建速度和可维护性</strong></li>
+<li><strong>那未来必将会对这些工具提出更高的要求，从而带动整个前端工具链再一次革新</strong></li>
+</ul>
+</li>
+<li>谢谢，这就是我今天带来的分享</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>关系图谱</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-332" aria-expanded="true"><h3>目录</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#第一部分" data-for="第一部分">第一部分</a></li><li class="depth-0"><a href="#第二部分" data-for="第二部分">第二部分</a></li><li class="depth-0"><a href="#第三部分" data-for="第三部分">第三部分</a></li><li class="depth-0"><a href="#第四部分" data-for="第四部分">第四部分</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr"><head><title>第8章 对象</title><meta charset="utf-8"/><link rel="preload" href="../../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Runqi 的知识库"/><meta property="og:title" content="第8章 对象"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="第8章 对象"/><meta name="twitter:description" content="在前面的数个章节里，我们陆续介绍了Redis用到的所有主要数据结构，比如简单动态字符串（SDS）、双端链表、字典、压缩列表、整数集合等等。 Redis并没有直接使用这些数据结构来实现键值对数据库，而是基于这些数据结构创建了一个对象系统，这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象，每种对象都用到了至少一种我们前面所介绍的数据结构。 通过这五种不同类型的对象，Redis可以在执行命令之前，根据对象的类型来判断一个对象是否可以执行给定的命令。使用对象的另一个好处是，我们可以针对不同的使用场景，为对象设置多种不同的数据结构实现，从而优化对象在不同场景下的使用效率..."/><meta property="og:description" content="在前面的数个章节里，我们陆续介绍了Redis用到的所有主要数据结构，比如简单动态字符串（SDS）、双端链表、字典、压缩列表、整数集合等等。 Redis并没有直接使用这些数据结构来实现键值对数据库，而是基于这些数据结构创建了一个对象系统，这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象，每种对象都用到了至少一种我们前面所介绍的数据结构。 通过这五种不同类型的对象，Redis可以在执行命令之前，根据对象的类型来判断一个对象是否可以执行给定的命令。使用对象的另一个好处是，我们可以针对不同的使用场景，为对象设置多种不同的数据结构实现，从而优化对象在不同场景下的使用效率..."/><meta property="og:image:alt" content="在前面的数个章节里，我们陆续介绍了Redis用到的所有主要数据结构，比如简单动态字符串（SDS）、双端链表、字典、压缩列表、整数集合等等。 Redis并没有直接使用这些数据结构来实现键值对数据库，而是基于这些数据结构创建了一个对象系统，这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象，每种对象都用到了至少一种我们前面所介绍的数据结构。 通过这五种不同类型的对象，Redis可以在执行命令之前，根据对象的类型来判断一个对象是否可以执行给定的命令。使用对象的另一个好处是，我们可以针对不同的使用场景，为对象设置多种不同的数据结构实现，从而优化对象在不同场景下的使用效率..."/><meta property="twitter:domain" content="runqi-zhao.github.io"/><meta property="og:url" content="https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第8章-对象"/><meta property="twitter:url" content="https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第8章-对象"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="在前面的数个章节里，我们陆续介绍了Redis用到的所有主要数据结构，比如简单动态字符串（SDS）、双端链表、字典、压缩列表、整数集合等等。 Redis并没有直接使用这些数据结构来实现键值对数据库，而是基于这些数据结构创建了一个对象系统，这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象，每种对象都用到了至少一种我们前面所介绍的数据结构。 通过这五种不同类型的对象，Redis可以在执行命令之前，根据对象的类型来判断一个对象是否可以执行给定的命令。使用对象的另一个好处是，我们可以针对不同的使用场景，为对象设置多种不同的数据结构实现，从而优化对象在不同场景下的使用效率..."/><meta name="generator" content="Quartz"/><link href="../../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第8章-对象-og-image.webp"/><meta property="og:image:url" content="https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第8章-对象-og-image.webp"/><meta name="twitter:image" content="https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第8章-对象-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第8章-对象" data-basepath><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Runqi 的知识库</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="搜索" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>搜索</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="搜索内容..." placeholder="搜索内容..."/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="暗色模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="暗色模式"><title>暗色模式</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="亮色模式"><title>亮色模式</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="阅读模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="阅读模式"><title>阅读模式</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-142" aria-label="探索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>探索</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-142" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../3.-资源/">3. 资源</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../3.-资源/后端开发/">后端开发</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../3.-资源/后端开发/redis设计与实现/">Redis设计与实现</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/">第1部分 数据结构与对象</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>第8章 对象</a></div></nav><h1 class="article-title">第8章 对象</h1><p show-comma="true" class="content-meta"><time datetime="2026-10-28T07:14:34.108Z">2026年10月28日</time><span>49分钟阅读</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><p>在前面的数个章节里，我们陆续介绍了Redis用到的所有主要数据结构，比如简单动态字符串（SDS）、双端链表、字典、压缩列表、整数集合等等。</p>
+<p><font color="red">Redis并没有直接使用这些数据结构来实现键值对数据库，而是基于这些数据结构创建了一个对象系统，这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象，</font>每种对象都用到了至少一种我们前面所介绍的数据结构。</p>
+<p>通过这五种不同类型的对象，Redis可以在执行命令之前，根据对象的类型来判断一个对象是否可以执行给定的命令。使用对象的另一个好处是，我们可以针对不同的使用场景，为对象设置多种不同的数据结构实现，从而优化对象在不同场景下的使用效率。</p>
+<p>除此之外，Redis的对象系统还实现了<font color="red">基于引用计数技术的内存回收机制</font>，当程序不再使用某个对象的时候，这个对象所占用的内存就会被自动释放；另外，Redis还通过引用计数技术实现了对象共享机制，这一机制可以在适当的条件下，通过让多个数据库键共享同一个对象来节约内存。</p>
+<h2 id="对象的类型和编码">对象的类型和编码<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#对象的类型和编码" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Redis使用对象来表示数据库中的键和值，<font color="red">每次当我们在Redis的数据库中新创建一个键值对时，我们至少会创建两个对象，一个对象用作键值对的键（键对象），另一个对象用作键值对的值（值对象）。</font></p>
+<p>举个例子，一下SET命令在数据库中创建了一个新的键值对，其中键值对的键是一个包含了字符串值”msg”的对象，而键值对的值则是一个包含了字符串值”hello world”的对象：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello world&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span></code></pre></figure>
+<p>Redis中的每个对象都由一个redisObject结构表示，该结构中和保存数据有关的三个属性分别是type属性、encoding属性和ptr属性：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">typedef</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> redisObject {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    //类型</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    unsigned</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> type:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    //编码</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    unsigned</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> encoding:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">4</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    //指向底层实现数据结构的指针</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    void</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> *</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">ptr;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // ...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">} robj;</span></span></code></pre></figure>
+<h3 id="类型">类型<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#类型" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>对象的type属性记录了对象的类型，这个属性的值可以是下表中的任何一个。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>类型常量</th><th>对象的名称</th></tr></thead><tbody><tr><td>REDIS_STRING</td><td>字符串对象</td></tr><tr><td>REDIS_LIST</td><td>列表对象</td></tr><tr><td>REDIS_HASH</td><td>哈希对象</td></tr><tr><td>REDIS_SET</td><td>集合对象</td></tr><tr><td>REDIS_ZSET</td><td>有序集合对象</td></tr></tbody></table></div>
+<p>对于Redis数据库保存的键值对来说，键总是一个字符串对象，而值则可以是字符串对象、列表对象、哈希对象、集合对象或者有序集合对象的其中一种，因此：</p>
+<ul>
+<li><font color="red">当我们称呼一个数据库键为“字符串键”时，我们指的是“这个数据库键所对应的值为字符串对象”；</font></li>
+<li><font color="red">当我们称呼一个键为“列表键”时，我们指的是“这个数据库键所对应的值为列表对象”。</font></li>
+</ul>
+<p>TYPE命令的实现方式也与此类似，当我们对一个数据库键执行TYPE命令时，命令返回的结果为数据库键对应的值对象的类型，而不是键对象的类型：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 键为字符串对象，值为字符串对象</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello world&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">TYPE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">string</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 键为字符串对象，值为列表对象</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">RPUSH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">6</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">TYPE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">list</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 键为字符串对象，值为哈希对象</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HMSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> profile</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> Tom</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> age</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 25</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> career</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> Programmer</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">TYPE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> profile</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">hash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 键为字符串对象，值为集合对象</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> fruits</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> apple</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> banana</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> cherry</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">TYPE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> fruits</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="function">set</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 键为字符串对象，值为有序集合对象</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ZADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> price</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 8.5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> apple</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5.0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> banana</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 6.0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> cherry</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">TYPE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> price</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">zset</span></span></code></pre></figure>
+<p>下表类除了TYPE命令在面对不同类型的值对象时所产生的输出。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>对象</th><th>对象type属性的值</th><th>TYPE命令的输出</th></tr></thead><tbody><tr><td>字符串对象</td><td>REDIS_STRING</td><td>”string”</td></tr><tr><td>列表对象</td><td>REDIS_LIST</td><td>”list”</td></tr><tr><td>哈希对象</td><td>REDIS_HASH</td><td>”hash”</td></tr><tr><td>集合对象</td><td>REDIS_SET</td><td>”set”</td></tr><tr><td>有序表对象</td><td>REDIS_ZSET</td><td>”zset”</td></tr></tbody></table></div>
+<h3 id="编码和底层实现">编码和底层实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#编码和底层实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>对象的ptr指针指向对象的底层实现数据结构，而这些数据结构由对象的encoding属性决定。</p>
+<p>encoding属性记录了对象所使用的编码，也即是说这个对象使用了什么数据结构作为对象的底层实现，这个属性的值可以是下表列出的常量的其中一个。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>编码常量</th><th>编码所对应的底层数据结构</th></tr></thead><tbody><tr><td>REDIS_ENCODING_INT</td><td>long类型的整数</td></tr><tr><td>REDIS_ENCONDING_ELEMENT</td><td>element编码的简单动态规划</td></tr><tr><td>REDIS_ENCONDING_RAW</td><td>简单动态字符串</td></tr><tr><td>REDIS_ENCONDING_HT</td><td>字典</td></tr><tr><td>REDIS_ENCONDING_LINKEDLIST</td><td>双向链表</td></tr><tr><td>REDIS_ENCONDING_ZIPLIST</td><td>压缩列表</td></tr><tr><td>REDIS_ENCONDING_INTLIST</td><td>整数集合</td></tr><tr><td>REDIS_ENCONDING_SKIPLIST</td><td>跳表和字典</td></tr></tbody></table></div>
+<p>每种类型的对象都至少使用了两种不同的编码，下表列出了每种类型的对象可以使用的编码。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>类型</th><th>编码</th><th>对象</th></tr></thead><tbody><tr><td>REDIS_STRING</td><td>REDIS_ENCOODING_INT</td><td>使用整数值实现的字符串对象</td></tr><tr><td>REDIS_STRING</td><td>REDIS_ENCOODING_EMBSTR</td><td>使用embstr编码的简单动态字符串实现的字符串对象</td></tr><tr><td>REDIS_STRING</td><td>REDIS_ENCOODING_RAW</td><td>使用简单动态字符串实现的字符串对象</td></tr><tr><td>REDIS_LIST</td><td>REDIS_ENCOODING_ZIPLIST</td><td>使用压缩列表实现的列表对象</td></tr><tr><td>REDIS_LIST</td><td>REDIS_ENCOODING_LINKEDLIST</td><td>使用双端列表列表实现的列表对象</td></tr><tr><td>REDIS_HASH</td><td>REDIS_ENCOODING_ZIPLIST</td><td>使用压缩别表实现的哈希表对象</td></tr><tr><td>REDIS_HASH</td><td>REDIS_ENCOODING_HT</td><td>使用字典实现的集合对象</td></tr><tr><td>REDIS_SET</td><td>REDIS_ENCOODING_INSET</td><td>使用整数集合实现的集合对象</td></tr><tr><td>REDIS_SET</td><td>REDIS_ENCOODING_HT</td><td>使用字典实现的集合对象</td></tr><tr><td>REDIS_ZSET</td><td>REDIS_ENCOODING_ZIPLIST</td><td>使用压缩列表实现的有序集合对象</td></tr><tr><td>REDIS_ZET</td><td>REDIS_ENCOODING_SKIPLIST</td><td>使用跳跃表和字典实现的有序集合对象</td></tr></tbody></table></div>
+<p>使用OBJECT ENCODING命令可以查看一个数据库键的值对象的编码：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello wrold&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;embstr&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> story</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;long long long long long long ago ...&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> story</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;raw&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;intset&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;seven&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hashtable&quot;</span></span></code></pre></figure>
+<p>下列出了不同编码的对象所对应的OBJECT ENCODING命令输出。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>对象所使用的底层数据结构</th><th>编码常量</th><th>ONBJECT ENCODING命令输出</th></tr></thead><tbody><tr><td>整数</td><td>REDIS_ENCODING_INT</td><td>”int”</td></tr><tr><td>embstr编码的简单动态字符串(SDS)</td><td>REDIS_ENCODING_EMBSTR</td><td>”embstr”</td></tr><tr><td>简单动态字符串</td><td>REDIS_ENCODING_RAW</td><td>”raw”</td></tr><tr><td>字典</td><td>REDIS_ENCODING_HT</td><td>”hashtable”</td></tr><tr><td>双端列表</td><td>REDIS_ENCODING_LINKENDLIST</td><td></td></tr><tr><td>压缩列表</td><td>REDIS_ENCODING_ZIPLIST</td><td>”ziplist”</td></tr><tr><td>整数集合</td><td>REDIS_ENCODING_INSET</td><td>”inset”</td></tr><tr><td>跳跃表和字典</td><td>REDIS_ENCODING_SKIPLIST</td><td>”skiplist”</td></tr></tbody></table></div>
+<p><font color="red">通过encoding属性来设定对象所使用的编码，而不是为特定类型的对象关联一种固定的编码，极大地提升了Redis的灵活性和效率，因为Redis可以根据不同的使用场景来为一个对象设置不同的编码，从而优化对象在某一场景下的效率。</font></p>
+<p>举个例子，在列表对象包含的元素比较少时，Redis使用压缩列表作为列表对象的底层实现：</p>
+<ul>
+<li>因为压缩列表比双端链表更节约内存，并且在元素数量较少时，在内存中以连续块方式保存的压缩列表比起双端链表可以更快被载入到缓存中；</li>
+<li>随着列表对象包含的元素越来越多，使用压缩列表来保存元素的优势逐渐消失时，对象就会将底层实现从压缩列表转向功能更强、也更适合保存大量元素的双端链表上面；</li>
+</ul>
+<p>其他类型的对象也会通过使用多种不同的编码来进行类似的优化。</p>
+<p>在接下来的内容中，我们将分别介绍Redis中的五种不同类型的对象，说明这些对象底层所使用的编码方式，列出对象从一种编码转换成另一种编码所需的条件，以及同一个命令在多种不同编码上的实现方法。</p>
+<h2 id="字符串对象">字符串对象<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#字符串对象" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><font color="red">字符串对象的编码可以是int、raw或者embstr。</font></p>
+<p>如果一个字符串对象保存的是整数值，并且这个整数值可以用long类型来表示，那么字符串对象会将整数值保存在字符串对象结构的ptr属性里面（将void*转换成long），并将字符串对象的编码设置为int。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426205903.png" alt/></p>
+<p>举个例子，如果我们执行以下SET命令，那么服务器将创建一个如图8-1所示的int编码的字符串对象作为number键的值：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> number</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10086</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> number</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;int&quot;</span></span></code></pre></figure>
+<p><font color="red">如果字符串对象保存的是一个字符串值，并且这个字符串值的长度大于32字节，那么字符串对象将使用一个简单动态字符串（SDS）来保存这个字符串值，并将对象的编码设置为raw。</font></p>
+<p>举个例子，如果我们执行以下命令，那么服务器将创建一个如图8-2所示的raw编码的字符串对象作为story键的值：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> story</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Long, long ago there lived a king ...&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">STRLEN</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> story</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">37</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> story</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;raw&quot;</span></span></code></pre></figure>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426210233.png" alt/></p>
+<p>如果字符串对象保存的是一个字符串值，并且这个字符串值的长度小于等于32字节，那么字符串对象将使用embstr编码的方式来保存这个字符串值。</p>
+<p>embstr编码是专门用于保存短字符串的一种优化编码方式，这种编码和raw编码一样，都使用redisObject结构和sdshdr结构来表示字符串对象，但raw编码会调用两次内存分配函数来分别创建redisObject结构和sdshdr结构，而embstr编码则通过调用一次内存分配函数来分配一块连续的空间，空间中依次包含redisObject和sdshdr两个结构，如下图所示：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426210313.png" alt/></p>
+<p>mbstr编码的字符串对象在执行命令时，产生的效果和raw编码的字符串对象执行命令时产生的效果是相同的，但使用embstr编码的字符串对象来保存短字符串值有以下好处：</p>
+<ul>
+<li>
+<p>embstr编码将创建字符串对象所需的内存分配次数从raw编码的两次降低为一次。</p>
+</li>
+<li>
+<p>释放embstr编码的字符串对象只需要调用一次内存释放函数，而释放raw编码的字符串对象需要调用两次内存释放函数。</p>
+</li>
+<li>
+<p>因为embstr编码的字符串对象的所有数据都保存在一块连续的内存里面，所以这种编码的字符串对象比起raw编码的字符串对象能够更好地利用缓存带来的优势。</p>
+</li>
+</ul>
+<p>作为例子，以下命令创建了一个embstr编码的字符串对象作为msg键的值，值对象的样子如下图所示：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426210359.png" alt/></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;embstr&quot;</span></span></code></pre></figure>
+<p>最后要说的是，可以用long double类型表示的浮点数在Redis中也是作为字符串值来保存的。如果我们要保存一个浮点数到字符串对象里面，那么程序会先将这个浮点数转换成字符串值，然后再保存转换所得的字符串值。</p>
+<p>举个例子，执行以下代码将创建一个包含3.14的字符串表示“3.14”的字符串对象：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pi</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3.14</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pi</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;embstr&quot;</span></span></code></pre></figure>
+<p>在有需要的时候，程序会将保存在字符串对象里面的字符串值转换回浮点数值，执行某些操作，然后再将执行操作所得的浮点数值转换回字符串值，并继续保存在字符串对象里面。</p>
+<p>举个例子，如果我们执行以下代码：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">INCRBYFLOAT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pi</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2.0</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;5.14&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pi</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;embstr&quot;</span></span></code></pre></figure>
+<p>那么程序首先会取出字符串对象里面保存的字符串值”3.14”，将它转换回浮点数值3.14，然后把3.14和2.0相加得出的值5.14转换成字符串”5.14”，并将这个”5.14”保存到字符串对象里面。下表总结并列出了字符串对象保存各种不同类型的值所使用的编码方式。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>值</th><th>编码</th></tr></thead><tbody><tr><td>可以用long类型保存的整数</td><td>int</td></tr><tr><td>可以用long double类型保存的浮点数</td><td>embstr或者raw</td></tr><tr><td>字符串值，或者因为长度太大而没办法用long类型表示的整数，又或者因为长度太大而没有办法用long double表示的浮点数</td><td>embstr或者raw</td></tr></tbody></table></div>
+<h3 id="编码的转换">编码的转换<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#编码的转换" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>int编码的字符串对象和embstr编码的字符串对象在条件满足的情况下，会被转换为raw编码的字符串对象。</p>
+<p><font color="red">对于int编码的字符串对象来说，如果我们向对象执行了一些命令，使得这个对象保存的不再是整数值，而是一个字符串值，那么字符串对象的编码将从int变为raw。</font></p>
+<p>在下面的示例中，我们通过APPEND命令，向一个保存整数值的字符串对象追加了一个字符串值，因为追加操作只能对字符串值执行，所以程序会先将之前保存的整数值10086转换为字符串值”10086”，然后再执行追加操作，操作的执行结果就是一个raw编码的、保存了字符串值的字符串对象：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> number</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10086</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> number</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;int&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">APPEND</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> number</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot; is a good number!&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">23</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">GET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> number</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;10086 is a good number!&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> number</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;raw&quot;</span></span></code></pre></figure>
+<p>另外，因为Redis没有为embstr编码的字符串对象编写任何相应的修改程序（只有int编码的字符串对象和raw编码的字符串对象有这些程序），所以<font color="red">embstr编码的字符串对象实际上是只读的。</font>当我们对embstr编码的字符串对象执行任何修改命令时，程序会先将对象的编码从embstr转换成raw，然后再执行修改命令。因为这个原因，embstr编码的字符串对象在执行修改命令之后，总会变成一个raw编码的字符串对象。</p>
+<p>以下代码展示了一个embstr编码的字符串对象在执行APPEND命令之后，对象的编码从embstr变为raw的例子：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello world&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;embstr&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">APPEND</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot; again!&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">18</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;raw&quot;</span></span></code></pre></figure>
+<h3 id="字符串命令的实现">字符串命令的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#字符串命令的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>因为字符串键的值为字符串对象，所以用于字符串键的所有命令都是针对字符串对象来构建的，下表列举了其中一部分字符串命令，以及这些命令在不同编码的字符串对象下的实现方法。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>命令</th><th>int编码的实现方法</th><th>embstr编码的实现方法</th><th>raw编码实现的方法</th></tr></thead><tbody><tr><td>SET</td><td>使用int编码保存至</td><td>使用embstr编码保存值</td><td>使用raw编码保存值</td></tr><tr><td>GET</td><td>拷贝对象所保存的整数值，将这个拷贝转换成字符串值，然后向客户端返回这个字符串值</td><td>直接向客户端返回字符串</td><td>直接向客户端返回字符串值</td></tr><tr><td>APPEND</td><td>将对象转换为raw编码，然后按eaw编码的方式执行此操作</td><td>将对象转换成raw编码，然后按照raw编码的方式执行此操作</td><td>调用sdscatlen函数，将给定字符串追加到现有字符串的末尾</td></tr><tr><td>INCRBYFLOAT</td><td>取出整数值并将其转换成long double类型的浮点数，对这个浮点数进行加法计算，然后将得出的浮点数结果保存起来</td><td>取出字符串值并尝试将其转换成1ong double类型的浮点数，对这个浮点数进行加法计算，然后将得出的浮点数结果保存起来。如果字符串值不能被转换成浮点数，那么向客户端返回一个错误</td><td>取出字符串值并尝试将其转换成long double类型的浮点数，对这个浮点数进行加法计算，然后将得出的浮点数结果保存起来。如果字符串值不能被转换成浮点数，那么向客户端返回一个错误</td></tr><tr><td>INCRBY</td><td>对整数值进行加法计算，得出的计算结果会作为整数被保存起来</td><td>embstr编码不能执行此命令，向客户端返回一个错误</td><td>raw编码不能执行此命令，向客户端返回一个错误</td></tr><tr><td>DECRBY</td><td>对整数值进行减法计算，得出的计算结果会作为整数被保存起来</td><td>embstr编码不能执行此命令，向客户端返回一个错误</td><td>raw编码不能执行此命令，向客户端返回一个错误</td></tr><tr><td>STRLEN</td><td>拷贝对象所保存的整数值，将这个拷贝转换成字符串值，计算并返回这个字符串值的长度</td><td>调用sdslen函数，返回字符串的长度</td><td>调用sds1en函数，返回字符串的长度</td></tr><tr><td>SETRANGE</td><td>将对象转换成raw编码，然后按raw编码的方式执行此命令</td><td>将对象转换成raw编码，然后按raw编码的方式执行此命令</td><td>将字符串特定索引上的值设置为给定的字符</td></tr><tr><td>GETRANGE</td><td>拷贝对象所保存的整数值，将这个拷贝转换成字符串值，然后取出并返回字符串指定索引上的字符</td><td>直接取出并返回字符串指定索引上的字符</td><td>直接取出并返回字符串指定索引上的字符</td></tr></tbody></table></div>
+<h2 id="列表对象">列表对象<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#列表对象" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><font color="red">列表对象的编码可以是ziplist或者linkedlist。</font></p>
+<p>ziplist编码的列表对象使用压缩列表作为底层实现，每个压缩列表节点（entry）保存了一个列表元素。举个例子，如果我们执行以下RPUSH命令，那么服务器将创建一个列表对象作为numbers键的值：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">RPUSH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;three&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span></code></pre></figure>
+<p>如果numbers键的值对象使用的是ziplist编码，这个这个值对象将会是下图所展示的样子。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426212245.png" alt/></p>
+<p>另一方面，linkedlist编码的列表对象使用双端链表作为底层实现，每个双端链表节点（node）都保存了一个字符串对象，而每个字符串对象都保存了一个列表元素。</p>
+<p>举个例子，如果前面所说的numbers键创建的列表对象使用的不是ziplist编码，而是linkedlist编码，那么numbers键的值对象将是下图所示的样子。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426212337.png" alt/></p>
+<p>注意，<font color="red">linkedlist编码的列表对象在底层的双端链表结构中包含了多个字符串对象，这种嵌套字符串对象的行为在稍后介绍的哈希对象、集合对象和有序集合对象中都会出现，字符串对象是Redis五种类型的对象中唯一一种会被其他四种类型对象嵌套的对象。</font></p>
+<p>为了简化字符串对象的表示，我们在图8-6使用了一个带有StringObject字样的格子来表示一个字符串对象，而StringObject字样下面的是字符串对象所保存的值。比如说，图8-7代表的就是一个包含了字符串值”three”的字符串对象，如下图所示：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426212426.png" alt/></p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426212454.png" alt/></p>
+<h3 id="编码转换">编码转换<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#编码转换" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>当列表对象可以同时满足以下两个条件时，列表对象使用ziplist编码：</p>
+<ul>
+<li>列表对象保存的所有字符串元素的长度都小于64字节；</li>
+<li>列表对象保存的元素数量小于512个；不能满足这两个条件的列表对象需要使用linkedlist编码。</li>
+</ul>
+<blockquote>
+<p>以上两个条件的上限值是可以修改的，具体请看配置文件中关于list-max-ziplist-value选项和list-max-ziplist-entries选项的说明。</p>
+</blockquote>
+<p>对于使用ziplist编码的列表对象来说，当使用ziplist编码所需的两个条件的任意一个不能被满足时，对象的编码转换操作就会被执行，原本保存在压缩列表里的所有列表元素都会被转移并保存到双端链表里面，对象的编码也会从ziplist变为linkedlist。</p>
+<p>以下代码展示了列表对象因为保存了长度太大的元素而进行编码转换的情况：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#所有元素的长度都小于64字节</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">RPUSH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;world&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;again&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#将一个65字节长的元素推入列表对象中</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">RPUSH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">4</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 编码已改变</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;linkedlist&quot;</span></span></code></pre></figure>
+<p>除此之外，以下代码展示了列表对象因为保存的元素数量过多而进行编码转换的情况：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#列表对象包含512个元素</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">EVAL</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;for i=1, 512 do redis.call('RPUSH', KEYS[1],i)end&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;integers&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">nil</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">LLEN</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">512</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#再向列表对象推入一个新元素，使得对象保存的元素数量达到513个</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">RPUSH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 513</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">513</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 编码已改变</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;linkedlist&quot;</span></span></code></pre></figure>
+<h3 id="列表命令的实现">列表命令的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#列表命令的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>因为列表键的值为列表对象，所以用于列表键的所有命令都是针对列表对象来构建的，下表列出了其中一部分列表键命令，以及这些命令在不同编码的列表对象下的实现方法。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426212807.png" alt/></p>
+<h2 id="哈希对象">哈希对象<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#哈希对象" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>哈希对象的编码可以是ziplist或者hashtable。</p>
+<p>ziplist编码的哈希对象使用压缩列表作为底层实现，每当有新的键值对要加入到哈希对象时，程序会先将保存了键的压缩列表节点推入到压缩列表表尾，然后再将保存了值的压缩列表节点推入到压缩列表表尾，因此：</p>
+<ul>
+<li>保存了同一键值对的两个节点总是紧挨在一起，保存键的节点在前，保存值的节点在后；</li>
+<li>先添加到哈希对象中的键值对会被放在压缩列表的表头方向，而后来添加到哈希对象中的键值对会被放在压缩列表的表尾方向。</li>
+</ul>
+<p>举个例子，如果我们执行以下HSET命令，那么服务器将创建一个列表对象作为profile键的值：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> profile</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Tom&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> profile</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> age</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 25</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> profile</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> career</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Programmer&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span></code></pre></figure>
+<p>如果profile键的值对象使用的是ziplist编码，那么这个值对象将会是下图1示的样子，其中对象所使用的压缩列表如下图2所示。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426212910.png" alt/></p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426212931.png" alt/></p>
+<p>另一方面，hashtable编码的哈希对象使用字典作为底层实现，哈希对象中的每个键值对都使用一个字典键值对来保存：</p>
+<p>·字典的每个键都是一个字符串对象，对象中保存了键值对的键；</p>
+<p>·字典的每个值都是一个字符串对象，对象中保存了键值对的值。</p>
+<p>举个例子，如果前面profile键创建的不是ziplist编码的哈希对象，而是hashtable编码的哈希对象，那么这个哈希对象应该会是下图所示的样子。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426213017.png" alt/></p>
+<h3 id="编码转换-1">编码转换<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#编码转换-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>当哈希对象可以同时满足以下两个条件时，哈希对象使用ziplist编码：</p>
+<ul>
+<li>哈希对象保存的所有键值对的键和值的字符串长度都小于64字节；</li>
+<li>哈希对象保存的键值对数量小于512个；不能满足这两个条件的哈希对象需要使用hashtable编码。</li>
+</ul>
+<blockquote>
+<p>这两个条件的上限值是可以修改的，具体请看配置文件中关于hash-max-ziplist-value选项和hash-max-ziplist-entries选项的说明。</p>
+</blockquote>
+<p>对于使用ziplist编码的列表对象来说，当使用ziplist编码所需的两个条件的任意一个不能被满足时，对象的编码转换操作就会被执行，原本保存在压缩列表里的所有键值对都会被转移并保存到字典里面，对象的编码也会从ziplist变为hashtable。</p>
+<p>以下代码展示了哈希对象因为键值对的键长度太大而引起编码转换的情况：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#哈希对象只包含一个键和值都不超过64个字节的键值对</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> book</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> name</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Mastering C++ in 21 days&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> book</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#向哈希对象添加一个新的键值对，键的长度为66字节</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> book</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> long_long_long_long_long_long_long_long_long_long_long_description</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;content&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 编码已改变</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> book</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hashtable&quot;</span></span></code></pre></figure>
+<p>除了键的长度太大会引起编码转换之外，值的长度太大也会引起编码转换，以下代码展示了这种情况的一个示例：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#哈希对象只包含一个键和值都不超过64个字节的键值对</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> greeting</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello world&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#向哈希对象添加一个新的键值对，值的长度为68字节</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> story</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;many string ... many string ... many string ... many string ... many&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 编码已改变</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hashtable&quot;</span></span></code></pre></figure>
+<p>最后，以下代码展示了哈希对象因为包含的键值对数量过多而引起编码转换的情况：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#创建一个包含512个键值对的哈希对象</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">EVAL</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;for i=1, 512 do redis.call('HSET', KEYS[1], i, i)end&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;numbers&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">nil</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HLEN</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">512</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#再向哈希对象添加一个新的键值对，使得键值对的数量变成513个</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HMSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;key&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;value&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HLEN</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">513</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 编码改变</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hashtable&quot;</span></span></code></pre></figure>
+<h3 id="哈希命令的实现">哈希命令的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#哈希命令的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>因为哈希键的值为哈希对象，所以用于哈希键的所有命令都是针对哈希对象来构建的，表8-9列出了其中一部分哈希键命令，以及这些命令在不同编码的哈希对象下的实现方法。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230426213313.png" alt/></p>
+<h2 id="集合对象">集合对象<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#集合对象" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>集合对象的编码可以是intset或者hashtable。</p>
+<p>intset编码的集合对象使用整数集合作为底层实现，集合对象包含的所有元素都被保存在整数集合里面。</p>
+<p>举个例子，以下代码将创建一个如下图所示的intset编码集合对象：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">3</span></span></code></pre></figure>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427163208.png" alt/></p>
+<p>另一方面，hashtable编码的集合对象使用字典作为底层实现，字典的每个键都是一个字符串对象，每个字符串对象包含了一个集合元素，而字典的值则全部被设置为NULL。</p>
+<p>举个例子，以下代码将创建一个如下图所示的hashtable编码集合对象：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">3</span></span></code></pre></figure>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427163229.png" alt/></p>
+<h3 id="编码的转换-1">编码的转换<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#编码的转换-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>当集合对象可以同时满足以下两个条件时，对象使用intset编码：</p>
+<ul>
+<li>集合对象保存的所有元素都是整数值；</li>
+<li>集合对象保存的元素数量不超过512个。</li>
+</ul>
+<p>不能满足这两个条件的集合对象需要使用hashtable编码。</p>
+<blockquote>
+<p>第二个条件的上限值是可以修改的，具体请看配置文件中关于set-max-intset-entries选项的说明。</p>
+</blockquote>
+<p>对于使用intset编码的集合对象来说，当使用intset编码所需的两个条件的任意一个不能被满足时，就会执行对象的编码转换操作，原本保存在整数集合中的所有元素都会被转移并保存到字典里面，并且对象的编码也会从intset变为hashtable。</p>
+<p>举个例子，以下代码创建了一个只包含整数元素的集合对象，该对象的编码为intset：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;intset&quot;</span></span></code></pre></figure>
+<p>不过，只要我们向这个只包含整数元素的集合对象添加一个字符串元素，集合对象的编码转移操作就会被执行：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;seven&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hashtable&quot;</span></span></code></pre></figure>
+<p>除此之外，如果我们创建一个包含512个整数元素的集合对象，那么对象的编码应该会是intset：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">EVAL</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;for i=1, 512 do redis.call('SADD', KEYS[1], i) end&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">nil</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SCARD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">512</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;intset&quot;</span></span></code></pre></figure>
+<p>但是，只要我们再向集合添加一个新的整数元素，使得这个集合的元素数量变成513，那么对象的编码转换操作就会被执行：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10086</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SCARD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">513</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> integers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hashtable&quot;</span></span></code></pre></figure>
+<h3 id="集合命令的实现">集合命令的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#集合命令的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>因为集合键的值为集合对象，所以用于集合键的所有命令都是针对集合对象来构建的，表8-10列出了其中一部分集合键命令，以及这些命令在不同编码的集合对象下的实现方法。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427163919.png" alt/></p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427163935.png" alt/></p>
+<h2 id="有序集合对象">有序集合对象<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#有序集合对象" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>有序集合的编码可以是ziplist或者skiplist。</p>
+<p>ziplist编码的压缩列表对象使用压缩列表作为底层实现，每个集合元素使用两个紧挨在一起的压缩列表节点来保存，第一个节点保存元素的成员（member），而第二个元素则保存元素的分值（score）。</p>
+<p>压缩列表内的集合元素按分值从小到大进行排序，分值较小的元素被放置在靠近表头的方向，而分值较大的元素则被放置在靠近表尾的方向。</p>
+<p>举个例子，如果我们执行以下ZADD命令，那么服务器将创建一个有序集合对象作为price键的值：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ZADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> price</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 8.5</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> apple</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 5.0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> banana</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 6.0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> cherry</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span></code></pre></figure>
+<p>如果price键的值对象使用的是ziplist编码，那么这个值对象将会是图8-14所示的样子，而对象所使用的压缩列表则会是如下图所示的样子。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427164032.png" alt/></p>
+<p>skiplist编码的有序集合对象使用zset结构作为底层实现，一个zset结构同时包含一个字典和一个跳跃表：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="c" data-theme="github-light github-dark"><code data-language="c" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">typedef</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> struct</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> zset {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    zskiplist </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">zsl;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    dict </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">dict;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">} zset;</span></span></code></pre></figure>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427164118.png" alt/></p>
+<p>zset结构中的zsl跳跃表按分值从小到大保存了所有集合元素，每个跳跃表节点都保存了一个集合元素：跳跃表节点的object属性保存了元素的成员，而跳跃表节点的score属性则保存了元素的分值。通过这个跳跃表，程序可以对有序集合进行范围型操作，比如ZRANK、ZRANGE等命令就是基于跳跃表API来实现的。</p>
+<p>除此之外，zset结构中的dict字典为有序集合创建了一个从成员到分值的映射，字典中的每个键值对都保存了一个集合元素：字典的键保存了元素的成员，而字典的值则保存了元素的分值。通过这个字典，程序可以用<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>复杂度查找给定成员的分值，ZSCORE命令就是根据这一特性实现的，而很多其他有序集合命令都在实现的内部用到了这一特性。</p>
+<p>有序集合每个元素的成员都是一个字符串对象，而每个元素的分值都是一个double类型的浮点数。值得一提的是，虽然zset结构同时使用跳跃表和字典来保存有序集合元素，但这两种数据结构都会通过指针来共享相同元素的成员和分值，所以同时使用跳跃表和字典来保存集合元素不会产生任何重复成员或者分值，也不会因此而浪费额外的内存。</p>
+<blockquote>
+<center>为什么有序集合需要同时使用跳跃表和字典来实现？</center>
+<blockquote>
+<p>在理论上，有序集合可以单独使用字典或者跳跃表的其中一种数据结构来实现，但无论单独使用字典还是跳跃表，在性能上对比起同时使用字典和跳跃表都会有所降低。举个例子，如果我们只使用字典来实现有序集合，那么虽然以O（1）复杂度查找成员的分值这一特性会被保留，但是，因为字典以无序的方式来保存集合元素，所以每次在执行范围型操作——比如ZRANK、ZRANGE等命令时，程序都需要对字典保存的所有元素进行排序，完成这种排序需要至少O（NlogN）时间复杂度，以及额外的O（N）内存空间（因为要创建一个数组来保存排序后的元素）。</p>
+<p>另一方面，如果我们只使用跳跃表来实现有序集合，那么跳跃表执行范围型操作的所有优点都会被保留，但因为没有了字典，所以根据成员查找分值这一操作的复杂度将从O（1）上升为O（logN）。因为以上原因，为了让有序集合的查找和范围型操作都尽可能快地执行，Redis选择了同时使用字典和跳跃表两种数据结构来实现有序集合。</p>
+</blockquote>
+</blockquote>
+<p>举个例子，如果前面price键创建的不是ziplist编码的有序集合对象，而是skiplist编码的有序集合对象，那么这个有序集合对象将会是图8-16所示的样子，而对象所使用的zset结构将会是图8-17所示的样子。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427164259.png" alt/></p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427164323.png" alt/></p>
+<p>为了展示方便，图8-17在字典和跳跃表中重复展示了各个元素的成员和分值，但在实际中，字典和跳跃表会共享元素的成员和分值，所以并不会造成任何数据重复，也不会因此而浪费任何内存。</p>
+<h3 id="编码的转换-2">编码的转换<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#编码的转换-2" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>当有序集合对象可以同时满足以下两个条件时，对象使用ziplist编码：</p>
+<ul>
+<li>有序集合保存的元素数量小于128个；</li>
+<li>有序集合保存的所有元素成员的长度都小于64字节；</li>
+</ul>
+<p>不能满足以上两个条件的有序集合对象将使用skiplist编码。</p>
+<blockquote>
+<p>以上两个条件的上限值是可以修改的，具体请看配置文件中关于zset-max-ziplist-entries选项和zset-max-ziplist-value选项的说明。</p>
+</blockquote>
+<p>对于使用ziplist编码的有序集合对象来说，当使用ziplist编码所需的两个条件中的任意一个不能被满足时，就会执行对象的编码转换操作，原本保存在压缩列表里的所有集合元素都会被转移并保存到zset结构里面，对象的编码也会从ziplist变为skiplist。</p>
+<p>以下代码展示了有序集合对象因为包含了过多元素而引发编码转换的情况：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#对象包含了128个元素</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">EVAL</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;for i=1, 128 do redis.call('ZADD', KEYS[1], i, i) end&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">nil</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ZCARD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">128</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># </span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">再添加一个新元素</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ZADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3.14</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> pi</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">对象包含的元素数量变为129</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">个</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ZCARD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">129</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># </span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">编码已改变</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;skiplist&quot;</span></span></code></pre></figure>
+<p>以下代码则展示了有序集合对象因为元素的成员过长而引发编码转换的情况：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 向有序集合添加一个成员只有三字节长的元素</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ZADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1.0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> www</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">#向有序集合添加一个成员为66字节长的元素</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">ZADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2.0</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 编码已改变</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">OBJECT</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> ENCODING</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> blah</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;skiplist&quot;</span></span></code></pre></figure>
+<h3 id="有序集合命令的实现">有序集合命令的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#有序集合命令的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>因为有序集合键的值为哈希对象，所以用于有序集合键的所有命令都是针对哈希对象来构建的，表8-11列出了其中一部分有序集合键命令，以及这些命令在不同编码的哈希对象下的实现方法。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427165257.png" alt/></p>
+<h2 id="类型检查与命令多态">类型检查与命令多态<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#类型检查与命令多态" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Redis中用于操作键的命令基本上可以分为两种类型。</p>
+<p>其中一种命令可以对任何类型的键执行，比如说DEL命令、EXPIRE命令、RENAME命令、TYPE命令、OBJECT命令等。</p>
+<p>举个例子，以下代码就展示了使用DEL命令来删除三种不同类型的键：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 字符串键</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 列表键</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">RPUSH</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"># 集合键</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SADD</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> fruits</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> apple</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> banana</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> cherry</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DEL</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DEL</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> numbers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">DEL</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> fruits</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">1</span></span></code></pre></figure>
+<p>而另一种命令只能对特定类型的键执行，比如说：</p>
+<ul>
+<li>SET、GET、APPEND、STRLEN等命令只能对字符串键执行；</li>
+<li>HDEL、HSET、HGET、HLEN等命令只能对哈希键执行；</li>
+<li>RPUSH、LPOP、LINSERT、LLEN等命令只能对列表键执行；</li>
+<li>SADD、SPOP、SINTER、SCARD等命令只能对集合键执行；</li>
+<li>ZADD、ZCARD、ZRANK、ZSCORE等命令只能对有序集合键执行；</li>
+</ul>
+<p>举个例子，我们可以用SET命令创建一个字符串键，然后用GET命令和APPEND命令操作这个键，但如果我们试图对这个字符串键执行只有列表键才能执行的LLEN命令，那么Redis将向我们返回一个类型错误：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">SET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;hello world&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">GET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hello world&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">APPEND</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot; again!&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">integer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">18</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">GET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;hello world again!&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">LLEN</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> msg</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">error</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">WRONGTYPE</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> Operation</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> against</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> a</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> key</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> holding</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> the</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> wrong</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> kind</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> value</span></span></code></pre></figure>
+<h3 id="类型检查的实现">类型检查的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#类型检查的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>从上面发生类型错误的代码示例可以看出，为了确保只有指定类型的键可以执行某些特定的命令，在执行一个类型特定的命令之前，Redis会先检查输入键的类型是否正确，然后再决定是否执行给定的命令。</p>
+<p>类型特定命令所进行的类型检查是通过redisObject结构的type属性来实现的：</p>
+<ul>
+<li>在执行一个类型特定命令之前，服务器会先检查输入数据库键的值对象是否为执行命令所需的类型，如果是的话，服务器就对键执行指定的命令；</li>
+<li>否则，服务器将拒绝执行命令，并向客户端返回一个类型错误。</li>
+</ul>
+<p>举个例子，对于LLEN命令来说：</p>
+<ul>
+<li>在执行LLEN命令之前，服务器会先检查输入数据库键的值对象是否为列表类型，也即是，检查值对象redisObject结构type属性的值是否为REDIS_LIST，如果是的话，服务器就对键执行LLEN命令；</li>
+<li>否则的话，服务器就拒绝执行命令并向客户端返回一个类型错误；图8-18展示了这一类型检查过程。</li>
+</ul>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230427165814.png" alt/></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>关系图谱</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-112" aria-expanded="true"><h3>目录</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#对象的类型和编码" data-for="对象的类型和编码">对象的类型和编码</a></li><li class="depth-1"><a href="#类型" data-for="类型">类型</a></li><li class="depth-1"><a href="#编码和底层实现" data-for="编码和底层实现">编码和底层实现</a></li><li class="depth-0"><a href="#字符串对象" data-for="字符串对象">字符串对象</a></li><li class="depth-1"><a href="#编码的转换" data-for="编码的转换">编码的转换</a></li><li class="depth-1"><a href="#字符串命令的实现" data-for="字符串命令的实现">字符串命令的实现</a></li><li class="depth-0"><a href="#列表对象" data-for="列表对象">列表对象</a></li><li class="depth-1"><a href="#编码转换" data-for="编码转换">编码转换</a></li><li class="depth-1"><a href="#列表命令的实现" data-for="列表命令的实现">列表命令的实现</a></li><li class="depth-0"><a href="#哈希对象" data-for="哈希对象">哈希对象</a></li><li class="depth-1"><a href="#编码转换-1" data-for="编码转换-1">编码转换</a></li><li class="depth-1"><a href="#哈希命令的实现" data-for="哈希命令的实现">哈希命令的实现</a></li><li class="depth-0"><a href="#集合对象" data-for="集合对象">集合对象</a></li><li class="depth-1"><a href="#编码的转换-1" data-for="编码的转换-1">编码的转换</a></li><li class="depth-1"><a href="#集合命令的实现" data-for="集合命令的实现">集合命令的实现</a></li><li class="depth-0"><a href="#有序集合对象" data-for="有序集合对象">有序集合对象</a></li><li class="depth-1"><a href="#编码的转换-2" data-for="编码的转换-2">编码的转换</a></li><li class="depth-1"><a href="#有序集合命令的实现" data-for="有序集合命令的实现">有序集合命令的实现</a></li><li class="depth-0"><a href="#类型检查与命令多态" data-for="类型检查与命令多态">类型检查与命令多态</a></li><li class="depth-1"><a href="#类型检查的实现" data-for="类型检查的实现">类型检查的实现</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>

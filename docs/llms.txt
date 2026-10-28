@@ -1,0 +1,456 @@
+# Runqi 的知识库
+
+> 后端开发、计算机基础、AI 工程与个人方法论的长期笔记库。每条知识都标注了来源与有效期（frontmatter: source / kind / review_after）。
+
+共 450 篇笔记。以下为按路径排序的完整目录，每行格式：`[标题](绝对链接)：一句话摘要`。
+
+- [2024 新年建议 - 陈思远](https://runqi-zhao.github.io/-1.-捕获/2024-新年建议---陈思远)：大家都快开工了，总结了几条实质性的建议，希望在新的一年，所有关注我的朋友们都能变的越来越好。
+- [Electronics Lab Bench Setup Guide](https://runqi-zhao.github.io/-1.-捕获/electronics-lab-bench-setup-guide)：April 30, 2023
+- [捕获箱](https://runqi-zhao.github.io/-1.-捕获/readme)：返回 首页 · 规则见 知识库使用指南
+- [The Linux Boot Process  From Power Button to Kernel](https://runqi-zhao.github.io/-1.-捕获/the-linux-boot-process-from-power-button-to-kernel)：^smrnjn
+- [The Reluctant Sysadmin's Guide to Securing a Linux Server](https://runqi-zhao.github.io/-1.-捕获/the-reluctant-sysadmin's-guide-to-securing-a-linux-server)：_I wrote a  to this guide, which you should probably consider along with this article._
+- [不理解超线性回报，就无法理解这个世界](https://runqi-zhao.github.io/-1.-捕获/不理解超线性回报，就无法理解这个世界)：不理解超线性回报，就无法理解这个世界。超线性回报归结为两大基本原因：指数增长和阈值（thresholds）。
+- [为什么 QUIC 优于 TCP？](https://runqi-zhao.github.io/-1.-捕获/为什么-quic-优于-tcp？)
+- [回县城去：青年维特的烦恼](https://runqi-zhao.github.io/-1.-捕获/回县城去：青年维特的烦恼)：我突然感觉这很像他现在的状态，或者很像我们这一代人的状态。在一线城市挣扎时，屏幕是碎的，世界模糊出彩色，不知前路在何方。回到县城后，所有事情都安稳了，摄像头是碎的。窥探外界的可能性断裂了。
+- [巧用过滤器和标签整理你的gmail邮件](https://runqi-zhao.github.io/-1.-捕获/巧用过滤器和标签整理你的gmail邮件)：我一直是google产品的忠实爱好者，因此我的主邮箱是gmail邮箱。由于这个邮箱使用频率比较高，所以邮件也就越来越多，界面看起来也很混乱。我在想作为一款成熟的产品，gmail应该有想outlook里面的那种分组和过滤功能。今天仔细研究了一下（其实是我老婆研究的，^_^）,发现其实gmail的这个功能还是很不错的。下面
+- [编程十年的感悟](https://runqi-zhao.github.io/-1.-捕获/编程十年的感悟)
+- [高盛的 2024 宏观经济预测](https://runqi-zhao.github.io/-1.-捕获/高盛的-2024-宏观经济预测)：其实高盛这类的金融投资机构，每年都会在年前出一份宏观经济预测报告。我个人是充分相信从业者的专业性的，而且读了几年发现他们的预测大体上都比较准确，除了一些不可预料的黑天鹅事件。   ^41ee4c16
+- [Apache Seata 多client API设计-废版1](https://runqi-zhao.github.io/1.-项目/apache-seata/apache-seata-多client-api设计-废版1)：目前，Seata 框架的实践主要基于单 Client 模式，在这种模式下，服务发现、序列化、压缩等功能都以单例形式存在，提供了全局唯一的配置管理能力。然而，随着业务的发展以及 Seata 自身单元测试和基准测试的隔离性要求，全局单例配置的修改会影响整个系统的稳定性和可控性。因此，提升 Seata 多 Client 能力
+- [Apache Seata 多client API设计](https://runqi-zhao.github.io/1.-项目/apache-seata/apache-seata-多client-api设计)：首先查看现有的配置文件：
+- [项目工作](https://runqi-zhao.github.io/1.-项目/readme)：返回 首页
+- [项目名称](https://runqi-zhao.github.io/1.-项目/template)：- 交付物：
+- [长期领域](https://runqi-zhao.github.io/2.-领域/readme)：返回 首页
+- [领域名称](https://runqi-zhao.github.io/2.-领域/template)：-
+- [健康](https://runqi-zhao.github.io/2.-领域/健康)：返回 首页 · 2. 领域/README
+- [家庭](https://runqi-zhao.github.io/2.-领域/家庭)：返回 首页 · 2. 领域/README
+- [找工作.README.md](https://runqi-zhao.github.io/2.-领域/找工作/找工作.readme.md)：%%本领域归档的项目列表%%
+- [投递看板](https://runqi-zhao.github.io/2.-领域/找工作/春招/投递看板)：- [ ] 携程
+- [邮储广东分行](https://runqi-zhao.github.io/2.-领域/找工作/春招/邮储广东分行)：地点：北京丽亭华苑酒店3楼金辉5厅
+- [职业发展](https://runqi-zhao.github.io/2.-领域/职业发展)：返回 首页 · 2. 领域/README
+- [育儿](https://runqi-zhao.github.io/2.-领域/育儿)：返回 首页 · 2. 领域/README
+- [知识资源](https://runqi-zhao.github.io/3.-资源/readme)：返回 首页
+- [标题](https://runqi-zhao.github.io/3.-资源/template)：-
+- [AI MOC](https://runqi-zhao.github.io/3.-资源/_导航/ai-moc)：返回 首页 · 可结合 后端开发 MOC
+- [分布式系统 MOC](https://runqi-zhao.github.io/3.-资源/_导航/分布式系统-moc)：返回 首页 · 上级 后端开发 MOC · 基础 计算机基础 MOC
+- [后端开发 MOC](https://runqi-zhao.github.io/3.-资源/_导航/后端开发-moc)：返回 首页 · 相关 计算机基础 MOC · 分布式系统 MOC · AI MOC
+- [计算机基础 MOC](https://runqi-zhao.github.io/3.-资源/_导航/计算机基础-moc)：返回 首页 · 相关 后端开发 MOC · 分布式系统 MOC
+- [01_FastAPI](https://runqi-zhao.github.io/3.-资源/人工智能/01_fastapi)
+- [函数调用](https://runqi-zhao.github.io/3.-资源/人工智能/agent基本概念)：5个基本概念
+- [Python 基础](https://runqi-zhao.github.io/3.-资源/人工智能/python基础/python-基础)：返回 AI MOC
+- [函数调用基本概念](https://runqi-zhao.github.io/3.-资源/人工智能/函数调用基本概念)
+- [1.1 分布式系统的驱动力和挑战](https://runqi-zhao.github.io/3.-资源/分布式/mit6.824/01-introduction/1.1-分布式系统的驱动力和挑战)：首先，我们需要知道为什么出现了分布式系统。
+- [1.2 课程结构（直接粘贴）](https://runqi-zhao.github.io/3.-资源/分布式/mit6.824/01-introduction/1.2-课程结构（直接粘贴）)：在讨论技术内容之前，我先介绍一下课程结构。你们应该可以通过网络搜索到这门课程的网站（最开始的简介里也有）。网站上有一些实验作业，课程时间表和一个Piazza（论坛）页面链接，你可以在那里发布问题并获得解答。课程主要的教学人员有：我Robert Morris会进行课堂授课，和四个助教。助教会重点解决实验问题，在工作时间，
+- [分布式系统的抽象和实现工具](https://runqi-zhao.github.io/3.-资源/分布式/mit6.824/01-introduction/分布式系统的抽象和实现工具)：存储、通信、计算
+- [赎金信](https://runqi-zhao.github.io/3.-资源/刷题-一些小感悟/赎金信)：这道题目其实比较怪的点就是使用map会消耗维护的时间，需要使用数组会更节省时间。
+- [Cookie](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/cookie)：1. Cookie 翻译过来是饼干的意思。
+- [EL表达式](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/el表达式)：EL 表达式的全称是：Expression Language。是表达式语言。
+- [JSTL标签库](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/jstl标签库)：JSTL 标签库全称是指JSP Standard Tag Library JSP 标准标签库。是一个不断完善的开放源代码的JSP 标
+- [Listener](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/listener)：1. Listener 监听器它是JavaWeb 的三大组件之一。JavaWeb 的三大组件分别是：Servlet 程序、Filter 过滤器、Listener 监
+- [Servlet](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/servlet)：1. Servlet 是JavaEE 规范之一。规范就是接口
+- [Tomcat](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/tomcat)：JavaWeb 是指，所有通过Java 语言编写可以通过浏览器访问的程序的总称，叫JavaWeb。
+- [jsp](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/jsp)：jsp 的全换是java server pages。Java 的服务器页面。
+- [session](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/session)：1. Session 就一个接口（HttpSession）。
+- [xml文件](https://runqi-zhao.github.io/3.-资源/后端开发/javaweb/xml文件)：xml是可拓展的标记性语言。
+- [Java并发编程艺术](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/0_电子书/java并发编程艺术)：^t6hw2q1zgve
+- [ConcurrentHashMap](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/6_java并发容器和框架/concurrenthashmap的原理与实现)：现有的包存在的问题：
+- [ConcurrentLinkedQueue的原理和实现](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/6_java并发容器和框架/concurrentlinkedqueue的原理和实现)：要想实现一个线程安全的队列有两种方式：
+- [Java中的锁](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java中的锁)：与synchronized的区别：
+- [Java内存模型](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java内存模型)：<font color="red" size="5">线程之间如何通信、线程之间如何同步</font>
+- [Java并发机制的底层实现原理](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java并发机制的底层实现原理)：java代码进行执行时会经历以下步骤：
+- [Java并发编程基础](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java并发编程基础)
+- [README](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/readme)：---
+- [第10章 Excutor框架](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第10章-excutor框架/第10章-excutor框架)：<font color="red" size=6>这一讲一定要反复，都是些概念性以及API的应用。</font>
+- [01_上下文切换](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第1章-并发编程的挑战/01_上下文切换)：CPU通过时间片分配算法来循环执行任务，当前任务执行一个时间片后会切换到下一个任务。但是，在切换前会保存上一个任务的状态，以便下次切换回这个任务时，可以再加载这个任务的状态。所以任务从保存到再加载的过程就是一次上下文切换。
+- [02_死锁](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第1章-并发编程的挑战/02_死锁)：锁是个非常有用的工具，运用场景非常多，因为它使用起来非常简单，而且易于理解。但同时它也会带来一些困扰，那就是可能会引起死锁，一旦产生死锁，就会造成系统功能不可用。让我们先来看一段代码，这段代码会引起死锁，使线程t1和线程t2互相等待对方释放锁。
+- [03_资源限制的挑战](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第1章-并发编程的挑战/03_资源限制的挑战)：资源限制是指在进行并发编程时，程序的执行速度受限于计算机硬件资源或软件资源。例如，服务器的带宽只有2Mb/s，某个资源的下载速度是1Mb/s每秒，系统启动10个线程下载资源，下载速度不会变成10Mb/s，所以在进行并发编程时，要考虑这些资源的限制。硬件资源限制有带宽的上传/下载速度、硬盘读写速度和CPU的处理速度。软件
+- [01_volatile的应用](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第2章-java并发机制的底层实现原理/01_volatile的应用)：在多线程并发编程中synchronized和volatile都扮演着重要的角色，volatile是轻量级的synchronized，它在多处理器开发中保证了共享变量的“可见性”。可见性的意思是当一个线程修改一个共享变量时，另外一个线程能读到这个修改的值。如果volatile变量修饰符使用恰当的话，它比synchroni
+- [02_synchronized的实现原理与应用](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第2章-java并发机制的底层实现原理/02_synchronized的实现原理与应用)：在多线程并发编程中synchronized一直是元老级角色，很多人都会称呼它为重量级锁。但是，随着Java SE 1.6对synchronized进行了各种优化之后，有些情况下它就并不那么重了。本文详细介绍Java SE 1.6中为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。
+- [03_原子操作的实现原理](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第2章-java并发机制的底层实现原理/03_原子操作的实现原理)：原子（atomic）本意是“不能被进一步分割的最小粒子”，而原子操作（atomic operation）意为“不可被中断的一个或一系列操作”。在多处理器上实现原子操作就变得有点复杂。让我们一起来聊一聊在Intel处理器和Java里是如何实现原子操作的。
+- [01_Java内存模型的基础](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/01_java内存模型的基础)：在并发编程中，需要处理两个关键问题：
+- [02_重排序](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/02_重排序)：定义：指编译器为了**优化程序性能**而对**指令序列进行重排序**的一种手段。
+- [03_顺序一致性](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/03_顺序一致性)：定义：是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参照物。
+- [04_volatile内存语义](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/04_volatile内存语义)：最好解释：把对volatile变量的单个读/写，看成是使用同一个锁对这些单个读/写操作的同步。
+- [05_锁的内存语义](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/05_锁的内存语义)：锁是java并发编程中最重要的同步机制。锁除了让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息。
+- [06_final域的内存语义](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/06_final域的内存语义)：编译器和处理器会遵循连个重排序规则
+- [07_happens-before](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/07_happens-before)：设计JMM时，考虑两个关键因素：
+- [08_双重检查锁定域延迟初始化](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/08_双重检查锁定域延迟初始化)：在java多线程程序中，有时候需要采用延迟初始化来降低初始化类和创建对象的开销。双重检查锁定是常见的延迟初始化技术，但它是一个错误的用法。本文将分析双重检查锁定的错误根源，以及两种线程安全的延迟初始化方案。
+- [09_Java内存模型综述](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第3章-java内存模型/09_java内存模型综述)：下面对java内存模型的相关知识进行总结。
+- [01_线程简介](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第4章-java并发编程基础/01_线程简介)：现代操作系统在运行一个程序时，会为其创建一个进程。
+- [02_启动和终止线程](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第4章-java并发编程基础/02_启动和终止线程)：在前面章节的示例中通过调用线程的start()方法进行启动，随着run()方法的执行完毕，线程也随之终止，大家对此一定不会陌生，下面将详细介绍线程的启动和终止。
+- [03_线程间通信](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第4章-java并发编程基础/03_线程间通信)：线程开始运行，拥有自己的栈空间，就如同一个脚本一样，按照既定的代码一步一步地执行，直到终止。但是，每个运行中的线程，如果仅仅是孤立地运行，那么没有一点儿价值，或者说价值很少，如果多个线程能够相互配合完成工作，这将会带来巨大的价值。
+- [04_线程应用实例](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第4章-java并发编程基础/04_线程应用实例)：开发人员经常会遇到这样的方法调用场景：调用一个方法时等待一段时间（一般来说是给定一个时间段），如果该方法能够在给定的时间段之内得到结果，那么将结果立刻返回，反之，超时返回默认结果。
+- [01_Lock接口](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第5章-java中的锁/01_lock接口)：与synchronized的区别：
+- [02_队列同步器](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第5章-java中的锁/02_队列同步器)：队列同步器（AbstractQueueSynchronizer），是用于构建锁或者其他同步组件的基础框架。具有以下特性：
+- [03_重入锁](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第5章-java中的锁/03_重入锁)：重入锁ReentrantLock，顾名思义，就是支持重进入的锁，它表示该锁能够支持一个线程对资源的重复加锁。除此之外，该锁的还支持获取锁时的公平和非公平性选择。
+- [04_读写锁](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第5章-java中的锁/04_读写锁)：之前提到锁（如Mutex和ReentrantLock）基本都是排他锁，这些锁在同一时刻只允许一个线程进行访问，而读写锁在同一时刻可以允许多个读线程访问，但是在写线程访问时，所有的读线程和其他写线程均被阻塞。读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性相比一般的排他锁有了很大提升。
+- [05_LockSupport工具](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第5章-java中的锁/05_locksupport工具)：回顾02_队列同步器，当需要阻塞或唤醒一个线程的时候，都会使用LockSupport工具类来完成相应工作。LockSupport定义了一组的公共静态方法，这些方法提供了最基本的线程阻塞和唤醒功能，而LockSupport也成为构建同步组件的基础工具。
+- [06_Condition接口](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第5章-java中的锁/06_condition接口)：任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()以及notifyAll()方法，这些方法与synchronized同步关键字配合，可以实现等待/通知模式。Condition接口也提供了类似Object的监
+- [01_ConcurrentHashMap的实现原理与使用](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第6章-java并发编程艺术/01_concurrenthashmap的实现原理与使用)：现有的容器中（如果没有concurrent包的话），只有HashMap与HashTable两个容器。
+- [02_ConcurrentLinkedQueue](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第6章-java并发编程艺术/02_concurrentlinkedqueue)：在并发编程中，有时需要使用线程安全的队列。实现一个线程安全的队列有两种方式：
+- [03_Java里的阻塞队列](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第6章-java并发编程艺术/03_java里的阻塞队列)：阻塞队列（BlockingQueue）是一个支持两个附加操作的队列。这两个附加的操作支持阻塞的插入和移除方法。
+- [04_Fork与Join框架](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第6章-java并发编程艺术/04_fork与join框架)：本节将会介绍Fork/Join框架的基本原理、算法、设计方式、应用与实现等。
+- [第7章_Java中的13个原子操作类](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第7章_java中的13个原子操作类/第7章_java中的13个原子操作类)：当程序更新一个变量时，如果多线程同时更新这个变量，可能得到期望之外的值，比如变量i=1，A线程更新i+1，B线程也更新i+1，经过两个线程操作之后可能i不等于3，而是等于2。因为A和B线程在更新变量i的时候拿到的i都是1，这就是线程不安全的更新操作，通常我们会使用synchronized来解决这个问题，synchron
+- [第8章_Java中的并发工具类](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第8章_java中的并发工具类/第8章_java中的并发工具类)：在JDK的并发包里提供了几个非常有用的并发工具类。CountDownLatch、CyclicBarrier和Semaphore工具类提供了一种并发流程控制的手段，Exchanger工具类则提供了在线程间交换数据的一种手段。
+- [第9章 Java的线程池](https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/第9章-java的线程池/第9章-java的线程池)：java线程池带来的好处：
+- [介绍](https://runqi-zhao.github.io/3.-资源/后端开发/java面试指北)：为了回馈加入的小伙伴，这两年多的时间我还贡献了一份 《Java 面试指北》 ，你可以将其看作是  开源版的补充完善，两者配合使用。
+- [01_基础架构：一条SQL查询是如何执行的](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/01_基础架构：一条sql查询是如何执行的)：看事物要看全貌，不能只看其中的一部分。
+- [02_日志系统：一条SQL更新语句是如何执行的？](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/02_日志系统：一条sql更新语句是如何执行的？)：首先请你说明，一条更新语句的执行流程是什么？
+- [03_事务隔离：为什么你改了我还看不见？](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/03_事务隔离：为什么你改了我还看不见？)：事务的作用：保证一组数据库操作要么全部成功，要么全部失败。
+- [04_深入浅出索引](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/04_深入浅出索引)：问题1：为什么需要索引，索引的作用是什么？
+- [05_全局锁和表锁](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/05_全局锁和表锁)：为社么需要加锁？
+- [09_普通索引与唯一索引如何选择](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/09_普通索引与唯一索引如何选择)：最基本的索引，没有任何限制
+- [10_为什么索引会选择错误](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/10_为什么索引会选择错误)：首先创建下表：
+- [13_删除表，大小为啥不变](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/13_删除表，大小为啥不变)：本文前提条件：
+- [14_count很慢吗，怎么办](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/14_count很慢吗，怎么办)：先说明这节看完应该做的事：
+- [15_`order_by`是如何进行操作的](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/15_`order_by`是如何进行操作的)：首先抛出一个问题：order by在进行给排列的时候，是如何将里面 的那日容进行排序的
+- [17_如何正式的显示回复消息](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/17_如何正式的显示回复消息)：还是从一个例子出发，现在有一个单词表，然后这个用户每次访问首页的时候，都会随机滚动显示三个单词。
+- [18_为什么这些SQL语句逻辑相同，性能却差异巨大](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/18_为什么这些sql语句逻辑相同，性能却差异巨大)：实际使用的过程中，可能存在部分MySQL语句使用不当，导致整个书库压力变大
+- [19_为什么 我只查一行的语句，也执行这么慢](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/19_为什么-我只查一行的语句，也执行这么慢)：一般情况下，单行查询的速度是很快的 ，在这一讲中，我们将不考虑CPU瓶颈和IO瓶颈这种情况。
+- [20_幻读是什么，幻读有什么问题？](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/20_幻读是什么，幻读有什么问题？)：还是从一例子说起：
+- [21_为什么我只修改一行语句，锁这么多](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/21_为什么我只修改一行语句，锁这么多)：这个的话其实还是需要集合具体案例进行讲解的，这个就是加锁的规则的总结。
+- [22_MySQL有哪些“饮鸠止渴”提高性能的方法](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/22_mysql有哪些“饮鸠止渴”提高性能的方法)：面试的时候经常会问，现在快到双十一了，业务这边可能在进行抢购的时候需要大量的SQL进行并发，请问你如何在短期内临时性的提升一些性能。
+- [23_MySQL是怎么保证数据不丢的？](https://runqi-zhao.github.io/3.-资源/后端开发/mysql实战45讲/23_mysql是怎么保证数据不丢的？)：是通过WAL机制，只要redo log 和binlog宝恒持久化到磁盘，就能确保MySQL一场重启后，数据可以恢复。
+- [01_Netty基本概念](https://runqi-zhao.github.io/3.-资源/后端开发/netty/01_netty基本概念)：什么场景下使用Netty？
+- [02_你的第一款Netty 应用程序](https://runqi-zhao.github.io/3.-资源/后端开发/netty/02_你的第一款netty-应用程序)：图1从高层次上展示了一个你将要编写的 Echo 客户端和服务器应用程序。
+- [03_Netty 的组件和设计](https://runqi-zhao.github.io/3.-资源/后端开发/netty/03_netty-的组件和设计)：本章主要内容：
+- [05_ByteBuf](https://runqi-zhao.github.io/3.-资源/后端开发/netty/05_bytebuf)：Netty 的数据处理API 通过两个组件暴露——abstract class ByteBuf 和interface ByteBufHolder。
+- [06_ChannelHandler 和ChannelPipeline](https://runqi-zhao.github.io/3.-资源/后端开发/netty/06_channelhandler-和channelpipeline)：Interface Channel 定义了一组和ChannelInboundHandler API 密切相关的简单但功能强大的状态模型，表1列出了Channel的4中状态。
+- [07_EventLoop 和线程模型](https://runqi-zhao.github.io/3.-资源/后端开发/netty/07_eventloop-和线程模型)：单线程 -> 多线程 ->线程池->Netty提供的线程池
+- [08_引导](https://runqi-zhao.github.io/3.-资源/后端开发/netty/08_引导)：如何将这些部分组织起来，成为一个可实际运行的应用程序呢？
+- [09_单元测试](https://runqi-zhao.github.io/3.-资源/后端开发/netty/09_单元测试)：Netty 提供了它所谓的Embedded 传输，用于测试ChannelHandler。这个传输是一种特殊的Channel 实现—EmbeddedChannel—的功能，这个实现提供了通过ChannelPipeline传播事件的简便方法。
+- [00_别老想着怎么用好RPC框架，你得多花时间琢磨原理](https://runqi-zhao.github.io/3.-资源/后端开发/rpc专栏/00_别老想着怎么用好rpc框架，你得多花时间琢磨原理)：RPC框架最大的优势就是能够像本地一样调用远程框架。
+- [01_核心原理：能否画张图解释下RPC的通信流程？](https://runqi-zhao.github.io/3.-资源/后端开发/rpc专栏/01_核心原理：能否画张图解释下rpc的通信流程？)：简单理解：远程调用想在本地调用一样简单。
+- [02 _协议：怎么设计可扩展且向后兼容的协议？](https://runqi-zhao.github.io/3.-资源/后端开发/rpc专栏/02-_协议：怎么设计可扩展且向后兼容的协议？)：协议是指人类和计算机沟通的协议，只有通过这种协议，计算机才知道我们想让它做什么。
+- [01_基本架构：一个键值数据库包含什么](https://runqi-zhao.github.io/3.-资源/后端开发/redis/01_基本架构：一个键值数据库包含什么)：这一节主要就是引出一些Redis能够解决的问题以及基本架构
+- [02_数据结构以及底层实现](https://runqi-zhao.github.io/3.-资源/后端开发/redis/02_数据结构以及底层实现)：- String
+- [03_Redis是单线程的嘛](https://runqi-zhao.github.io/3.-资源/后端开发/redis/03_redis是单线程的嘛)：灵魂性问题：，Redis是单线程的吗？你确定吗？全部是单线程吗
+- [04_AOF日志](https://runqi-zhao.github.io/3.-资源/后端开发/redis/04_aof日志)：Redis是内存数据库，一旦宕机，所有数据都会丢失，因此，需要将里面的内容进行备份（持久化），常见的持久化机制由AOF（Append Only File）日志和RDB快照。
+- [05_RDB快照恢复方式](https://runqi-zhao.github.io/3.-资源/后端开发/redis/05_rdb快照恢复方式)：仅仅使用AOF存在的问题
+- [06_数据同步](https://runqi-zhao.github.io/3.-资源/后端开发/redis/06_数据同步)：虽然使用AOF与RDB进行备份，但是如果Redi发生宕机，仍然金额能存在服务卡不可用的问题。比如，在实际使用时仍然可能存在服务不可用的问题。比如哎实际使用时只运行了一个Redis示例，如果这个示例宕机了，在恢复期间，无法服务新来的数据存取请求的。
+- [07_哨兵机制：主库挂了，如何不间断服务？](https://runqi-zhao.github.io/3.-资源/后端开发/redis/07_哨兵机制：主库挂了，如何不间断服务？)：先说明Redis的集群运行机制：
+- [08_哨兵挂了，主从库还能进行切换吗](https://runqi-zhao.github.io/3.-资源/后端开发/redis/08_哨兵挂了，主从库还能进行切换吗)：为了解决这个问题，实现需要解决i的第一个问题：哨兵集群是怎么形成的。哨兵是怎么和主库从库进行通信的。
+- [09_切片集群](https://runqi-zhao.github.io/3.-资源/后端开发/redis/09_切片集群)：现在存在一种情况：Redis中有很多键值对（千万级别的），每个键值对的大小大约是512B，现在为了快速部署对外提供服务，我们应该如何部署
+- [10_String类型](https://runqi-zhao.github.io/3.-资源/后端开发/redis/10_string类型)：1. 设置对应的查找长度，能够快速查找对应的查找长度。
+- [11_有一亿个keys要统计，应该用哪种集合](https://runqi-zhao.github.io/3.-资源/后端开发/redis/11_有一亿个keys要统计，应该用哪种集合)：在实际应用中，我们会使用到很多一个key对应一个数据集合：
+- [13_如何在Redis中保存时间序列数据？](https://runqi-zhao.github.io/3.-资源/后端开发/redis/13_如何在redis中保存时间序列数据？)：现在，有一种场景：记录用户在网站或者 App上点击行为的数据，来分析用户行为。这里的数据一般包括用户ID、行为 类型、行为发生的时间戳 ：
+- [15_消息队列的考验：Redis有哪些解决方案？](https://runqi-zhao.github.io/3.-资源/后端开发/redis/15_消息队列的考验：redis有哪些解决方案？)：Redis可以用来做消息队列吗
+- [16_异步机制：如何避免单线程模型的阻塞](https://runqi-zhao.github.io/3.-资源/后端开发/redis/16_异步机制：如何避免单线程模型的阻塞)：要想知道如何避免阻塞，首先得知道为什么会出现阻塞。
+- [17_为什么CPU架构也会影响Redis性能](https://runqi-zhao.github.io/3.-资源/后端开发/redis/17_为什么cpu架构也会影响redis性能)：CPU时计算机处理指令的中心，相当于我们的大脑，现代CPU架构都是采用多核，其中甚至区分出来大小核，Redis在进行运行的时候，其中的性能与CPU是密不可分的，因此，要想知道为什么CPU为什么会影响Redis执行性能，首先需要知道对应的CPU架构
+- [18_波动的响应延迟：如何应对变慢的Redis](https://runqi-zhao.github.io/3.-资源/后端开发/redis/18_波动的响应延迟：如何应对变慢的redis)：在我们平常使用Redis的 时候，会存在对应的响应延迟降低，这个时候，我们需要考虑对应的影响因素 ，除了在上一讲中说的CPU架构之外，还有很多的 影响因素，下面具体说明每一个影响因素：
+- [20_删除数据后，为什么内存占用率还是很高](https://runqi-zhao.github.io/3.-资源/后端开发/redis/20_删除数据后，为什么内存占用率还是很高)：这是因为，当数据删除后，Redis 释放的内存空间会由内存分配器管理，并不会立即返回给操作系统。所以，操作系统仍然会记录着给 Redis 分配了大量内存。
+- [21_缓冲区：一个可能引发 “惨案”的地方](https://runqi-zhao.github.io/3.-资源/后端开发/redis/21_缓冲区：一个可能引发-“惨案”的地方)：在我们实际使用Redis的时候，有时候会出现对应的 Redis缓冲区很小，导致Redis性能下降甚至崩溃，本节主要说明对应的排查情况以及解决情况。
+- [23_旁路缓存：Redis是如何工作的](https://runqi-zhao.github.io/3.-资源/后端开发/redis/23_旁路缓存：redis是如何工作的)：我们都知道，Redis在实际使用的时候是作为缓存进行存储，加速访问速度。这一节，主要就是总结Redis在作为缓存的时候是如何进行工作的 。
+- [第2章 简单动态字符串](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第2章-简单动态字符串)：Redis没有直接使用C语言传统的字符串表示（以空字符结尾的字符数组，以下简称C字符串），而是<font  color="red">自己构建了一种名为简单动态字符串（simple dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。</font>
+- [第3章 链表](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第3章-链表)：链表在redis中的应用非常广泛，比如列表键的底层之一就是链表。当一个列表键包含了数量比较多的元素，又或者列表中包含的元素都是比较长的字符串时，Redis就会使用链表作为列表键的底层实现。
+- [...](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第4章-字典)：字典，又称为符号表（symbol table）、关联数组（associateive array）或映射（map），是一种用于保存键值对（key-value pair）的抽象数据结构。
+- [第5章 跳表](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第5章-跳表)：跳表（skiplist）是一种有序数据结构，它通过在每个节点中维持多个指向其他节点的指针，从而达到快速访问节点的目的。
+- [第6章 整数集合](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第6章-整数集合)：整数集合（intset）是集合键的底层实现之一，当一个集合只包含整数值元素，并且这个集合的元素数量不多时，Redis就会使用整数集合作为集合键的底层实现。
+- [第7章 压缩列表](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第7章-压缩列表)：压缩列表（ziplist）是列表键和哈希键的底层实现之一。当一个列表键只包含少量列表项，并且每个列表项要么就是小整数值，要么就是长度比较短的字符串，那么Redis就会使用压缩列表来做列表键的底层实现。
+- [键为字符串对象，值为字符串对象](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第1部分-数据结构与对象/第8章-对象)：在前面的数个章节里，我们陆续介绍了Redis用到的所有主要数据结构，比如简单动态字符串（SDS）、双端链表、字典、压缩列表、整数集合等等。
+- [第10章 RDB持久化](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第2部分-单机数据库的实现/第10章-rdb持久化)：redis再进行数据存储时，将自己的数据库状态存储在内存里面，所以如果不想办法将存储在内存中的数据库状态保存到磁盘里面，那么一旦服务器进行退出，服务器中的数据库状态也会消失不见。
+- [第11章 AOF持久化](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第2部分-单机数据库的实现/第11章-aof持久化)：除了RDB持久化功能之外，Redis还提供了AOF（Append Only File）持久化功能。与RDB持久化通过保存数据库中的键值对来记录数据库状态不同，AOF持久化是通过保存Redis服务器所执行的写命令来记录数据库状态的，如图所示：
+- [ifdef HAVE_EVPORT](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第2部分-单机数据库的实现/第12章-事件)：Redis服务器是一个事件驱动驱动程序。服务器需要处理以下两类事件：
+- [客户端是一个主服务器](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第2部分-单机数据库的实现/第13章-客户端)：Redis服务器是典型的一对多服务器程序：一个服务器可以与多个客户端建立网络连接，每个客户端可以向服务器发送命令请求，而服务器则接收并处理客户端发送的命令请求，并向客户端返回命令回复。
+- [Server](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第2部分-单机数据库的实现/第14章-服务器)：Redis服务器负责与多个客户端建立网络连接，处理客户端发送的命令请求，在数据库中保存客户端执行命令所产生的数据，并通过资源管理来维持服务器自身的运转。
+- [默认每次检查的数据库数量](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第2部分-单机数据库的实现/第9章-数据库)：Redis服务器将所有数据库都保存在服务器状态redis.h/redisServer结构的db数组中，db数组的每个项都是一个redis.h/redisDb结构，每个redisDb结构代表一个数据库：
+- [第15章 复制](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第3部分-多级数据库的实现/第15章-复制)：在Redis中，用户可以通过执行SLAVEOF命令或者设置slaveof选项，让一个服务器去复制（replicate）另一个服务器，我们称呼被复制的服务器为主服务器（master），而对主服务器进行复制的服务器则被称为从服务器（slave），如图1所示：
+- [Server](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第3部分-多级数据库的实现/第16章-sentinel)：Sentinel（哨岗、哨兵）是Redis的高可用性（high availability）解决方案：由一个或多个Sentinel实例（instance）组成的Sentinel系统（system）可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在被监视的主服务器进入下线状态时，自动将下线主服务器属下的某个
+- [第17章 集群](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第3部分-多级数据库的实现/第17章-集群)：Redis集群是Redis提供的分布式数据库方案，集群通过分片（sharding）来进行数据共享，并提供复制和故障转移功能。
+- [一个表，记录了所有八位长位数组的汉明重量](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第3部分-多级数据库的实现/第22章-二进制位数组)：Redis提供了SETBIT、GETBIT、BITCOUNT、BITOP四个命令用于处理二进制位数组（bit array，又称“位数组”）。
+- [向客户端返回频道列表](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第4部分-独立功能的实现/第18章-发布订阅者模式)：Redis的发布与订阅功能由PUBLISH、SUBSCRIBE、PSUBSCRIBE等命令组成。
+- [第19章 事务](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第4部分-独立功能的实现/第19章-事务)：Redis通过MULTI、EXEC、WATCH等命令来实现事务（transaction）功能。事务提供了一种将多个命令请求打包，然后一次性、按顺序地执行多个命令的机制，并且在事务执行期间，服务器不会中断事务而改去执行其他客户端的命令请求，它会将事务中的所有命令都执行完毕，然后才去处理其他客户端的命令请求。
+- [第20章 Lua脚本](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第4部分-独立功能的实现/第20章-lua脚本)：Redis从2.6版本开始引入对Lua脚本的支持，通过在服务器中嵌入Lua环境，Redis客户端可以使用Lua脚本，直接在服务器端原子地执行多个Redis命令。
+- [第21章 排序](https://runqi-zhao.github.io/3.-资源/后端开发/redis设计与实现/第4部分-独立功能的实现/第21章-排序)：Redis的SORT命令可以对列表键、集合键或者有序集合键的值进行排序。
+- [00_Spring特性](https://runqi-zhao.github.io/3.-资源/后端开发/spring/00_spring特性)：Spring : 春天 --->给软件行业带来了春天
+- [01_IOC](https://runqi-zhao.github.io/3.-资源/后端开发/spring/01_ioc)：新建一个空白的maven项目
+- [04_Spring IOC 容器源码分析系列文章导读](https://runqi-zhao.github.io/3.-资源/后端开发/spring/spring源码阅读-来自博客/04_spring-ioc-容器源码分析系列文章导读)：Spring 是一个轻量级的企业级应用开发框架，于 2004 年由 ) 发布了 1.0 版本。经过十几年的迭代，现在的 Spring 框架已经非常成熟了。Spring 包含了众多模块，包括但不限于 Core、Bean、Context、AOP 和 Web 等。在今天，我们完全可以使用 Spring 所提供的一站式解决方案
+- [05_Spring IOC 容器源码分析 - 获取单例 bean](https://runqi-zhao.github.io/3.-资源/后端开发/spring/spring源码阅读-来自博客/05_spring-ioc-容器源码分析---获取单例-bean)：为了写 Spring IOC 容器源码分析系列的文章，我特地写了一篇 Spring IOC 容器的文章。在导读一文中，我介绍了 Spring 的一些特性以及阅读 Spring 源码的一些建议。在做完必要的准备工作后，从本文开始，正式开始进入源码分析的阶段。
+- [06_Spring IOC 容器源码分析 - 创建单例 bean 的过程](https://runqi-zhao.github.io/3.-资源/后端开发/spring/spring源码阅读-来自博客/06_spring-ioc-容器源码分析---创建单例-bean-的过程)：在中，我比较详细的分析了获取 bean 的方法，也就是`getBean(String)`的实现逻辑。对于已实例化好的单例 bean，getBean( String (字符串) ) 方法并不会再一次去创建，而是从缓存中获取。如果某个 bean 还未实例化，这个时候就无法命中缓存。此时，就要根据 bean 的配置信息去创建
+- [07_Spring IOC 容器源码分析 - 创建原始 bean 对象](https://runqi-zhao.github.io/3.-资源/后端开发/spring/spring源码阅读-来自博客/07_spring-ioc-容器源码分析---创建原始-bean-对象)：本篇文章是上一篇文章（）的延续。在上一篇文章中，我们从战略层面上领略了`doCreateBean`方法的全过程。本篇文章，我们就从战术的层面上，详细分析`doCreateBean`方法中的一个重要的调用，即`createBeanInstance`方法。在本篇文章中，你将看到三种不同的构造 bean 对象的方式。你也会了
+- [00_知识前言](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/00_知识前言)：在我看来，要想学好消息队列，不应该仅仅停留在使用层面上，还需要深入了解它的**设计思路、实现原理和使用的底层技术**。但是要注意循序渐进，由浅入深地去学习。
+- [01_为什么需要消费队列](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/01_为什么需要消费队列)：消息队列是最古老的中间件之一，从系统之间有通信需求开始，就自然产生了消息队列。但是给消息队列下一个准确的定义却不太容易。我们知道，消息队列的主要功能就是收发消息，但是它的作用不仅仅只是解决应用之间的通信问题这么简单。
+- [02_该如何选择消息队列](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/02_该如何选择消息队列)：开源。
+- [03_主题与队列的区别](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/03_主题与队列的区别)：最初的消息队列，就是一个严格意义上的队列。在计算机领域，“队列（Queue）”是一种数据结构，有完整而严格的定义。在维基百科中，队列的定义是这样的：
+- [04_如何使用事务消息实现分布式事务？](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/04_如何使用事务消息实现分布式事务？)：**消息队列中的“事务”，主要解决的是消息生产者和消息消费者的数据一致性问题。**
+- [05_如何确保消息不会丢失](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/05_如何确保消息不会丢失)：绝大部分丢消息的原因都是由于开发者不熟悉消息队列，没有正确使用和配置消息队列导致的。虽然不同的消息队列提供的 API 不一样，相关的配置项也不同，但是在保证消息可靠传递这块儿，它们的实现原理是一样的。
+- [06_如何处理消费过程中的重复消息](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/06_如何处理消费过程中的重复消息)：在消息传递过程中，如果出现传递失败的情况，发送方会执行重试，重试的过程中就有可能会产生重复的消息。对使用消息队列的业务系统来说，如果没有对重复消息进行处理，就有可能会导致系统的数据出现错误。
+- [07_消息积压了该如何处理](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/07_消息积压了该如何处理)：在使用消息队列遇到的问题中，消息积压这个问题，应该是最常遇到的问题了，并且，这个问题还不太好解决。
+- [09_如何阅读源码](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/09_如何阅读源码)：掌握这些开源软件的最佳方式就是去学习它的源代码。很多同学跟我说：“我也很想去看一些开源软件的代码，也尝试去看过，但是面对上千个源码文件，几十万行代码，完全不知道从哪儿入手啊。”
+- [10_如何使用异步设计提升系统性能](https://runqi-zhao.github.io/3.-资源/后端开发/消息队列/10_如何使用异步设计提升系统性能)：同步请求的问题：
+- [00_概述](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第13章-线程安全与锁优化/00_概述)：在软件业发展的初期，程序编写都是以算法为核心的，程序员会把数据和过程分别作为独立的部分来考虑，数据代表问题空间中的客体，程序代码则用于处理这些数据，这种思维方式直接站在计算机的角度去抽象问题和解决问题，被称为面向过程的编程思想。与此相对，面向对象的编程思想则站在现实世界的角度去抽象和解决问题，它把数据和行为都看作对象的
+- [01_线程安全](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第13章-线程安全与锁优化/01_线程安全)：定义：当多个线程同时访问一个对象时，如果不用考虑这些线程在运行时环境下的调度和交替执行，也不需要进行额外的同步，或者在调用方进行任何其他的协调操作，调用这个对象的行为都可以获得正确的结果，那就称这个对象是线程安全的。
+- [03_锁优化](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第13章-线程安全与锁优化/03_锁优化)：什么是自旋锁？
+- [第2章 Java内存区域与内存溢出异常](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第2章-java内存区域与内存溢出异常)：Java与C++之间有一堵由内存动态分配和垃圾收集技术所围成的高墙，墙外面的人想进去，墙里面的人却想出来。
+- [00_概述](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第3章-垃圾收集器与内存分配策略/00_概述)：垃圾收集(GC)主要是从三个方面进行考虑：
+- [01_如何判断对象是否“死去”](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第3章-垃圾收集器与内存分配策略/01_如何判断对象是否“死去”)：概念：在对象中添加一个引用计数器，每当有一个地方引用它时，计数器值就加一；当引用失效时，计数器值就减一；任何时刻计数器为零的对象就是不可能再被使用的。
+- [02_垃圾收集算法](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第3章-垃圾收集器与内存分配策略/02_垃圾收集算法)：从如何判定对象消亡的角度出发，<font color="blue">垃圾收集算法可以划分为“引用计数式垃圾收集”（Reference Counting GC）和“追踪式垃圾收集”（Tracing GC）两大类</font>，这两类也常被称作“直接垃圾收集”和“间接垃圾收集”。由于引用计数式垃圾收集算法在本书讨论到的主流
+- [03_HotSpot的算法细节实现](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第3章-垃圾收集器与内存分配策略/03_hotspot的算法细节实现)：01_如何判断对象是否“死去”与02_垃圾收集算法从原理上介绍了常见的对象存活判定算法和垃圾收集算法，Java虚拟机实现这些算法时，必须对算法的执行效率有严格的考量，才能保证虚拟机高效运行。本章设置这部分内容主要是为了稍后介绍各款垃圾收集器时做前置知识铺垫，如果读者对这部分内容感到枯燥或者疑惑，不妨先跳过去，等后续遇到
+- [04_经典垃圾收集器](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第3章-垃圾收集器与内存分配策略/04_经典垃圾收集器)：本节标题中“经典”二字并非情怀，它其实是讨论范围的限定语，这里讨论的是在JDK 7 Update 4之后（在这个版本中正式提供了商用的G1收集器，此前G1仍处于实验状态）、JDK 11正式发布之前，OracleJDK中的HotSpot虚拟机 所包含的全部可用的垃圾收集器。使用“经典”二字是为了与几款目前仍处于实验状态，
+- [05_低延时垃圾回收器](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第3章-垃圾收集器与内存分配策略/05_低延时垃圾回收器)：衡量一个垃圾回收器的三项最重要的指标是：内存占用（Footprint）、吞吐量（Throughput）和延迟（Latency），三者共同构成了一个“"，其中，随着计算机的发展，现在最关注的指标是延迟。
+- [06_选择合适的垃圾回收器](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第3章-垃圾收集器与内存分配策略/06_选择合适的垃圾回收器)：Epsilon被形容成一个无操作的收集器（A No-Op Garbage Collector），而事实上只要Java虚拟机能够工作，垃圾收集器便不可能是真正“无操作”的。原因是“垃圾收集器”这个名字并不能形容它全部的职责，更贴切的名字应该是——“自动内存管理子系统”。一个垃圾收集器除了垃圾收集这个本职工作之外，它还要负
+- [00_概述](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第6章-类文件结构/00_概述)：曾记得在第一堂计算机程序课上老师就讲过：“计算机只认识0和1，所以我们写的程序需要被编译器翻译成由0和1构成的二进制格式才能被计算机执行。”十多年过去了，今天的计算机仍然只能识别0和1，但由于最近十年内虚拟机以及大量建立在虚拟机之上的程序语言如雨后春笋般出现并蓬勃发展，把我们编写的程序编译成二进制本地机器码（Nativ
+- [01_Class类文件的结构](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第6章-类文件结构/01_class类文件的结构)：Class文件是由8个字节为基础的字节流构成的，这些字节流之间都严格按照规定的顺序排列，并且字节之间不存在任何空隙，对于超过8个字节的数据，将按照Big-Endian的顺序存储的，也就是说高位字节存储在低的地址上面，而低位字节存储到高地址上面，其实这也是class文件要跨平台的关键，因为 PowerPC架构的处理采用B
+- [02_字节码指令简介](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第6章-类文件结构/02_字节码指令简介)：Java虚拟机的指令由一个字节长度、代表着某种特定操作含义的数字（成为操作码，Opcode）以及跟随其后的零至多个代表此操作所需的参数（称为操作数，Operand）构成。由于Java虚拟机采用面向操作栈而不是寄存器的架构，所以大多数指令不包含操作数，只有一个操作码，指令参数都存放在操作数栈中。
+- [03_公有设计，私有实现](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第6章-类文件结构/03_公有设计，私有实现)：《Java虚拟机规范》描绘了Java虚拟机应有的共同程序存储格式：Class文件格式以及字节码指令集。这些内容与硬件、操作系统和具体的Java虚拟机实现之间是完全独立的，虚拟机实现者可能更愿意把它们看作程序在各种Java平台实现之间互相安全地交互的手段。
+- [04_Class文件结构的发展](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第6章-类文件结构/04_class文件结构的发展)：Class文件结构自《Java虚拟机规范》初版订立以来，已经有超过二十年的历史。这二十多年间，Java技术体系有了翻天覆地的改变，JDK的版本号已经从1.0提升到了13。相对于语言、API以及Java技术体系中其他方面的变化，Class文件结构一直处于一个相对比较稳定的状态，Class文件的主体结构、字节码指令的语义和
+- [00_概述](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第7章-虚拟机类加载机制/00_概述)：Java虚拟机吧描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这个过程称作虚拟机的类加载机制。
+- [01_类加载的时机](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第7章-虚拟机类加载机制/01_类加载的时机)：一个类从被加载到虚拟机内存中使用，到写在出内存位置，整个生命周期将会经历七个步骤：
+- [02_类加载过程](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第7章-虚拟机类加载机制/02_类加载过程)：“加载”是“类加载”过程中一个阶段。在加载阶段，Java虚拟机需要完成下面三件事情：
+- [03_类加载器](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第7章-虚拟机类加载机制/03_类加载器)：Java虚拟机设计团队有意把类加载阶段中的“通过一个类的全限定名来获取描述该类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己决定如何去获取所需的类。实现这个动作的代码被称为“类加载器”（Class Loader）。
+- [04_Java模块化系统](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第7章-虚拟机类加载机制/04_java模块化系统)：在JDK 9中引入的Java模块化系统（Java Platform Module System，JPMS）是对Java技术的一次重要升级，为了能够实现模块化的关键目标——可配置的封装隔离机制，Java虚拟机对类加载架构也做出了相应的变动调整，才使模块化系统得以顺利地运作。JDK 9的模块不仅仅像之前的JAR包那样只是简
+- [00_概述](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第8章-虚拟机字节码执行引擎/00_概述)：执行引擎是Java虚拟机核心的组成部分之一。“虚拟机”是一个相对于“物理机”的概念，这两种机器都有代码执行能力，其区别是物理机的执行引擎是直接建立在处理器、缓存、指令集和操作系统层面上的，而虚拟机的执行引擎则是由软件自行实现的，因此可以不受物理条件制约地定制指令集与执行引擎的结构体系，能够执行那些不被硬件直接支持的指令
+- [01_运行时栈帧结构](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第8章-虚拟机字节码执行引擎/01_运行时栈帧结构)：栈帧都包括了局部变量表、操作数栈、动态链接和方法返回地址等信息。
+- [02_方法调用](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第8章-虚拟机字节码执行引擎/02_方法调用)：方法调用并不等于方法中的代码执行，方法调用唯一的任务就是确定背带用方法的版本（即调用哪一个方法），暂时还未涉及方法内部的具体运行过程。
+- [03_动态类型语言支持](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第8章-虚拟机字节码执行引擎/03_动态类型语言支持)：Java虚拟机的字节码指令集的数量自从Sun公司的第一款Java虚拟机问世至今，二十余年间只新增过一条指令，它就是随着JDK 7的发布的字节码首位新成员——invokedynamic指令。这条新增加的指令是JDK 7的项目目标：实现动态类型语言（Dynamically Typed Language）支持而进行的改进之一
+- [04_基于栈的字节码解释执行引擎](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第8章-虚拟机字节码执行引擎/04_基于栈的字节码解释执行引擎)：探讨虚拟机是如何执行方法里面的字节码指令的。
+- [00_概述](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第9章-前端编译与优化/00_概述)：在Java技术下谈“编译期”而没有具体上下文语境的话，其实是一句很含糊的表述，因为它可能是指一个前端编译器（叫“编译器的前端”更准确一些）把`*.java`文件转变成`*.class`文件的过程；也可能是指Java虚拟机的即时编译器（常称JIT编译器，Just In Time Compiler）运行期把字节码转变成本地
+- [01_Javac编译器](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第9章-前端编译与优化/01_javac编译器)：分析源码是了解一项技术的实现内幕最彻底的手段，Javac编译器不像HotSpot虚拟机那样使用C++语言（包含少量C语言）实现，它本身就是一个由Java语言编写的程序，这为纯Java的程序员了解它的编译过程带来了很大的便利。
+- [02_Java语法糖的味道](https://runqi-zhao.github.io/3.-资源/后端开发/深入理解java虚拟机/第9章-前端编译与优化/02_java语法糖的味道)：Java选择的泛型实现方式叫作“类型擦除式泛型”（Type Erasure Generics），而C#选择的泛型实现方式是“具现化式泛型”（Reified Generics）。
+- [00_kubernetes的发展历程](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/0_预习/00_kubernetes的发展历程)：本来的Pass服务不具备镜像打包的功能，等于想要部署在服务其上面，需要先根据虚拟机将环境适配好，然后在曾运行，对于开发与意识增加成本的。
+- [01_白话容器基础：从进程说起](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/1_容器技术概念入门篇/01_白话容器基础：从进程说起)：<font color="red">容器本身没有价值，有价值的是“容器编排”</font>
+- [02_白话容器基础_限制与隔离](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/1_容器技术概念入门篇/02_白话容器基础_限制与隔离)：在01_白话容器基础：从进程说起中，详细介绍Linux容重用来实现“隔离”的手段：NameSpace。
+- [你会看到好多宿主机的文件](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/1_容器技术概念入门篇/03_白话容器基础_深入理解容器镜像)：在01_白话容器基础：从进程说起与02_白话容器基础_限制与隔离中，已经说明了容器中组基础的两种技术：NameSpace和Cgroups。
+- [使用官方提供的Python开发镜像作为基础镜像](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/1_容器技术概念入门篇/04_白话容器基础_重新认识docker容器)：在前面的01_白话容器基础：从进程说起 02_白话容器基础_限制与隔离 03_白话容器基础_深入理解容器镜像，我分别从 Linux Namespace 的隔离能力、Linux Cgroups 的限制能力，以及基于 rootfs 的文件系统三个角度，为你剖析了一个 Linux 容器的核心实现原理。
+- [05_从容器到容器云：谈谈kubernetes的本质](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/1_容器技术概念入门篇/05_从容器到容器云：谈谈kubernetes的本质)：前面四节中，已经介绍了Docker运行的本质：
+- [创建一个Master节点](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/2_kubberbetes集群搭建与实践/06_kubernetes一键部署利器：kubeadm)：没有kubeadm的部署方法：使用SlatStack、Ansible等运维工具自动化地执行这些步骤。
+- [ls /usr/share/nginx/html](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/2_kubberbetes集群搭建与实践/08_牛刀小试：了解kubernets的yaml文件)：作为一个应用开发者，你首先要做的，是制作容器的镜像。这一部分内容，请参见03_白话容器基础_深入理解容器镜像。
+- [09_为什么我们需要Pod](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/3_容器编排与kubernetes作业管理/09_为什么我们需要pod)：为什么 Kubernetes 项目又突然搞出一个 Pod 来呢？
+- [README](https://runqi-zhao.github.io/3.-资源/后端开发/深度解析kubernetes/readme)：---
+- [01_MySQL逻辑架构](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第1章-mysql架构与历史/01_mysql逻辑架构)：下图展示了MySQL的逻辑架构图。
+- [02_并发控制](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第1章-mysql架构与历史/02_并发控制)：并发控制从两个方面进行讨论：服务器层与存储引擎层。
+- [03_事务](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第1章-mysql架构与历史/03_事务)：何为事务？
+- [05_MySQL的存储引擎](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第1章-mysql架构与历史/05_mysql的存储引擎)：在文件系统中，MySQL将每个数据库（也可以称之为schema）保存为数据目录下的一个子目录。创建表时，MySQL会在数据库子目录下创建一个和表同名的.frm文件保存表的定义。例如创建一个名为MyTable的表，MySQL会在MyTable.frm文件中保存该表的定义。因为MySQL使用文件系统的目录和文件来保存数据库
+- [08_总结](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第1章-mysql架构与历史/08_总结)：MySQL拥有分层的架构。上层是服务器层的服务和查询执行引擎，下层则是存储引擎。虽然有很多不同作用的插件API，但存储引擎API还是最重要的。如果能理解MySQL在存储引擎和服务层之间处理查询时如何通过API来回交互，就能抓住MySQL的核心基础架构的精髓。
+- [01_选择优化的数据类型](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第4章-schema与数据类型优化/01_选择优化的数据类型)：MySQL在进行类型选择的时候，需要遵循下面几项原则：
+- [02_MySQL schema设计中的陷阱](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第4章-schema与数据类型优化/02_mysql-schema设计中的陷阱)：MySQL的存储引擎API工作时需要在服务器层和存储引擎层之间通过行缓冲格式拷贝数据，然后在服务器层将缓冲内容解码成各个列。
+- [03_范式与反范式](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第4章-schema与数据类型优化/03_范式与反范式)：对于任何给定的数据通常都有很多种表示方法，从完全的范式化到完全的反范式化，以及两者的折中。在范式化的数据库中，每个事实数据会出现并且只出现一次。相反，在反范式化的数据库中，信息是冗余的，可能会存储在多个地方。
+- [04_缓存表和汇总表](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第4章-schema与数据类型优化/04_缓存表和汇总表)：有时提升性能最好的方法是在同一张表中保存衍生的冗余数据。
+- [05_加快ALTER TABLE操作的速度](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第4章-schema与数据类型优化/05_加快alter-table操作的速度)：MySQL的ALTER TABLE操作的性能对大表来说是个大问题。MySQL执行大部分修改表结构操作的方法是用新的结构创建一个空表，从旧表中查出所有数据插入新表，然后删除旧表。这样操作可能需要花费很长时间，如果内存不足而表又很大，而且还有很多索引的情况下尤其如此。许多人都有这样的经验，ALTER TABLE操作需要花费
+- [06_总结](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第4章-schema与数据类型优化/06_总结)：良好的schema设计原则是普遍适用的，但MySQL有它自己的实现细节要注意。概括来说，尽可能保持任何东西小而简单总是好的。MySQL喜欢简单，需要使用数据库的人应该也同样会喜欢简单的原则：
+- [01_索引的基础](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第5章-创建高性能的索引/01_索引的基础)：<details><summary>索引是什么，作用又是什么？</summary> <p> 索引是存储引擎用于在快速找到记录的一种数据结构。</p> <p>
+- [02_索引的优点](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第5章-创建高性能的索引/02_索引的优点)：1. 索引大大减少了服务器需要扫描的数据量。
+- [03_高性能的索引策略](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第5章-创建高性能的索引/03_高性能的索引策略)：正确地创建和使用所以i你是实现高性能查询的基础。
+- [04_索引案例学习](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第5章-创建高性能的索引/04_索引案例学习)：在使用索引时，从下面几个角度出发：
+- [05_维护索引和表](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第5章-创建高性能的索引/05_维护索引和表)：即使用正确的类型创建了表并加上了合适的索引，工作也没有结束：还需要维护表和索引来确保它们都正常工作。维护表有三个主要的目的：找到并修复损坏的表，维护准确的索引统计信息，减少碎片。
+- [06_总结](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第5章-创建高性能的索引/06_总结)：在MySQL中，大多数情况下都会使用B-Tree索引。其他类型的索引大多只适用于特殊的目的。如果在合适的场景中使用索引，将大大提高查询的响应时间。本章将不再介绍更多这方面的内容了，最后值得总的回顾一下这些特性以及如何使用B-Tree索引。
+- [01_为什么查询速度会慢](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/01_为什么查询速度会慢)：查询时那个最重要？
+- [02_慢查询基础：优化数据访问](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/02_慢查询基础：优化数据访问)：对于低效的查询，发现通过下面两个步骤来分析总是很有效：
+- [03_重构查询的方式](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/03_重构查询的方式)：在优化有问题的查询时，目标应该是找到一个更优的方法获得实际需要的结果——而不一定总是需要从MySQL获取一模一样的结果集。
+- [04_查询执行的基础](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/04_查询执行的基础)：在说明查询基础之前，首先需要说明MySQL的查询的过程，如下图所示：
+- [05_MySQL查询优化器的局限性](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/05_mysql查询优化器的局限性)：MySQL在进行关联子查询的步骤如下：
+- [06_查询器的优化提示](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/06_查询器的优化提示)：如果对优化器选择的执行计划不满意，可以使用优化器提供的几个提示（hint）来控制最终的执行计划。下面将列举一些常见的提示，并简单地给出什么时候使用该提示。
+- [07_优化特定类型的查询](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/07_优化特定类型的查询)：COUNT()聚合函数，以及如何优化使用了该函数的查询，很可能是MySQL中最容易被误解的前10个话题之一。在网上随便搜索一下就能看到很多错误的理解，可能比我们想象的多得多。
+- [09_总结](https://runqi-zhao.github.io/3.-资源/后端开发/高性能mysql/第6章-查询性能优化/09_总结)：如果把创建高性能应用程序比作是一个环环相扣的“难题”，除了前面介绍的schema、索引和查询语句设计之外，查询优化应该是解开“难题”的最后一步了。要想写一个好的查询，你必须要理解schema设计、索引设计等，反之亦然。
+- [摄影摄像.README](https://runqi-zhao.github.io/3.-资源/摄影摄像/摄影摄像.readme)：%%根据当前文件的  的 tags 字段查询任务，从所有的笔记中提取%%
+- [为什么要学习Linux操作系统？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/os/为什么要学习linux操作系统？)：你好，我是你的老朋友刘超。在“趣谈网络协议”结课半年之后，我又给你带来了一个新的基础课程，“趣谈 Linux 操作系统”。
+- [你可以把Linux内核当成一家软件外包公司的老板](https://runqi-zhao.github.io/3.-资源/计算机基础知识/os/你可以把linux内核当成一家软件外包公司的老板)：在平时的生活中，我们几乎时时刻刻都在使用操作系统，只是大部分时间你都意识不到它的存在。比如你买了一部手机或者一台平板电脑，立马就能上手使用，这是因为它们里面都预先安装了操作系统。
+- [入学测验：你究竟对Linux操作系统了解多少](https://runqi-zhao.github.io/3.-资源/计算机基础知识/os/入学测验：你究竟对linux操作系统了解多少)
+- [学习路径：爬过这六个陡坡，你就能对Linux了如指掌](https://runqi-zhao.github.io/3.-资源/计算机基础知识/os/学习路径：爬过这六个陡坡，你就能对linux了如指掌)：很多人觉得 Linux 操作系统刚开始学起来很难，主要是因为我们平时办公或者学习用的都是 Windows 系统，而 Windows 和 Linux 的使用模式是完全不一样的。
+- [学会几个系统调用：咱们公司能接哪些类型的项目？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/os/学会几个系统调用：咱们公司能接哪些类型的项目？)：上一节我们讲了几个重要的 Linux 命令行，只有通过这些命令，用户才能把 Linux 系统用起来，不知道你掌握得如何了？其实 Linux 命令也是一个程序，只不过代码是别人写好的，你直接用就可以了。你可以自己试着写写代码，通过代码把 Linux 系统用起来，这样印象会更深刻。
+- [passwd](https://runqi-zhao.github.io/3.-资源/计算机基础知识/os/快速上手几个linux命令：每家公司都有自己的黑话)：如果你还没有上手用过 Linux，那么接下来的课程，你可能会感受到困惑。因为没有一手的体验，你可能很难将Linux的机制和你的使用行为关联起来。所以这一节，咱们先介绍几个上手 Linux 的命令，通过这些命令，我们试试先把 Linux 用起来。
+- [01_CPU是如何工作的](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/01_硬件结构/01_cpu是如何工作的)：我们知道，CPU相当于人类的 大脑，现在我们计算`1+1=2`，这个CPU将会做出什么处理，同时，我们经常说的32位和64位又指的 是什么？
+- [02_磁盘比内存慢几万倍](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/01_硬件结构/02_磁盘比内存慢几万倍)：从一个例子说起吧，现在假设我们期末考试，我们需要复习大量的知识。现在我们在图书馆馆，从书架上面拿到一本书，在看书的时候，我们的大脑会思考问题，也会记忆知识点，另外我们通常也会把常用的书放在自己的桌子上，当我们要找一本不常用的书，则会去图书馆的书架找。
+- [03_如何写出让 CPU 跑得更快的代码？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/01_硬件结构/03_如何写出让-cpu-跑得更快的代码？)：你可能会好奇为什么有了内存，还需要 CPU Cache？根据摩尔定律，CPU 的访问速度每 18 个月就会翻倍，相当于每年增长 60% 左右，内存的速度当然也会不断增长，但是增长的速度远小于 CPU，平均每年只增长 7% 左右。于是，CPU 与内存的访问性能的差距不断拉大。
+- [04_CPU缓存一致性](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/01_硬件结构/04_cpu缓存一致性)：CPU cache对应的结构如下：
+- [05_CPU是如何执行任务的](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/01_硬件结构/05_cpu是如何执行任务的)：CPU的架构在04_CPU缓存一致性以及03_如何写出让 CPU 跑得更快的代码？中已经详细介绍了。对应的结构图如下：
+- [06_什么是软中断](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/01_硬件结构/06_什么是软中断)：**中断请求的响应程序，也就是中断处理程序，要尽可能快的执行完，这样可以减少对正常进程运行调度地影响**。
+- [02_Linux内核 vs Windows内核](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/02_linux内核-vs-windows内核)：计算机是由各种外部硬件设备组成，比如内存、cpu、硬盘等，如果每个应用都要和这些硬件设备对接通信协议，那这样太累了，所以这个中间人就由内核来负责。
+- [01_为什么要有虚拟内存](https://runqi-zhao.github.io/3.-资源/计算机基础知识/操作系统/03_内存管理/01_为什么要有虚拟内存)：操作系统会提供一种机制，将不同进程的虚拟地址和不同内存的物理地址映射起来。
+- [01_评价算法常用方法](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/01_评价算法常用方法)：- 时间复杂度
+- [02_递归与哈希表](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/02_递归与哈希表)：- 怎么从思想上理解递归
+- [03_排序](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/03_排序)：1. 归并排序整体时递归，左边排序+右边排序+merge 让整体有序
+- [04_比较器与堆](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/04_比较器与堆)：1. 堆结构就是用数组实现的完全二叉树结构
+- [05_前缀树](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/05_前缀树)：前缀树其实是特殊的07_二叉树
+- [05_排序总结](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/05_排序总结)：基于比较的排序请看03_排序，01_评价算法常用方法
+- [06_链表以及常见面试题](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/06_链表以及常见面试题)：1. 对于笔试，不用太在乎空间复杂度，一切为了时间复杂度
+- [07_二叉树](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/07_二叉树)：Class Node {
+- [08_二叉树的递归套路](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/08_二叉树的递归套路)：**这是非常非常重要的一节，务必搞懂！！！！**
+- [09_贪心算法](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/09_贪心算法)：1. 最自然智慧的算法
+- [10_图](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/10_图)：1. 有若干个样本a、b、c、d…类型假设是V
+- [11_暴力递归](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/11_暴力递归)：暴力递归才是动态规划的基础，只有充分掌握了暴力递归，才能在上面进行12_动态规划。
+- [12_动态规划](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/12_动态规划)：1. 有重复调用同一个子问题的解，这种递归可以优化
+- [13_滑动窗口与单调栈](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/13_滑动窗口与单调栈)：滑动窗口是一种想象出来的数据结构：滑动窗口有左边界L和有边界R，在数组或者字符串或者一个序列上，记为S，窗口就是S[L..R]这一部分；L往右滑意味着一个样本出了窗口，R往右滑意味着一个样本进了窗口；L和R都只能往右滑。
+- [14_类似斐波那契数列的递归](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/14_类似斐波那契数列的递归)：1. 斐波那契数列的线性求解（O(N)）的方式非常好理解
+- [15_KMP算法](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/15_kmp算法)：这节课的笔记其实只能说是辅助作用，如果想要复习，听课最好。
+- [16_BFPRT算法](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/16_bfprt算法)：在一个中找出第k大的数
+- [17_Manacher算法及其扩展](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/17_manacher算法及其扩展)：Manacher算法是由题目“求字符串中最长回文子串的长度”而来。比如abcdcb的最长回文子串为bcdcb，其长度为5。
+- [18_Morris遍历及其相关扩展](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/18_morris遍历及其相关扩展)：一种遍历二叉树的方式，并且时间复杂度O(N)，额外空间复杂度O(1)通过利用原树中大量空闲指针的方式，达到节省空间的目的
+- [19_线段树](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/19_线段树)：这节课适合听视频，概念很重要
+- [20_打表技巧和矩阵处理技巧](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/20_打表技巧和矩阵处理技巧)：1. 问题如果返回值不太多，可以用hardcode的方式列出，作为程序的一部分
+- [21_数组问题](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/21_数组问题)：三个问题，进行递归，说明一些数组的问题
+- [22_哈希函数有关的结构和岛问题](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/22_哈希函数有关的结构和岛问题)：认识哈希函数 ->  out f(in data)
+- [23_资源限制类题目](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/23_资源限制类题目)：1. 布隆过滤器用于集合的建立与查询，并可以节省大量空间
+- [24_有序表的的原理、应用、以及拓展](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/24_有序表的的原理、应用、以及拓展)：在说明有序表之前，我们得需要知道什么叫做搜索二叉树，利用搜索二叉树，说明有序表的实现
+- [25_AC自动机、卡特兰数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/25_ac自动机、卡特兰数)：1. 关键在于fail指针的理解（网上帖子几乎没有解释）
+- [Union-find算法](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/mit课程-算法/2-动态连接)：这个将会讲述对应的解决问题的模型：
+- [说明](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/mit课程-算法/说明)：来自于后期的温故知新，首先这个里面不再是干巴巴的讲解，也会有练习，也不是干巴巴的刷题，所以这个将会是将会是近期的目标
+- [常见面试题_一](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/常见面试题_一)：笔试常见技巧
+- [常见面试题_二](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/常见面试题_二)：在行也有序、列也有序的二维数组中，找num，找到返回true，否则false
+- [常见面试题_十三](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/常见面试题_十三)：给定一个 N×3 的矩阵 matrix，对于每一个长度为 3 的小数组 arr，都表示一个大楼的三个数 据。arr[0]表示大楼的左边界，arr[1]表示大楼的右边界，arr[2]表示大楼的高度(一定大于 0)。 每座大楼的地基都在 X 轴上，大楼之间可能会有重叠，请返回整体的轮廓线数组。
+- [常见面试题_十二](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/常见面试题_十二)：给定一个二维数组 map，含义是一张地图，例如，如下矩阵:
+- [常见面试题_十四](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/常见面试题_十四)：给定一个正数1，裂开的方法有一种，(1) 给定一个正数2，裂开的方法有两种，(1和1)、(2) 给定一个正数3，裂开的方法有三种，(1、1、1)、(1、2)、(3) 给定一个正数4，裂开的方法有五种，(1、1、1、1)、(1、1、2)、(1、3)、(2、2)、 (4)
+- [00_约瑟夫循环](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/00_约瑟夫循环)：下面是使用循环链表进行实现的。
+- [03_复杂度分析(上)：如何分析、统计算法的执行效率和资源消耗](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/03_复杂度分析(上)：如何分析、统计算法的执行效率和资源消耗)：碎碎念：之所以在这个时间突然买了这个课，是因为在秋招的时候，某家公司手撕做过的原题没有手撕出来，导致挂了，虽然当初觉得自己是太久没做，但是最近秋招结束了，发现其实时是自己数据结构好多基本结构都忘了，就拿链表来说，你最基础的增删改查都忘记了，自己虽然看完某些题目，知道怎么做了，但是总是不能串联起来，故此买了这门课，希望自
+- [04_复杂度分析(下)：浅析最好、最坏、平均 、均摊时间复杂度](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/04_复杂度分析(下)：浅析最好、最坏、平均-、均摊时间复杂度)：上一讲中说明了时间复杂度，这一讲中接着上一讲的基础上，说明其中的最好情况时间复杂度，最坏情况时间、平均情况时间复杂度、均摊时间复杂度。
+- [05_数组：为什么很多编程语言的数组都是从0开始的](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/05_数组：为什么很多编程语言的数组都是从0开始的)：为了解答这个问题，首先我们得知道数组的概念。
+- [06_链表(上)：如何实现LRU缓存淘汰算法](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/06_链表(上)：如何实现lru缓存淘汰算法)：先说题目，我们知道，在操作系统中，为了加速 数据的 访问，我们讲部分数据存储到内存中，在访问数据的时候直接去内存中进行拿取，加快数组的访问速度。但是数据量特别大的时候，我们需要及时更新缓存，因此，在操作系统中，有下面几种缓存更新算法：先进先出策略FIFO（First In，First Out）、最少使用策略LFU（Le
+- [08_栈：如何实现浏览器的前进和后退功能？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/08_栈：如何实现浏览器的前进和后退功能？)：还是从一个例子开始说起，浏览器是怎么实现对应的前进与后退？
+- [09_队列：队列在线程池等有限资源池种的应用](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/09_队列：队列在线程池等有限资源池种的应用)：现在先出来一个经典问题，我们向固定大小的线程池种请求一个线程时，如果线程池中没有空闲资源了，这个时候线程池如何处理这个请求，是拒绝这个请求，还是排队请求？各种处理策略又是怎么实现的呢？
+- [11_排序（上）：为什么插入排序比冒泡排序更受欢迎？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/11_排序（上）：为什么插入排序比冒泡排序更受欢迎？)：这是一讲十分有必要的知识，只有将这个进行复习好，才能够说你数据结构中数组相关的内容的掌握好了。
+- [12_排序（下）：如何用快排思想在O(n)内查找第K大元素？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/12_排序（下）：如何用快排思想在o(n)内查找第k大元素？)：现在要取一个数组种第K大得数，请问怎么进行选择，才能将时间复杂度为O(n)，空间复杂度为O(1)。
+- [13_线性排序：如何根据年龄给100万用户数据排序？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/极客时间-算法设计之美总结/13_线性排序：如何根据年龄给100万用户数据排序？)：如题目，我们应该怎么解决这个问题。
+- [K个逆序对](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/k个逆序对)：对应左神训练营第4期第6节第2题。
+- [M个有序数组，求其中的第k个数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/m个有序数组，求其中的第k个数)：这道题目疑似来源于谷歌面试题，难度个人判断困难。
+- [Nim博弈](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/nim博弈)：经典问题。
+- [115.不同的子序列](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/leetcode115_不同的子序列)：这是 LeetCode上的 **** ，难度为 **困难**。
+- [1312.让字符串成为回文串的最少插入次数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/leetcode1312_让字符串成为回文串的最少插入次数)：这是 LeetCode 上的 **** ，难度为 **困难**。
+- [leetcode137_只出现一次的数字](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/leetcode137_只出现一次的数字)：这是 LeetCode上的 ****的**拓展** ，难度为 **困难**。
+- [174.地下城游戏](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/leetcode174_地下城游戏)：这是 LeetCode上的 **** ，难度为 **困难**。
+- [212. 单词搜索 II](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/leetcode212_单词搜索-ii)：这是 LeetCode 上的 **** ，难度为 **困难**。
+- [leetcode233_数字 1 的个数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/leetcode233_数字-1-的个数)：这是 LeetCode 上的 **** ，难度为 **困难**。
+- [282. 给表达式添加运算符](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/leetcode282_给表达式添加运算符)：这是 LeetCode 上的 **** ，难度为 **困难**。
+- [246 · 二叉树的路径和 II](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/lintcode246-_-二叉树的路径和-ii)：这是 LintCode 上的 **** ，难度为 **中等**。
+- [使用单词表拼接长字符串的方法数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/使用单词表拼接长字符串的方法数)：找到来源，自认为难度中等。
+- [完美洗牌问题](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/完美洗牌问题)：经典算法
+- [找到数组中出现次数大于N除以k的数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/找到数组中出现次数大于n除以k的数)：给定一个整型数组arr，再给定一个整数k，打印所有出现次数大于 N/K 的数。如果没有这样的数，打印提示信息。
+- [最大路径和](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/最大路径和)：【最大路径和】给定一个二叉树的头节点head，路径的规定有以下三种不同的规定：
+- [未排序数组中累加和小于或等于给定值的最长子数组长度](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/未排序数组中累加和小于或等于给定值的最长子数组长度)：给定一个二维数组matrix，再给定一个k值
+- [正数分裂](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/正数分裂)：对应左神训练营第4期第6节第1题。
+- [满足二叉搜索树的最大拓扑结构的大小](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/满足二叉搜索树的最大拓扑结构的大小)：对应左神训练营第4期第6节第3题。
+- [牛客_回文串方案数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_回文串方案数)：这是 牛客上的 **** ，难度为 **四颗星**。
+- [牛客_在数组中找到出现次数大于一半的数](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_在数组中找到出现次数大于一半的数)：这是 牛客上的  ，难度为 **中等**。
+- [牛客_大楼轮廓问题](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_大楼轮廓问题)：这是 牛客上的 **** ，难度为 **四颗星**。
+- [牛客_打怪兽](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_打怪兽)：这是 牛客上的 **** ，难度为 **三颗星**。
+- [最大路径和](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_最大路径和)：这是 牛客上的 **** ，难度为 **三颗星**。
+- [牛客_最长的可整合子数组的长度](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_最长的可整合子数组的长度)：这是 牛客上的 **** ，难度为 **二颗星**。
+- [最长递增链](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_最长递增链)：这是 牛客上的 **** ，难度为 **三颗星**。
+- [牛客_蛇蛇数组](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/牛客_蛇蛇数组)：这是 牛客上的 **** ，难度为 **三颗星**。
+- [约瑟夫环](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/约瑟夫环)：这是 LeetCode上的 **** ，难度为 **简单**。
+- [给定一个字符串str，求最长回文子序列长度](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/给定一个字符串str，求最长回文子序列长度)：未找到出处，难度认为中等。
+- [股票问题](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/股票问题三连)：给定一个数组arr，从左到右表示昨天从早到晚股票的价格。作为一个事后诸葛亮，你想知道如果只做一次交易，且每次交易只买卖一股，返回能挣到的最大钱数
+- [表达式计算](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/表达式计算)：未找到出处。
+- [过河最少需要几条船](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/算法刷题/左神课堂题目/过河最少需要几条船)：这是 牛客上的 **** ，难度为 **三颗星**。
+- [DFS](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/经典算法必知必会/dfs)：1. 利用栈实现
+- [搜索二叉树](https://runqi-zhao.github.io/3.-资源/计算机基础知识/算法/经典算法必知必会/搜索二叉树)：详细信息在24_有序表的的原理、应用、以及拓展
+- [计算机基础知识.README](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机基础知识.readme)：%%本领域归档的项目列表%%
+- [01_为什么要学习计算机网络](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/01_为什么要学习计算机网络)：《圣经》中有一个通天塔的故事，大致是说，上帝为了阻止人类联合起来，就让人类说不同的语言。人类没法儿沟通，达不成“协议”，通天塔的计划就失败了。但是千年以后，有一种叫“程序猿”的物种，敲着一种这个群体通用的语言，连接着全世界所有的人，打造这互联网世界的通天塔。如今的世界，正是因为互联网，才连接在一起。
+- [02_网络分层的真实含义是什么](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/02_网络分层的真实含义是什么)：长时间从事计算机网络相关的工作，我发现，计算机网络有一个显著的特点，就是这是一个不仅需要背诵，而且特别需要将原理烂熟于胸的学科。很多问题看起来懂了，但是就怕往细里问，一问就发现你懂得没有那么透彻。我们上一节列了之后要讲的网络协议。这些协议本来没什么稀奇，每一本教科书都会讲，并且都要求你背下来。因为考试会考，面试会问。可
+- [03_ifconfig：最熟悉又陌生的命令行](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/03_ifconfig：最熟悉又陌生的命令行)：上一节结尾给你留的一个思考题是，你知道怎么查看 IP 地址吗？
+- [04_DHCP与PXE：IP是怎么来的，又是怎么没的？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/04_dhcp与pxe：ip是怎么来的，又是怎么没的？)：上一节，我们讲了IP的一些基本概念。如果需要和其他机器通讯，我们就需要一个通讯地址，我们需要给网卡配置这么一个地址。
+- [05_从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/05_从物理层到mac层：如何在宿舍里自己组网玩联机游戏？)：上一节(04_DHCP与PXE：IP是怎么来的，又是怎么没的？)，我们见证了 IP 地址的诞生，或者说是整个操作系统的诞生。一旦机器有了 IP，就可以在网络的环境里和其他的机器展开沟通了。
+- [06_交换机与VLAN：办公室太复杂，我要回学校](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/06_交换机与vlan：办公室太复杂，我要回学校)：上一次（05_从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？），我们在宿舍里组建了一个本地的局域网 LAN，可以愉快地玩游戏了。这是一个非常简单的场景，因为只有一台交换机，电脑数目很少。今天，让我们切换到一个稍微复杂一点的场景，办公室。
+- [07_ICMP与ping：投石问路的侦察兵](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/07_icmp与ping：投石问路的侦察兵)：无论是在宿舍，还是在办公室，或者运维一个数据中心，我们常常会遇到网络不通的问题。那台机器明明就在那里，你甚至都可以通过机器的终端连上去看。它看着好好的，可是就是连不上去，究竟是哪里出了问题呢？
+- [08_世界这么大，我想出网关：欧洲十国游与玄奘西行](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/08_世界这么大，我想出网关：欧洲十国游与玄奘西行)：前几节(06_交换机与VLAN：办公室太复杂，我要回学校，07_ICMP与ping：投石问路的侦察兵)，我主要跟你讲了宿舍里和办公室里用到的网络协议。你已经有了一些基础，是时候去外网逛逛了！
+- [echo 200 chao >> /etc/iproute2/rt_tables](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/09_路由协议：西出网关无故人，敢问路在何方)：俗话说得好，在家千日好，出门一日难。网络包一旦出了网关，就像玄奘西行一样踏上了江湖漂泊的路。
+- [10_UDP协议：因性善而简单，难免碰到“城会玩”](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/10_udp协议：因性善而简单，难免碰到“城会玩”)：讲完了 IP 层以后，接下来我们开始讲传输层。传输层里比较重要的两个协议，一个是 TCP，一个是 UDP。对于不从事底层开发的人员来讲，或者对于开发应用的人来讲，最常用的就是这两个协议。由于面试的时候，这两个协议经常会被放在一起问，因而我在讲的时候，也会结合着来讲。
+- [11_TCP协议（上）：因性恶而复杂，先恶后善反轻松](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/11_tcp协议（上）：因性恶而复杂，先恶后善反轻松)：上一节10_UDP协议：因性善而简单，难免碰到“城会玩”，我们讲的 UDP，基本上包括了传输层所必须的端口字段。它就像我们小时候一样简单，相信“网之初，性本善，不丢包，不乱序”。
+- [12_TCP协议（下）：西行必定多妖孽，恒心智慧消磨难](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/12_tcp协议（下）：西行必定多妖孽，恒心智慧消磨难)：我们前面说到玄奘西行，要出网关。既然出了网关，那就是在公网上传输数据，公网往往是不可靠的，因而需要很多的机制去保证传输的可靠性，这里面需要恒心，也即各种**重传的策略**，还需要有智慧，也就是说，这里面包含着**大量的算法**。
+- [13_套接字Socket：Talk is cheap,show me the code](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/13_套接字socket：talk-is-cheap,show-me-the-code)：前面讲完了TCP11_TCP协议（上）：因性恶而复杂，先恶后善反轻松 12_TCP协议（下）：西行必定多妖孽，恒心智慧消磨难和UDP 10_UDP协议：因性善而简单，难免碰到“城会玩”协议，还没有上手过，这一节咱们讲讲基于TCP和UDP协议的Socket编程。
+- [14_HTTP协议：看个新闻原来这么麻烦](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/14_http协议：看个新闻原来这么麻烦)：前面讲述完**传输层**，接下来开始讲**应用层**的协议。从哪里开始讲呢，就从咱们最常用的HTTP协议开始。
+- [15_HTTPS协议：点外卖的过程原来这么复杂](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/15_https协议：点外卖的过程原来这么复杂)：用HTTP14_HTTP协议：看个新闻原来这么麻烦协议，看个新闻还没有问题，但是换到更加严肃的场景中，就存在很多的安全风险。例如，你要下单做一次支付，如果还是使用普通的HTTP协议，那你很可能会被黑客盯上。
+- [16_流媒体协议：如何在直播里看到美女帅哥？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/16_流媒体协议：如何在直播里看到美女帅哥？)：最近直播比较火，很多人都喜欢看直播，那一个直播系统里面都有哪些组成部分，都使用了什么协议呢？
+- [17_P2P协议：我下小电影，99%急死你](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/17_p2p协议：我下小电影，99%急死你)：如果你想下载一个电影，一般会通过什么方式呢？
+- [18_DNS协议：网络世界的地址簿](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/18_dns协议：网络世界的地址簿)：前面我们讲了平时常见的看新闻、支付、直播、下载等场景，现在网站的数目非常多，常用的网站就有二三十个，如果全部用IP地址进行访问，恐怕很难记住。于是，就需要一个地址簿，根据名称，就可以查看具体的地址。
+- [19_HTTPDNS：网络世界的地址簿也会指错路](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/19_httpdns：网络世界的地址簿也会指错路)：上一节18_DNS协议：网络世界的地址簿我们知道了DNS的两项功能，第一是根据名称查到具体的地址，另外一个是可以针对多个地址做负载均衡，而且可以在多个地址中选择一个距离你近的地方访问。
+- [20_CDN：你去小卖部取过快递么？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/20_cdn：你去小卖部取过快递么？)：上一节，我们看到了网站的一般访问模式。
+- [21_数据中心：我是开发商，自己拿地盖别墅](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/21_数据中心：我是开发商，自己拿地盖别墅)：无论你是看新闻、下订单、看视频、下载文件，最终访问的目的地都在数据中心里面。我们前面学了这么多的网络协议和网络相关的知识，你是不是很好奇，数据中心究竟长啥样呢？
+- [22_VPN：朝中有人好做官](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/22_vpn：朝中有人好做官)：前面我们讲到了21_数据中心：我是开发商，自己拿地盖别墅，里面很复杂，但是有的公司有多个数据中心，需要将多个数据中心连接起来，或者需要办公室和数据中心连接起来。这该怎么办呢？
+- [23_移动网络：去巴塞罗那，手机也上不了脸书](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/23_移动网络：去巴塞罗那，手机也上不了脸书)：前面讲的都是电脑上网的场景，那使用手机上网有什么不同呢？
+- [24_软件定义网络：共享基础设施的小区物业管理办法](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/24_软件定义网络：共享基础设施的小区物业管理办法)：上一节我们说到23_移动网络：去巴塞罗那，手机也上不了脸书，使用原生的VLAN和Linux网桥的方式来进行云平台的管理，但是这样在灵活性、隔离性方面都显得不足，而且整个网络缺少统一的视图、统一的管理。
+- [25_云中的网络安全：虽然不是土豪，也需要基本安全和保障](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/25_云中的网络安全：虽然不是土豪，也需要基本安全和保障)：上一节24_软件定义网络：共享基础设施的小区物业管理办法我们看到，做一个小区物业维护一个大家共享的环境，还是挺不容易的。如果都是自觉遵守规则的住户那还好，如果遇上不自觉的住户就会很麻烦。
+- [26_云中的网络QoS：邻居疯狂下电影，我该怎么办？](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/26_云中的网络qos：邻居疯狂下电影，我该怎么办？)：在小区里面，是不是经常有住户不自觉就霸占公共通道，如果你找他理论，他的话就像一个相声《楼道曲》说的一样：“公用公用，你用我用，大家都用，我为什么不能用？”。
+- [26_云中网络：自己拿地成本高，购买公寓更灵活](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/26_云中网络：自己拿地成本高，购买公寓更灵活)：前面我们讲了21_数据中心：我是开发商，自己拿地盖别墅，数据中心里面堆着一大片一大片的机器，用网络连接起来，机器数目一旦非常多，人们就发现，维护这么一大片机器还挺麻烦的，有好多不灵活的地方。
+- [27_云中网络的隔离GRE、VXLAN：虽然住一个小区，也要保护隐私](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/27_云中网络的隔离gre、vxlan：虽然住一个小区，也要保护隐私)：**这一讲先跳过，复习好前面基础概念再说**
+- [32_讲RPC协议综述：远在天边，近在眼前](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/32_讲rpc协议综述：远在天边，近在眼前)：前面我们讲了容器网络如何实现跨主机互通，以及微服务之间的相互调用。
+- [33_于XML的SOAP协议：不要说NBA，请说美国职业篮球联赛](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/33_于xml的soap协议：不要说nba，请说美国职业篮球联赛)：32_讲RPC协议综述：远在天边，近在眼前我们讲了RPC的经典模型和设计要点，并用最早期的ONC RPC为例子，详述了具体的实现。
+- [34_基于JSON的RESTful接口协议：我不关心过程，请给我结果](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/34_基于json的restful接口协议：我不关心过程，请给我结果)：33_于XML的SOAP协议：不要说NBA，请说美国职业篮球联赛我们讲了基于XML的SOAP协议，SOAP的S是啥意思来着？是Simple，但是好像一点儿都不简单啊！
+- [35_二进制类RPC协议：还是叫NBA吧，总说全称多费劲](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/35_二进制类rpc协议：还是叫nba吧，总说全称多费劲)：前面我们讲了两个常用文本类的RPC协议，对于陌生人之间的沟通，用NBA、CBA这样的缩略语，会使得协议约定非常不方便。
+- [37_知识串讲：用双十一的故事串起碎片的网络协议（上）](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/37_知识串讲：用双十一的故事串起碎片的网络协议（上）)：基本的网络知识我们都讲完了，还记得最初举的那个“双十一”下单的例子吗？这一节开始，我们详细地讲解这个过程，用这个过程串起我们讲过的网络协议。
+- [38_知识串讲：用双十一的故事串起碎片的网络协议（中）](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/38_知识串讲：用双十一的故事串起碎片的网络协议（中）)：上一节我们讲到，手机App经过了一个复杂的过程，终于拿到了电商网站的SLB的IP地址，是不是该下单了？
+- [39_知识串讲：用双十一的故事串起碎片的网络协议（下）](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/39_知识串讲：用双十一的故事串起碎片的网络协议（下）)：上一节，我们封装了一个长长的网络包，“大炮”准备完毕，开始发送。
+- [容器网络之Flannel：每人一亩三分地](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/容器网络之flannel：每人一亩三分地)：上一节我们讲了容器网络的模型，以及如何通过NAT的方式与物理网络进行互通。
+- [容器网络：来去自由的日子，不买公寓去合租](https://runqi-zhao.github.io/3.-资源/计算机基础知识/计算机网络/容器网络：来去自由的日子，不买公寓去合租)：如果说虚拟机是买公寓，容器则相当于合租，有一定的隔离，但是隔离性没有那么好。云计算解决了基础资源层的弹性伸缩，却没有解决PaaS层应用随基础资源层弹性伸缩而带来的批量、快速部署问题。于是，容器应运而生。
+- [01_iterator模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/01_iterator模式)：在java种我们要遍历arr数组时，可以使用以下语句：
+- [02_adapter模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/02_adapter模式)：举个例子：想让工作电压是直流12伏特的笔记本电脑在交流220伏特的AC电源下工作，应该怎么做？通常，使用AC适配器，将家庭用的交流220伏特电压转换成我们所需要的直流12伏特电压。这就是适配器(Adapter)的工作，**它位于实际情况与需求之间，填补两者之间的差异**。
+- [03_Template_Method模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/03_template_method模式)：模板原意实质带有镂空文字的薄薄的塑料板。只要用笔在模板的镂空处进行临摹，即使手写也能写出整齐的文字。根据不同的笔可以写出不同的颜色。但无论用什么笔，到最后字的形状都是一样的。
+- [04_Factory_Method模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/04_factory_method模式)：在Template Method模式中，我们在父类中规定处理的流程，在子类中实现具体的处理。如果我们将该模式用于生成实例，他就演变成本章中我们要学习的Factory Method模式。
+- [05_Singleton模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/05_singleton模式)：在程序运行时，通常都会生成很多实例。表示字符串的java.lang.String类的实例与字符串是一对一的关系，所以当有1000个字符串的时候，就会有1000个实例。
+- [06_Prototype模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/06_prototype模式)：通常我们会使用以下方式生成Something类的实例。
+- [07_Builder模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/07_builder模式)：在建造大楼时，需要先打牢地基，搭建框架，然后自下而上地一层已成盖起来，通常，在建造这种具有复杂结构的物体时，是很难一气呵成的，我们需要首先建造组成这个物体的各个部分，然后分阶段将他们组装起来。
+- [08_Abstract_Fatctory模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/08_abstract_fatctory模式)：Abstract Factory模式的工作是将“抽象零件”组装成“抽象产品”。
+- [09_Bridge模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/09_bridge模式)：将类的功能层次结构与实现层次结构分离
+- [10_Strategy模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/10_strategy模式)：无论什么程序，其目的都是为了解决问题，我们有需要编写特定的算法。使用Strategy模式可以整体地替换算法的实现部分。能够整体地替换算法，能让我们轻松地以不同算法去解决一个问题，这就是策略模式。
+- [11_Composite模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/11_composite模式)：想象一个文件系统，在这文件系统中，有文件夹的概念，文件夹里面可以有文件，也可以有子文件夹，可以说，文件夹形成了一种容器结构、递归结构。
+- [12_Decorator模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/12_decorator模式)：假如现在有一块蛋糕，如果只涂上奶油，其他什么都不加，就是奶油蛋糕。如果加上草莓，就是草莓奶油蛋糕。如果再加上一块黑色巧克力板，上面用白色巧克力写上姓名，然后插上代表年龄的蜡烛，就变成了一块生日蛋糕。
+- [13_Visitor模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/13_visitor模式)：在Visitor模式中，数据结构预处理分离开来。
+- [14_Chain_of_Responsibility模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/14_chain_of_responsibility模式)：<font color="red">将多个对象组成一条责任链，然后按照他们在职责链上的顺序一个个地找出到底应该谁来负责处理。</font>这种模式称为Chain of Responsibility模式（推卸责任模式）。
+- [15_Facade模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/15_facade模式)：程序这东西总是会变得越来越大。随着时间的推移，程序中的类会越来越多，而且它们之间相互关联，这会导致程序结构也变得越来越复杂。我们在使用这些类之前，必须先弄清楚它们之间的关系，注意正确的调用顺序。
+- [16_Mediator模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/16_mediator模式)：请大家想象一下一个乱糟糟的开发小组的工作状态。小组中的10个成员虽然一起协同工作，但是意见难以统一，总是互相指挥，导致工作始进度始终滞后。不仅如此，他们还都十分在意编码细节，经常为此争执不下。这时，我们就需要一个中立的仲裁者站出来说：“各位，请大家将情况报告给我，我来负责仲裁。我会从团队整体出发进行考虑，然后下达指示。
+- [17_Observer模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/17_observer模式)：在本章中，我们将要学习**Observer模式**。
+- [18_Memento模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/18_memento模式)：我们在使用文本编辑器编写文件时，如果不小心删除了某句话，可以通过撤销(undo)功能将文件恢复至之前的状态。有些文本编辑器甚至支持多次撤销，能够恢复至很久之前的版本。
+- [19_State模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/19_state模式)：在面向对象编程中，是用类表示对象的。也就是说，程序的设计者需要考虑用类来表示什么东西。类对应的东西可能存在于真实世界中，也可能不存在于真实世界中。对于后者，可能有人看到代码后会感到吃惊：这些东西居然也可以是类啊。
+- [flyweight模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/flyweight模式)：<font color="red">Flyweight模式的目的就是“通过尽量的共享实例来避免new出实例”。</font>
+- [proxy模式](https://runqi-zhao.github.io/3.-资源/计算机基础知识/设计模式/proxy模式)：Proxy模式在面向对象编程中，“本人”和“代理人”都是对象。如果“本人”对象太忙了，有些工作无法自己亲自完成，就将其交给“代理人”对象负责。
+- [存档](https://runqi-zhao.github.io/4.-存档/readme)：返回 首页
+- [存档说明](https://runqi-zhao.github.io/4.-存档/template)：- 原类型：
+- [为什么前端工程化](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/chatgpt/为什么前端工程化)：前端工程化主要解决以下几个问题：
+- [什么是前端工程化](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/chatgpt/什么是前端工程化)：前端工程化是指在前端开发过程中，采用一系列的技术手段和工具，来提高开发效率、保证代码质量、提高代码复用性、实现自动化流程和促进团队协作等方面的目标。前端工程化的实现需要从代码管理、模块化开发、代码质量保障、工具链和自动化流程、团队协作和沟通等多个方面入手，采用一系列的技术手段和工具，如版本控制系统、模块化框架、代码规范
+- [前端工程化的内容](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/chatgpt/前端工程化的内容)：前端工程化包括以下方面：
+- [参考1](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/chatgpt/参考1)：以下是一个可能的演讲大纲：
+- [参考2](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/chatgpt/参考2)：好的，以下是一个可能的内容大纲：
+- [PPT 大纲](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/ppt-大纲)：- 前端领域的趋势
+- [WOT-分享会.README](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/wot-分享会.readme)：%%设置项目截止日期，及其结果描述%%
+- [主题大纲](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/主题大纲)：前端工程化是指在前端开发过程中，采用一系列的技术手段和工具，来提高开发效率、保证代码质量、提高代码复用性、实现自动化流程和促进团队协作等方面的目标。近年来，前端开发领域呈现出如下3个趋势，涉及的平台越来越多、支撑的业务越来越多、团队的规模不断增大，上述3个趋势具体到前端工程上又表现为『代码规模增大』、『维护人数增多』、
+- [往届主题](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/往届主题)：- 2022
+- [存在的问题](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/存在的问题)：- 爱用『额』『对』
+- [排练注意事项](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/排练注意事项)：坚持走完完整的流程，回头再回顾问题并解决
+- [现场演讲注意事项](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/现场演讲注意事项)：- 身体与屏幕呈45度，朝向房间一角落
+- [观众可能的问题](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/观众可能的问题)：- Rspack 公司内外的接入项目数量大概有多少？
+- [逐字稿](https://runqi-zhao.github.io/4.-存档/个人品牌-wot-分享会/演讲排练/逐字稿)：- 大家早上好，我叫林宜丙，今天带来的分享主题是『字节跳动的前端工程化实践』；
+- [LifeOS 原始说明](https://runqi-zhao.github.io/4.-存档/系统/lifeos-原始说明)：<p align="center">中文版本  |  <a title="English" href="https://github.com/quanru/obsidian-example-LifeOS/blob/main/README.md">English Version</a></p>
+- [0. 周期笔记__Templates__Daily](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/0.-周期笔记__templates__daily)：%%项目的今日快照%%
+- [任务](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/0.-周期笔记__templates__monthly)：%%分别从要事维度和角色维度安排任务%%
+- [目标](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/0.-周期笔记__templates__quarterly)：%%分别从要事维度和角色维度设定目标%%
+- [任务](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/0.-周期笔记__templates__weekly)：%%分别从要事维度和角色维度安排任务%%
+- [目标](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/0.-周期笔记__templates__yearly)：%%分别从要事维度和角色维度设定目标%%
+- [1. 项目__Template](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/1.-项目__template)：%%设置项目截止日期，及其结果描述%%
+- [2. 领域__Template](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/2.-领域__template)：%%本领域归档的项目列表%%
+- [3. 资源__Template](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/3.-资源__template)：%%根据当前文件的  的 tags 字段查询任务，从所有的笔记中提取%%
+- [4. 存档__Template](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/4.-存档__template)：%%根据当前文件的  的 tags 字段查询任务，从所有的笔记中提取%%
+- [旧模板备份（2026-09-27）](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/readme)：这些文件是在简化模板、移除 PeriodicPARA 依赖前保存的原版本，仅用于回溯，不再作为新笔记模板使用。
+- [Description](https://runqi-zhao.github.io/4.-存档/系统/旧模板-2026-09-27/templates__jobs_template)
+- [规则](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/program/readme)：x金
+- [nameCandidateList](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/program/namecandidatelist)：总数: 59
+- [土](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/五行/土)：01、选择寓意好的土字旁字
+- [木](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/五行/木)：父母给孩子起名的时候也要根据孩子的五行，八字五行属木的字一般适合给需要木的宝宝，下面这一期就为大家介绍八字五行属木的字，感兴趣的朋友们一起来看看!
+- [水](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/五行/水)：作者：易经工作室
+- [火](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/五行/火)：作者：前端小白
+- [金](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/五行/金)：一、五行属金的字女孩用
+- [五行和字义查询](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/五行和字义查询)：-
+- [候选列表](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/候选列表)："林瑾瑜"
+- [单字](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/单字)
+- [宝宝起名.README](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/宝宝起名.readme)：%%根据当前文件的  的 tags 字段查询任务，从所有的笔记中提取%%
+- [程序起名](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/程序起名)：const fs = require('fs');
+- [规则](https://runqi-zhao.github.io/4.-存档/育儿-宝宝起名/规则)：火金
+- [筹办周岁宴.README](https://runqi-zhao.github.io/4.-存档/育儿-筹办周岁宴/筹办周岁宴.readme)：%%设置项目截止日期，及其结果描述%%
+- [表达与输出](https://runqi-zhao.github.io/5.-表达/readme)：返回 首页 · 知识来源 后端开发 MOC、计算机基础 MOC、AI MOC
+- [seata client端启动流程](https://runqi-zhao.github.io/5.-表达/博客/apache-seata/seata-client端启动流程)：Seata 是一款开源的分布式事务解决方案，致力于在微服务架构下提供高性能和简单易用的分布式事务服务。在 Seata 开源之前，其内部版本在阿里系内部一直扮演着应用架构层数据一致性的中间件角色，帮助经济体平稳的度过历年的双11，对上层业务进行了有力的技术支撑。经过多年沉淀与积累，其商业化产品先后在阿里云、金融云上售卖。
+- [一种实用新型 Obsidian 实践之构建我的第二大脑 🧠](https://runqi-zhao.github.io/5.-表达/博客/一种实用新型-obsidian-实践之构建我的第二大脑-🧠)：本文将以  为例，分享我使用 Obsidian 构建第二大脑的实践！
+- [分布式事务](https://runqi-zhao.github.io/5.-表达/博客/基础/分布式事务)：从一个问题进行出发：
+- [IDEA](https://runqi-zhao.github.io/idea)：个人整体笔记
+- [求职看板](https://runqi-zhao.github.io/jobs-moc)：返回 首页 · 领域 2. 领域/找工作/找工作.README.md
+- [我的知识库](https://runqi-zhao.github.io/readme)：从 首页 开始。
+- [Runqi 的知识库](https://runqi-zhao.github.io)：后端开发、计算机基础、AI 工程与长期方法论的笔记库。每条知识都带 `source`（出处）和 `kind` / `review_after`（有效期），过期会被复核或归档。
+- [{{title}}](https://runqi-zhao.github.io/templates/jobs_template)：返回 Jobs MOC
+- [<% tp.file.title %>](https://runqi-zhao.github.io/templates/剪藏-pdf)：-
+- [<% tp.file.title %>](https://runqi-zhao.github.io/templates/剪藏-网页)：-
+- [<% tp.file.title %>](https://runqi-zhao.github.io/templates/剪藏-视频)：- `00:00`
+- [<% tp.file.title %>](https://runqi-zhao.github.io/templates/捕获-碎片)：<% tp.file.cursor() %>
+- [<% tp.file.title %>](https://runqi-zhao.github.io/templates/知识卡)：-
+- [任务](https://runqi-zhao.github.io/任务)：返回 首页
+- [待整理清单](https://runqi-zhao.github.io/待整理清单)：返回 首页
+- [知识库整理报告（2026-09-27）](https://runqi-zhao.github.io/整理报告-2026-09-27)：返回 首页
+- [知识保鲜看板](https://runqi-zhao.github.io/知识保鲜看板)：返回 首页 · 相关：知识关联体检 · 知识库使用指南
+- [知识关联体检](https://runqi-zhao.github.io/知识关联体检)：返回 首页 · 知识保鲜看板 · 知识库使用指南
+- [知识库使用指南](https://runqi-zhao.github.io/知识库使用指南)：返回 首页
+- [首页](https://runqi-zhao.github.io/首页)

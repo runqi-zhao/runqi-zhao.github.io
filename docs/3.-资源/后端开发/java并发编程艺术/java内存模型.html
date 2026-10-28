@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr"><head><title>Java内存模型</title><meta charset="utf-8"/><link rel="preload" href="../../../index-bb6c1746.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Runqi 的知识库"/><meta property="og:title" content="Java内存模型"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Java内存模型"/><meta name="twitter:description" content="总结《Java并发艺术之美》"/><meta property="og:description" content="总结《Java并发艺术之美》"/><meta property="og:image:alt" content="总结《Java并发艺术之美》"/><meta property="twitter:domain" content="runqi-zhao.github.io"/><meta property="og:url" content="https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java内存模型"/><meta property="twitter:url" content="https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java内存模型"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="总结《Java并发艺术之美》"/><meta name="generator" content="Quartz"/><link href="../../../index-bb6c1746.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java内存模型-og-image.webp"/><meta property="og:image:url" content="https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java内存模型-og-image.webp"/><meta name="twitter:image" content="https://runqi-zhao.github.io/3.-资源/后端开发/java并发编程艺术/java内存模型-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="3.-资源/后端开发/java并发编程艺术/java内存模型" data-basepath><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Runqi 的知识库</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="搜索" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>搜索</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="搜索内容..." placeholder="搜索内容..."/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="暗色模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="暗色模式"><title>暗色模式</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="亮色模式"><title>亮色模式</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="阅读模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="阅读模式"><title>阅读模式</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-51" aria-label="探索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>探索</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-51" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../3.-资源/">3. 资源</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../3.-资源/后端开发/">后端开发</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../3.-资源/后端开发/java并发编程艺术/">Java并发编程艺术</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Java内存模型</a></div></nav><h1 class="article-title">Java内存模型</h1><details class="note-properties metadata-container" open data-collapsed="false"><summary class="note-properties-header"><span class="note-properties-title">Properties</span><span class="note-properties-count">1</span></summary><table class="note-properties-table"><tbody><tr class="note-properties-row metadata-property"><td class="note-properties-key metadata-property-key">description</td><td class="note-properties-value metadata-property-value"><span class="note-properties-text">总结《Java并发艺术之美》</span></td></tr></tbody></table></details><p show-comma="true" class="content-meta"><time datetime="2026-10-28T07:14:34.028Z">2026年10月28日</time><span>92分钟阅读</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h2 id="java内存基础">Java内存基础<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#java内存基础" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="并发编程模型的两个关键问题">并发编程模型的两个关键问题<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#并发编程模型的两个关键问题" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><font color="red" size="5">线程之间如何通信、线程之间如何同步</font></p>
+<p>通信：线程之间以何种机制交换信息。</p>
+<p>同步：程序中用于控制不同线程间操作发生相对顺序的机制。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%A4%E4%B8%AA%E5%85%B3%E9%94%AE%E9%97%AE%E9%A2%98.png" alt="并发编程两个关键问题"/></p>
+<h3 id="java内存模型的抽象结构">Java内存模型的抽象结构<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#java内存模型的抽象结构" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Java中，堆结构如下图</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/java%E5%A0%86%E7%BB%93%E6%9E%84.jpg" alt="java堆结构"/></p>
+<p>其中，共享指的是线程之间共享。</p>
+<p>java线程之家通信是由Java内存模型（JMM）控制。JMM决定一个线程对共享变量的写入何时对另一个线程可见。</p>
+<p>JMM定义了线程和主存之间的抽象关系：</p>
+<ul>
+<li>线程之间的共享变量存储在主内存之中</li>
+<li>每个线程存在本地内存（抽象概念，并不真实存在）
+<ul>
+<li>本地内存包括
+<ul>
+<li>缓存</li>
+<li>写缓冲区</li>
+<li>寄存器</li>
+<li>其他硬件</li>
+<li>编译器优化</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>本地内存保存共享内存副本</li>
+</ul>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221204212005018.png" alt="image-20221204212005018"/></p>
+<center>JMM的抽象结构示意图</center>
+<p>线程之间如何进行通信？</p>
+<ol id="0rtm7h">
+<li>线程A把本地内存中的变量通过共享变量刷新到主内存中去</li>
+<li>线程B从主内存中去读取线程A之前更新过的共享变量</li>
+</ol>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221204212230918.png" alt="image-20221204212230918"/></p>
+<center>线程之间的通信</center>
+<p>从总体来看，JMM通过控制主内存于每个线程之间的交互，来控制内存的可见性。</p>
+<h3 id="从源码到指令序列的重排序">从源码到指令序列的重排序<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#从源码到指令序列的重排序" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%B0%E6%9C%80%E7%BB%88%E6%89%A7%E8%A1%8C%E7%9A%84%E6%8C%87%E4%BB%A4%E5%BA%8F%E5%88%97%E7%9A%84%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="从源代码到最终执行的指令序列的示意图"/></p>
+<p>为了提高性能，编译器和处理器会对指令进行重排序：</p>
+<ol>
+<li>
+<p>编译器优化的重排序</p>
+<p>重新安排语句执行顺序，在不改变语义的前提下</p>
+</li>
+<li>
+<p>指令级并发的重排序</p>
+<p>将多条语句叠加执行。不存在数据依赖性时，处理器可以改变语句对应机器指令的执行顺序。</p>
+</li>
+<li>
+<p>内存的重排序</p>
+<p>处理器使用缓存于读/写缓冲区，是的加载存储操作看上去在乱序执行</p>
+</li>
+</ol>
+<p>2 3属于处理器重排序 1 属于编译器重排序</p>
+<p><font color="red" size="5">导致问题：内存可见性问题</font></p>
+<p>解决办法</p>
+<ol>
+<li>编译器：JMM编译器重排序规则会**<font color="red">禁止特定类型</font>**的编译器重排序</li>
+<li>处理器：JMM的处理器重排序要求规则要求Java编译器在生成对应的指令序列之前，插入特定类型的**<font color="red">内存屏障</font><strong>指令，通过内存屏障指令</strong><font color="red">禁止类特定类型</font>**的处理器重排序。</li>
+</ol>
+<h3 id="并发编程模型的分类">并发编程模型的分类<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#并发编程模型的分类" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>现代处理器使用写缓冲区临时保存向内存写入的数据</p>
+<p>好处</p>
+<ol>
+<li>写缓冲区可以流水线执行，避免处理器停顿带来的延迟；</li>
+<li>批处理方式写入写缓冲区，合并写缓冲区对于廷议内存地址的多次写，减少对总线的占用。</li>
+</ol>
+<p>坏处：</p>
+<ol>
+<li><font color="red">每个处理器的写缓冲区只对本处理器可见</font>；会产生脏读</li>
+<li>可见性如何保证？</li>
+</ol>
+<p><font size="5">问题1详细说明</font></p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221204215118266-1670840143672-1.png" alt="image-20221204215118266"/></p>
+<center>处理器和内存的交互</center>
+<p>如图，处理器A，B同时将自己的共享变量存储到自己的写缓冲区(A1,B1)，A从内存中读取B（A2），B从内存中读取A（B2），最后，将自己缓存区修改的变量（脏数据）刷新到内存中（A3，B3），程序最后的结果为a=b=0。显然，内存实际的发生数徐变成了A2->A1。</p>
+<p><strong>解决办法：处理器允许对写-读操作重排序</strong></p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221204215828583.png" alt="image-20221204215828583"/></p>
+<p>N代表不允许连个操作重排序，Y表示允许重排序。</p>
+<p><font size="5">问题2解决</font></p>
+<p>为了保证内存可见性，Java编译器在生成指令序列的适当位置会插入内存屏障指令来禁止特定类型的处理器重排序。JMM把内存屏障指令分为4类，如表所示。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221204220330124.png" alt="image-20221204220330124"/></p>
+<p>Load 用于把内存中的数据装载到寄存器中。</p>
+<p>Store用于把寄存器中的数据存入内存。</p>
+<p>StoreLoad Barriers用的最多，但处理时会将写缓冲区的全部数据读取到内存之中。</p>
+<h3 id="happens-before简介">happens-before简介<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#happens-before简介" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>目前，java使用JSR-133内存模型，在JSR-133中，使用happens-before的概念来阐述操作之间的内存可见性。即，在JMM中，如果一个操作执行的结果对另一个操作可见，那么这两个操作之间必须存在happens-before关系。其中的两个操作的是否为一个线程任意。</p>
+<p>happens-before的规则：</p>
+<ol>
+<li>
+<p>程序顺序规则：一个线程中的每个操作，happens-before与该线程中的任意后续操作。</p>
+<p>两个操作具有happens-before关系，并不意味着前一个操作必须要在后一个操作之前执行！仅仅要求前一个操作（执行结果）对后一个操作可见，且一个操作按顺序排在第二个操作之前。</p>
+</li>
+<li>
+<p>监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</p>
+</li>
+<li>
+<p>volatile变量规则：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。</p>
+</li>
+<li>
+<p>传递性：A happens-before B, B happpens-before C -> A happens before C</p>
+</li>
+</ol>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221207100407303.png" alt="image-20221207100407303"/></p>
+<center>happens-before与JMM的关系</center>
+<ul>
+<li><strong><font color="red">一个happens-before对应于一个或多个编译器和处理器重排序规则。</font></strong></li>
+<li>对于java程序员来说，happens-before避免了为了理解JMM提供的内存可见性保证而去学习复杂的重排序规则以及这些规则的具体实现方法</li>
+</ul>
+<h2 id="重排序">重排序<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#重排序" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>定义：指编译器为了<strong>优化程序性能</strong>而对<strong>指令序列进行重排序</strong>的一种手段</p>
+<h3 id="数据依赖性">数据依赖性<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#数据依赖性" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>定义：两个操作访问<font color="red">同一个变量</font>，且<font color="red">两个操作中有一个是写操作</font>，此时这两个就存在数据依赖性。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208102612371.png" alt="image-20221208102612371"/></p>
+<p>上面三种情况，只要重排序两个操作的执行顺序，程序的执行结果就会被改变。</p>
+<p>因此，编译器与处理器在重排序的时候，不会改变数据依赖性的顺序。</p>
+<p><font color="red" size="5">注意，此时说的数据依赖性仅仅是针对单处理器，不同处理器之间和不同线程之间的数据依赖性不被编译器和处理器考虑。</font></p>
+<h3 id="as-if-serial语义">as-if-serial语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#as-if-serial语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>定义：不管怎么重排序，程序的执行结果不变。</li>
+<li>做法：当存在数据依赖性时，不能进行重排序；不存在时，可以进行重排序。</li>
+<li>效果：是的程序员出现一种“幻觉”：单线程往往是按程序的顺序执行的。（详情请看<code>程序的顺序规则</code>）</li>
+<li>问题：单线程时不会存在任何问题，多线程会存在问题。</li>
+</ul>
+<h3 id="程序的顺序规则">程序的顺序规则<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#程序的顺序规则" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><font color="red" size="5">JMM要求前一个操作对后一个操作可见，且第一个操作按顺序排在第二个操作之前。（不代表在其之间执行）</font></p>
+<p>如：</p>
+<ul>
+<li>操作A的执行结果不需要对操作B可见</li>
+<li>重排序操作A和操作B后的执行结果，与操作A和操作B按happens-before顺序执行的结果一致。</li>
+</ul>
+<h3 id="重排序对多线程的影响">重排序对多线程的影响<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#重排序对多线程的影响" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> ReorderExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    boolean</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword">    Public </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (flag) { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> a; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 4</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ……</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>提问：假设现在存在两个线程A，B，A首先执行writer()方法，随后B执行reader()方法。线程B在执行操作4时，能否看到线程A在操作1对共享变量a的写入？</p>
+<p><font color="blue" size="5">不一定</font></p>
+<p>原因：操作1与操作2没有数据依赖关系，编译器和处理器可以重排序，操作3与操作4不存在依赖关系，也可以重排序，则，会出现下面效果：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208105051298.png" alt="image-20221208105051298"/></p>
+<center>程序执行时序图</center>
+<p>虚线代表错误的读操作，实现代表正确的读操作。</p>
+<p>很明显，多线程程序的语义被重排序破坏了。</p>
+<p>还有一种情况：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208105314286.png" alt="image-20221208105314286"/></p>
+<center>程序执行时序图</center>
+<p>3与4存在控制依赖关系。当代码中存在控制依赖性时，会影响指令序列的并行速度。<strong>编译器和处理器执行来克服控制相关性对并行度的影响。</strong></p>
+<p>上图中，处理器执行线程B的处理器可以提前读取并计算a*a，然后把计算结果临时保存在一个名为重排序缓冲(ROB)的英寸缓存中。当操作3的条件位true，将其写入i。</p>
+<p>在单线程程序中，对存在控制依赖的操作重排序，不会改变执行结果；但在多线程程序中，对存在控制依赖的操作重排序，可能会改变程序的执行结果。</p>
+<h2 id="顺序一致性">顺序一致性<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#顺序一致性" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>定义：是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参照物。</p>
+<h3 id="数据竞争与顺序一致性">数据竞争与顺序一致性<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#数据竞争与顺序一致性" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>java内存模型规范对数据竞争的定于如下：</p>
+<p><font color="red">当在一个线程中写一个变量，在另一个线程读同一个变量，而且写和读没有通过同步来排序。</font></p>
+<p>当代码中包含数据竞争时，程序的执行往往产生违反直觉的结果。如果一个多线程程序能正确同步，这个程序将是一个没有数据竞争的程序。</p>
+<p>JMM对正确同步做了以下操作：</p>
+<ul>
+<li>正确同步（广义，包括对常用原语的正确使用）的，程序的执行具有顺序一致性—线程的执行结果和该程序在一致性内存模型中结果相同。</li>
+</ul>
+<h3 id="顺序一致性内存模型">顺序一致性内存模型<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#顺序一致性内存模型" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>两大特性：</p>
+<ol>
+<li>一个线程中所有操作必须按照程序的顺序执行。</li>
+<li>（不管程序是否同步）所有线程都只能看到一个单一的操作执行顺序。在顺序一致性内存模型中，每个操作必须原子执行且立刻对所有线程可见</li>
+</ol>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208140933682.png" alt="image-20221208140933682"/></p>
+<center>顺序一致性内存模型的视图</center>
+<p>在概念上，顺序一致性模型有一个单一的全局内存，这个内存通过左右摇摆的开关连接到任意一个线程，同时每一个线程必须按照程序的顺序来执行内存读/写操作。</p>
+<p>因此，在任意时间点，<font color="red">只能有一个线程连接到内存</font>，即在多线程并发执行时，图中的装置把所有线程的所有内存读/写操作串行化。</p>
+<p>例如，现在线程A与线程B并发执行。其中A有3个操作：A1 -> A2 -> A3，B1->B2->B3。</p>
+<p>那么，此时我们可以有下图这种情况：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208141621231.png" alt="image-20221208141621231"/></p>
+<center>顺序一致性模型的一种执行效果</center>
+<p>当然，也会存在下图这种效果：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208141714667.png" alt="image-20221208141714667"/></p>
+<center>顺序一致性模型中的另一种执行效果</center>
+<p>以上两种情况，都是合理的。第二个操作之所以能够实现是因为：顺序一致性内存模型中的每个操作必须立即对任意线程可见。</p>
+<p>但在JMM中，没有这个保证。<font color="red">未同步程序在JMM中不但整体的执行顺序是无序的，而且所有线程看到的操作执行顺序也可能不一致</font>。</p>
+<p>比如，在当前线程把写过的数据缓存在本地内存中，在没有刷新到主内存之前，这个写操作仅对当前线程可见；从其他线程的角度来观察，会认为这个写操作根本没有被当前线程执行。只有当前线程把本地内存中写过的数据刷新到主内存之后，这个写操作才能对其他线程可见。在这种情况下，当前线程和其他线程看到的操作执行顺序将不一致。</p>
+<h3 id="同步程序的顺序一致性效果">同步程序的顺序一致性效果<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#同步程序的顺序一致性效果" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> SynchronizedExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    boolean</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 获取锁</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    } </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 释放锁</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 获取锁</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (flag) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> a;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            ……</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        } </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 释放锁</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设线程A执行writer方法，线程B执行reader方法。根据JMM规范，该程序的执行结果将与程序在顺序一致性模型中的执行结果相同。时序图如下：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208143620525.png" alt="image-20221208143620525"/></p>
+<center>两个内存模型中的执行时序对比图</center>
+<p>顺序一致性模型中，所有操作按照程序的顺序串行执行。</p>
+<p>JMM中，临界区的代码可以重排序。JMM会在推出临界区和进入临界区这两个关键时间点做一些特别处理，是的线程在两个时间点具有与顺序一致性模型相同的内存模型。</p>
+<p>虽然线程A在临界区内做了重排序，但由于监视器互斥执行的特性，这里的线程B根本无法“观察”到线程A在临界区内的重排序。这种重排序既提高了执行效率，又没有改变程序的执行结果。</p>
+<p>因此，JMM在实现顺序一致性的具体方针为：<font color="red">在不改变（正确同步的）程序执行结果的前提下，尽可能地为编译器和处理器地优化打开方便之门。</font></p>
+<h3 id="未同步程序地执行特性">未同步程序地执行特性<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#未同步程序地执行特性" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>未同步或者未正确同步地线程，JMM只提供最小安全性：</p>
+<ul>
+<li>线程执行时读取到的值，要么是之前某个线程写入的值，要么是默认值</li>
+<li>JMM保证线程读操作读取到的值不会无中生有(Out Thin Air)地冒出来。</li>
+<li>JVM在堆分配对象时，首先会对内存空间进行清零，然后才会在上面分配对象（JVM内部会同步这两个操作）。</li>
+<li>因此，在已经清零的内存空间(Pre-zeroed Memory)分配对象时，域地默认初始化已经完成了。</li>
+</ul>
+<p>JMM不保证未同步程序的执行结果与该程序在顺序一致性模型中地执行结果一致。</p>
+<p>未同步程序在JMM中执行时，整体式无序的，起执行结果也无法预知。未同步在两个模型中地执行特性有如下几个差异：</p>
+<ol>
+<li>顺序一致性模型保证单线程内地操作会按照程序地顺序执行，而JMM不保证单线程内操作会按程序的顺序执行（比如上面正确的多线程在临界区内重排序）。</li>
+<li>顺序一致性模型保证所有线程只能看到一致的操作执行顺序，而JMM不保证所有线程能看到一致的操作执行顺序。</li>
+<li>JMM不保证对64位long型和double型变量的写操作具有原子性，而顺序一致性模型保证对所有内存读/写都具有原子性。</li>
+</ol>
+<p>差异3与处理器总线工作机制密切相关，在计算机中，数据通过总线在处理器和内存之间传递。每次处理器和内存之间的数据传递都是通过一系列步骤来完成的，这一系列步骤称之为总线事务（Bus Transaction）。总线事务包括读事务（Read Transaction）和写事务（WriteTransaction）。读事务从内存传送数据到处理器，写事务从处理器传送数据到内存，每个事务会读/写内存中一个或多个物理上连续的字。这里的关键是，总线会同步试图并发使用总线的事务。在一个处理器执行总线事务期间，总线会禁止其他的处理器和I/O设备执行内存的读/写。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208153200262.png" alt="image-20221208153200262"/></p>
+<center>总线的工作机制</center>
+<p>总线会对A，B，C发现仲裁，对竞争做出裁决。假设A获胜，此时要等A执行完毕，才能访问其他内容。</p>
+<p>总线的这些工作机制可以把所有处理器对内存的访问以串行化的方式来执行。在任意时间点，最多只能有一个处理器可以访问内存。这个特性确保了单个总线事务之中的内存读/写操作具有原子性。</p>
+<p>问题：32位机器上64位可能不具有原子性，造成后果</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221208154809733.png" alt="image-20221208154809733"/></p>
+<center>总线事务执行的时序图</center>
+<p>这时，处理器B只能看到被处理器A“写了一半”的无效值。</p>
+<p>注意，从JDK5开始，仅仅只允许把一个64位long/double型变量的写操作拆分为两个32位的写操作来执行，任意的读操作在JSR-133中都必须具有原子性（即任意读操作必须要在单个读事务中执行）。</p>
+<h2 id="volatile内存语义">volatile内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="volatile的特性">volatile的特性<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile的特性" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>最好解释：把对volatile变量的单个读/写，看成是使用同一个锁对这些单个读/写操作的同步。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> VolatileFeaturesExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    volatile</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> long</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> vl </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0L</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 使用volatile声明64位的long型变量</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> set</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">long</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> l</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        vl </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> l; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 单个volatile变量的写</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> getAndIncrement</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> () {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        vl</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 复合（多个）volatile变量的读/写</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> long</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> vl; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 单个volatile变量的读</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设有多个线程分别调用上面程序的3个方法，这个程序在语义上和下面程序等价。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> VolatileFeaturesExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    long</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> vl </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0L</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 64位的long型普通变量</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> set</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">long</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> l</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 对单个的普通变量的写用同一个锁同步</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        vl </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> l;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> getAndIncrement</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> () { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 普通方法调用</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        long</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> temp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(); </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 调用已同步的读方法</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        temp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1L</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 普通写操作</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        set</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(temp); </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 调用已同步的写方法</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> long</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 对单个的普通变量的读用同一个锁同步</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> vl;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>即，一个volatile变量的单个读/写操作，与一个普通的读/写操作都是使用同一个锁同步，它们之间的执行效果形同。</p>
+<p>锁的happens-before规则保证：</p>
+<ol>
+<li>释放锁时两个线程的可见性</li>
+<li>获取锁时两个线程的可见性</li>
+</ol>
+<p>那么，对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。</p>
+<p><font color="red">锁的语义决定了临界区代码的执行具有原子性。</font>即，只要是volatile变量，即使是64位的long和double型变量，也具有原子性，但是如果是符合操作（a++）不具有原子性。</p>
+<p>总结<strong>volatile自身</strong>特性</p>
+<ol>
+<li>
+<p><strong>可见性</strong></p>
+<p>对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入</p>
+</li>
+<li>
+<p><strong>原子性</strong></p>
+<p>对任意单个volatile变量的读/写具有原子性，但类似于volatile++这种复合操作不具有原子性。</p>
+</li>
+</ol>
+<h3 id="volatile写-读建立的happens-before关系">volatile写-读建立的happens-before关系<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile写-读建立的happens-before关系" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>即相当于volatile对线程可见性的影响</p>
+<p>从JDK5开始，volatile变量的写-读可以实现线程之间的通信。</p>
+<p>从内存语义的角度来说，volatile的写-读与锁的释放-获取有相同的效果：volatile写和锁的释放有相同的内存语义；volatile读与锁的获取有相同的语义。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> VolatileExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    volatile</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> boolean</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (flag) {　　　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> a;　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 4</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ……</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设线程A先执行writer方法，线程B执行reader()方法。A线程写之前的所有共享变量，B线程读取之后可见所有的共享变量。根据happens-before规则，这个建立的happens-before关系可以分为3类：</p>
+<ol>
+<li>根据顺序次序规则</li>
+<li>根据volatile规则，2 happens before 3</li>
+<li>根据happens-before规则</li>
+</ol>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209153237453.png" alt="image-20221209153237453"/></p>
+<center>happens before关系</center>
+<p>每一个箭头链接的两个节点，代表了一个happens-before关系。黑色箭头表示程序顺序规则；橙色箭头表示volatile规则；蓝色箭头表示组合这些规则后提供的happens-before保证。</p>
+<h3 id="volatile写-读的内存语义">volatile写-读的内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile写-读的内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="volatile写内存语义">volatile写内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile写内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>当写一个volatile变量，JMM会把该线程对应的本地内存中的共享变量书信到主内存。</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> VolatileExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    volatile</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> boolean</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        flag </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (flag) {　　　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> a;　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 4</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ……</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>状态图如下：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209154059683.png" alt="image-20221209154059683"/></p>
+<center>共享变量的状态示意图</center>
+<p>线程A在写flag变量后，本地内存A中被线程A更新过的两个共享变量的值被刷新到主内存中。此时，本地内存A和主内存中的共享变量的值是一致的。</p>
+<h4 id="volatile读内存语义">volatile读内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile读内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效。接下来从主内存中进行读取。</li>
+</ul>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209155208886.png" alt="image-20221209155208886"/></p>
+<center>共享变量的状态示意图</center>
+<p>线程B原本的值认为无效，必须从主内存中进行读取。</p>
+<p>将两部综合起来看：<font color="red">在读线程B读一个volatile变量后，写线程A再写这个volatile变量之前所有可见的共享变量值都将立即变得对读线程B可见。</font></p>
+<h4 id="总结">总结<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#总结" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>线程A写一个volatile变量，实质上就是线程A向接下来要读这个volatile变量的某个线程发出了(其对共享变量所做的修改)消息。</li>
+<li>线程B读一个volatile变量，实质上就是线程B接受之前某个线程发出（在写这个volatile变量之前对共享变量所做修改的）的消息</li>
+<li>线程A写一个volatile变量，线程B随后读这个volatile变量，实质上就是线程A向线程B发送消息</li>
+</ul>
+<h3 id="volatile语义实现">volatile语义实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile语义实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>为了实现volatile内存语义，JMM会分别限制这两种类型的重排序类型。</p>
+<center>volatile重排序规则表</center>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>是否能重排序</th><th>第二个操作</th><th>第二个操作</th><th>第二个操作</th></tr></thead><tbody><tr><td>第一个操作</td><td>普通读/写</td><td>volatile读</td><td>volatile写</td></tr><tr><td>普通读/写</td><td></td><td></td><td>NO</td></tr><tr><td>volatile读</td><td>NO</td><td>NO</td><td>NO</td></tr><tr><td>volatile写</td><td></td><td>NO</td><td>NO</td></tr></tbody></table></div>
+<p>举例来说，第三行最后一个单元格的意思是：在程序中，当第一个操作为普通变量的读或写时，如果第二个操作为volatile写，则编译器不能重排序这两个操作。</p>
+<p>从表可知：</p>
+<ol>
+<li>当第二个是volatile写时，不管第一个操作是什么，都不能重排序。这个规则确保volatile写之前的操作不会被编译器重排序到volatile写之后</li>
+<li>当第一个操作volatile读时，不管第二个是什么，都不能重排序。目的是为了确保volatile读之后的操作不会被编译器重排序到volatile都之前</li>
+<li>当一个时volatile写，第二个操作是volatile读时，不能重排序。</li>
+</ol>
+<p>怎么进行实现？</p>
+<ol>
+<li>编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。</li>
+<li>编译器去发现最有不住来最小化屏障总数几乎不可能，JMM采用保守策略。
+<ol>
+<li>在每个volatile写操作的前面插入一个StoreStore屏障。</li>
+<li>在每个volatile写操作的后面插入一个StoreLoad屏障。</li>
+<li>在每个volatile读操作的后面插入一个LoadLoad屏障。</li>
+<li>在每个volatile读操作的后面插入一个LoadStore屏障。</li>
+</ol>
+</li>
+</ol>
+<p>下图是volatile写插入内存屏障后生成的指令序列示例图：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209161647492.png" alt="image-20221209161647492"/></p>
+<center>指令序列示意图</center>
+<p>volatile写后面的StoreLoad屏障。此屏障的作用是避免volatile写与后面可能有的volatile读/写操作重排序。因为编译器常常无法准确判断在一个volatile写的后面是否需要插入一个StoreLoad屏障（比如，一个volatile写之后方法立即return）。为了保证能正确实现volatile的内存语义，JMM在采取了保守策略：在每个volatile写的后面，或者在每个volatile读的前面插入一个StoreLoad屏障。从整体执行效率的角度考虑，JMM最终选择了在每个volatile写的后面插入一个StoreLoad屏障。因为volatile写-读内存语义的常见使用模式是：一个写线程写volatile变量，多个读线程读同一个volatile变量。当读线程的数量大大超过写线程时，选择在volatile写之后插入StoreLoad屏障将带来可观的执行效率的提升。从这里可以看到JMM在实现上的一个特点：首先确保正确性，然后再去追求执行效率。</p>
+<p>下图是volatile读插入内存屏障后生成的指令序列</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209163851656.png" alt="image-20221209163851656"/></p>
+<center>指令序列示意图</center>
+<p>LoadLoad屏障用来禁止处理器把上面的volatile读与下面的普通读重排序。</p>
+<p>LoadStore屏障用来禁止处理器把上面的volatile读与下面的普通写重排序。</p>
+<p>上述volatile写和volatile读的内存屏障插入策略非常保守。在实际执行时，只要不改变volatile写-读的内存语义，编译器可以根据具体情况省略不必要的屏障。下面通过具体的示例代码进行说明。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> VolatileBarrierExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    volatile</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> v1 </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    volatile</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> v2 </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> readAndWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> v1;　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 第一个volatile读</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> j </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> v2; 　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 第二个volatile读</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> j; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 普通写</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        v1 </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; 　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 第一个volatile写</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        v2 </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> j </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; 　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 第二个 volatile写</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    …　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 其他方法</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>针对readAndWrite()方法，编译器在生成字节码时可以做如下的优化。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209164230852.png" alt="image-20221209164230852"/></p>
+<center>指令序列示意图</center>
+<p>注意，最后的StoreLoad屏障不能省略。因为第二个volatile写之后，方法立即return。此时编译器可能无法准确断定后面是否会有volatile读或写，为了安全起见，编译器通常会在这里插入一个StoreLoad屏障。</p>
+<p>上面的优化针对任意处理器平台，由于不同的处理器有不同“松紧度”的处理器内存模型，内存屏障的插入还可以根据具体的处理器内存模型继续优化。以X86处理器为例，除最后的StoreLoad屏障外，其他的屏障都会被省略。</p>
+<p>前面保守策略下的volatile读和写，在X86处理器平台可以优化成下图</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209164416551.png" alt="image-20221209164416551"/></p>
+<center>指令序列示意图</center>
+<p>前文提到过，X86处理器仅会对写-读操作做重排序。X86不会对读-读、读-写和写-写操作做重排序，因此在X86处理器中会省略掉这3种操作类型对应的内存屏障。在X86中，JMM仅需在volatile写后面插入一个StoreLoad屏障即可正确实现volatile写-读的内存语义。这意味着在X86处理器中，volatile写的开销比volatile读的开销会大很多（因为执行StoreLoad屏障开销会比较大）。</p>
+<h3 id="jsr-133为什么要增强volatile的内存语义">JSR-133为什么要增强volatile的内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jsr-133为什么要增强volatile的内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>旧的Java内存模型允许volatile变量与普通变量重排序。在旧的内存模型中，VolatileExample示例程序可能被重排序成下列时序来执行</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221209164550684.png" alt="image-20221209164550684"/></p>
+<center>线程执行时序图</center>
+<p>为了提供一种比锁更轻量级的线程之间通信的机制，JSR-133专家组决定增强volatile的内存语义：严格限制编译器和处理器对volatile变量与普通变量的重排序，确保volatile的写-读和锁的释放-获取具有相同的内存语义。</p>
+<p>从编译器重排序规则和处理器内存屏障插入策略来看，只要volatile变量与普通变量之间的重排序可能会破坏volatile的内存语义，这种重排序就会被编译器重排序规则和处理器内存屏障插入策略禁止。</p>
+<p>由于volatile仅仅保证对单个volatile变量的读/写具有原子性，而锁的互斥执行的特性可以确保对整个临界区代码的执行具有原子性。在功能上，锁比volatile更强大；在可伸缩性和执行性能上，volatile更有优势。</p>
+<h2 id="锁的内存语义">锁的内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#锁的内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="锁的释放-获取建立的happens-before关系">锁的释放-获取建立的happens-before关系<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#锁的释放-获取建立的happens-before关系" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>锁是java并发编程中最重要的同步机制。锁除了让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> MonitorExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }　　　　　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 4</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> a;　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ……</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }　　　　　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 6</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设线程A执行writer()方法，随后线程B执行reader()方法。根据happens-before规则，这个过程包含的happens-before关系可以分为3类。</p>
+<ol>
+<li>根据程序次序规则，1 happens-before 2,2 happens-before 3;4 happens-before 5,5 happens before 6。</li>
+<li>根据监视器锁规则，3 happens-before 4。</li>
+<li>根据happens-before的传递性，2 happens-before 5。</li>
+</ol>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221210172844092.png" alt="image-20221210172844092"/></p>
+<center>happens-before关系图</center>
+<p>每一个箭头链接的两个节点，代表了一个happens-before关系。黑色箭头表示程序顺序规则；橙色箭头表示监视器锁规则；蓝色箭头表示组合这些规则后提供的happens before保证。</p>
+<p>在线程A释放了锁之后，随后线程B获取同一个锁。在上图中，2 happens-before 5。因此，线程A在释放锁之前所有可见的共享变量，在线程B获取同一个锁之后，将立刻变得对B线程可见。</p>
+<h3 id="锁的释放和获取的内存语义">锁的释放和获取的内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#锁的释放和获取的内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>当线程释放锁时，JMM会把该线程该线程对应的本地内存中的共享变量数显到主内存中。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> MonitorExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        a</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }　　　　　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 4</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> a;　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ……</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }　　　　　　　　　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 6</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>还是以这个程序为例，假设线程A执行writer()方法，随后线程B执行reader()方法。A线程释放锁后，共享数据的状态如下：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221210203244226.png" alt="image-20221210203244226"/></p>
+<center>共享数据的状态示意图</center>
+<p>当线程获取锁时，JMM会把线程对应的本地内存置为无效。从而使得被监视保护的临界区代码必须从内存中读取共享变量。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221210203446257.png" alt="image-20221210203446257"/></p>
+<center>锁获取的状态示意图</center>
+<p><font color="red">锁释放与volatile写有相同的内存语义；所获取与volatile读有相同的内存语义</font></p>
+<p>总结：</p>
+<ul>
+<li>线程A释放一个锁，实质上是线程A向接下来将要获取这个锁的某个线程发出了（线程A对共享变量所做的修改的）消息。</li>
+<li>线程B获取一个锁，实质上是线程B接受了之前按某个线程发出的（在释放这个锁之前对共享变量所做修改的）消息。</li>
+<li>线程A释放一个锁，线程B获取一个锁，这个过程实际上是线程通过主内存向线程B发送消息。</li>
+</ul>
+<h3 id="锁内存语义的实现">锁内存语义的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#锁内存语义的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>借助ReentrantLock源码进行分析：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> ReentrantLockExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword">    ReentrantLock lock </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> ReentrantLock</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        lock.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lock</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 获取锁</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            a</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">finally</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">            lock.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">unlock</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 释放锁</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> () {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        lock.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">lock</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 获取锁</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        try</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        	int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> a;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">       		……</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">finally</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        	lock.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">unlock</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 释放锁</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>在ReentrantLock中，调用lock()方法获取锁；调用unlock()方法释放锁。</p>
+<p>ReentrantLock的实现依赖于Java同步器框架AbstractQueuedSynchronizer（AQS）。AQS使用一个整型的volatile变量（命名为state）来维护同步状态。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221210204350675.png" alt="image-20221210204350675"/></p>
+<center>ReentrantLock的类图</center>
+<p>ReentrantLock分为公平锁与不公平锁。</p>
+<h4 id="公平锁">公平锁<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#公平锁" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>加锁方法lock()调用轨迹：</p>
+<ol>
+<li>ReentrantLock:lock()。</li>
+<li>FairSync:lock();</li>
+<li>AbstractQueuedSynchronizer:acquire(int arg)</li>
+<li>ReentrantLock:tryAcquire(int acquires)</li>
+</ol>
+<p>从第四部开始真正加锁</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">protected</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> final</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> boolean</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> tryAcquire</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> acquires) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    final</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Thread current </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Thread.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">currentThread</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> c </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> getState</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();　　　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 获取锁的开始，首先读volatile变量state</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (c </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">isFirst</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(current) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;&amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        compareAndSetState</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, acquires)) {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        setExclusiveOwnerThread</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(current);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    else</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (current </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> getExclusiveOwnerThread</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> nextc </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> c </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> acquires;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (nextc </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)　　</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        throw</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Error</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;Maximum lock count exceeded&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        setState</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(nextc);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>从源代码得，加锁方法首先读volatile变量state</p>
+<p>解锁方法unlock()调用轨迹如下：</p>
+<ol>
+<li>ReentrantLock:unlock()。</li>
+<li>AbstractQueuedSynchronizer:release(int arg)。</li>
+<li>Sync:tryRelease(int releases)。</li>
+</ol>
+<p>从第3步开始释放锁</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">protected</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> final</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> boolean</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> tryRelease</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> releases) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> c </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> getState</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> releases;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Thread.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">currentThread</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> getExclusiveOwnerThread</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        throw</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> IllegalMonitorStateException</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    boolean</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> free </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (c </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        free </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        setExclusiveOwnerThread</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    setState</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(c);　　　　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 释放锁的最后，写volatile变量state</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> free;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>释放锁的最后写volatile变量的state。</p>
+<p>公平锁在释放后最后写volatile变量state，在获取锁时首先读这个volatile变量。根据volatile的happens-before规则，释放锁的线程在写volatile变量之前可见的共享变量，在获取锁的线程读取同一个volatile变量后立即变得对获取锁的线程可见。</p>
+<h4 id="非公平锁">非公平锁<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#非公平锁" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>释放与公平锁完全一致</p>
+<p>获取轨迹：</p>
+<ol>
+<li>ReentrantLock:lock()。</li>
+<li>NonfairSync:lock()。</li>
+<li>AbstractQueuedSynchronizer:compareAndSetState(int expect,int update)。</li>
+</ol>
+<p>从第三步真正开始加锁：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">protected</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> final</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> boolean</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> compareAndSetState</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> expect, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> update) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">	return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> unsafe.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">compareAndSwapInt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, stateOffset, expect, update);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>该方法以原子操作的方式更新state变量。如果当前状态值等于预期值，则以原子方式将同步状态设置为给定的更新值。此操作具有volatile读和写的内存语义方式。</p>
+<p>从编译器和处理器出发，分析CAS如何同时具有volatile读和volatile写的内存语义。</p>
+<ul>
+<li>编译器不会对volatile读与volatile读后面的任意内存操作重排序；</li>
+<li>编译器不会对volatile写于volatile写前面的任意内存操作重排序。</li>
+<li><strong>编译不会对CAS于CAS前于CAS后的任意内存操作重排序。</strong></li>
+</ul>
+<p>举例：在x86处理器中，如何同时具有volatile读和volatile写的内存语义的。</p>
+<p>下面是sun.misc.Unsafe类的compareAndSwapInt()方法的源代码。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> final</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> native</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> boolean</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> compareAndSwapInt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Object o, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">long</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> offset, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> expected, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="function"> x);</span></span></code></pre></figure>
+<p>这是一个本地方法，这个本地方法在openjdk中依次调用的c++代码为：unsafe.cpp，atomic.cpp和atomic_windows_x86.inline.hpp。这个本地方法的最终实现在openjdk的如下位置：openjdk-7-fcs-src-b147-27_jun_2011\openjdk\hotspot\src\os_cpu\windows_x86\vm\atomic_windows_x86.inline.hpp（对应于Windows操作系统，X86处理器）。下面是对应于intel X86处理器的源代码的片段。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="assembly" data-theme="github-light github-dark"><code data-language="assembly" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>inline jint Atomic::cmpxchg (jint exchange_value, volatile jint* dest,</span></span>
+<span data-line><span>jint compare_value) {</span></span>
+<span data-line><span>    // alternative for InterlockedCompareExchange</span></span>
+<span data-line><span>    int mp = os::is_MP();</span></span>
+<span data-line><span>    __asm {</span></span>
+<span data-line><span>    mov edx, dest</span></span>
+<span data-line><span>    mov ecx, exchange_value</span></span>
+<span data-line><span>    mov eax, compare_value</span></span>
+<span data-line><span>    LOCK_IF_MP(mp)</span></span>
+<span data-line><span>    cmpxchg dword ptr [edx], ecx</span></span>
+<span data-line><span>    }</span></span>
+<span data-line><span>}</span></span></code></pre></figure>
+<p>程序会根据当前处理器类型来决定是否为cmpxchg指令加上lock前缀（Lock Cmpxchg）。反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。intel手册对lock前缀的说明如下：</p>
+<ol>
+<li>确保对内存的读-改-写操作原子执行。在Pentium及Pentium之前的处理器中，带有lock前
+缀的指令在执行期间会锁住总线，使得其他处理器暂时无法通过总线访问内存。很显然，这会
+带来昂贵的开销。从Pentium 4、Intel Xeon及P6处理器开始，Intel使用缓存锁定（Cache Locking）来保证指令执行的原子性。缓存锁定将大大降低lock前缀指令的执行开销。</li>
+<li>禁止该指令，与之前和之后的读和写指令重排序。</li>
+<li>把写缓冲区中的所有数据刷新到内存中。</li>
+</ol>
+<p>上面的第2点和第3点具有的内存屏障下效果，足以同时实现volatile读和volatile写的内存语义。</p>
+<p>总结：</p>
+<ul>
+<li>公平锁与非公平锁释放时，最后都要写一个volatile变量state。</li>
+<li>公平锁获取时，首先会去读volatile变量</li>
+<li>非公平锁获取时，首先会用CAS更新volatile变量，这个操作同时具有volatile读和volatile写的内存语义。</li>
+</ul>
+<p>从本文对ReentrantLock的分析可以看出，锁释放-获取的内存语义的实现至少有下面两种
+方式。</p>
+<ol>
+<li>利用volatile变量的写-读所具有的内存语义。</li>
+<li>利用CAS所附带的volatile读和volatile写的内存语义。</li>
+</ol>
+<h3 id="concurrent包的实现">concurrent包的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#concurrent包的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>java线程之间的通信现在有了下面4种方式。</p>
+<ol>
+<li>A线程写volatile变量，随后B线程读这个volatile变量。</li>
+<li>A线程写volatile变量，随后B线程用CAS更新这个volatile变量。</li>
+<li>A线程用CAS更新一个volatile变量，随后B线程用CAS更新这个volatile变量。</li>
+<li>A线程用CAS更新一个volatile变量，随后B线程读这个volatile变量。</li>
+</ol>
+<p>Java的CAS会使用现代处理器上提供的高效机器级别的原子指令，这些原子指令以原子方式对内存执行读-改-写操作，这是在多处理器中实现同步的关键（从本质上来说，能够支持原子性读-改-写指令的计算机，是顺序计算图灵机的异步等价机器，因此任何现代的多处理器都会去支持某种能对内存执行原子性读-改-写操作的原子指令）。同时，volatile变量的读/写和CAS可以实现线程之间的通信。把这些特性整合在一起，就形成了整个concurrent包得以实现的基石。如果我们仔细分析concurrent包的源代码实现，会发现一个通用化的实现模式。</p>
+<ol>
+<li>声明共享变量为volatile。</li>
+<li>使用CAS的原子条件更新来实现线程之间的同步。</li>
+<li>配合volatile读/写和CAS具有的volatile读和写的内存语义来实现线程之间的通信。</li>
+</ol>
+<p>AQS，非阻塞数据结构和原子变量类（java.util.concurrent.atomic包中的类），这些concurrent包中的基础类都是使用这种模式来实现的，而concurrent包中的高层类又是依赖于这些基础类来实现的。从整体来看，concurrent包的实现示意图如下：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221210223108372.png" alt="image-20221210223108372"/></p>
+<center>concurrent包的实现示意图</center>
+<h2 id="final域的内存语义">final域的内存语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#final域的内存语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="final域的重排序规则">final域的重排序规则<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#final域的重排序规则" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>编译器域处理器会遵循连个重排序规则</p>
+<ol>
+<li>在构造函数内对一个final域写入，与随后把这个构造对象的引用复制给一个引用变量，这两个操作之间不能重排序。</li>
+<li>初次读一个包含final域的对象引用，与随后初次读这个final域，这两个操作之间不能重排序。</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> FinalExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//普通变量</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    final</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> j;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//final变量</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> FinalExample obj;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FinalExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//构造函数</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//写普通域</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        j </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//写final域</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//写线程A执行</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        obj </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FinalExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//读线程B执行</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword">        FinalExample object </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> obj;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//都对象引用</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> object.i;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//读普通域</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> b </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> object.j;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//读final域</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设一个线程A执行writer()方法，线程B执行reader()方法。下面两节将会用这个例子说明。</p>
+<h3 id="写final域的重排序规则">写final域的重排序规则<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#写final域的重排序规则" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>写final域的重排序规则禁止把final域的写重排序到构造函数之外。具体是连个方面：</p>
+<ol>
+<li>JMM禁止编译器把final域的写重排序到构造函数之外。</li>
+<li>编译器会在final域写之后，构造函数return之前，插入一个StoreStore屏障。这个屏障禁止处理器把final域的写重排序到构造函数之外。</li>
+</ol>
+<p>例如上面的writer()方法。运行1时有连个步骤，如下：</p>
+<ol>
+<li>构造一个FinalExample类型的对象。</li>
+<li>把这个对象的引用赋值给引用变量obj。</li>
+</ol>
+<p>如果线程B读对象引用与读对象成员域之间没有重排序，下图可能是一种执行时序。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221211105355001.png" alt="image-20221211105355001"/></p>
+<center>线程执行时序图</center>
+<p>写普通域的操作被编译器排到了构造函数之外，读线程B错误的读取了普通变量的值。而写final域的操作，被写final域的重排序规则“限定”在了构造函数之内，读线程B正确地读取了final变量初始化之后的值。</p>
+<p>因此，写final域的重排序规则可以确保：<font color="red" size="5px">在对象引用为任意线程可见之前，对象的final域已经初始化完成。而普通域不具有这个保障。</font></p>
+<h3 id="读final域的重排序规则">读final域的重排序规则<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#读final域的重排序规则" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>在一个线程中，初次读对象引用与初次读该对象包含的final域，JMM禁止<font color="blue">处理器</font>重排序这连个操作。</li>
+<li>编译器会在读final域操作前面插入一个LoadLoad屏障。</li>
+</ol>
+<p>初次读对象引用与初次读该对象包含的final域，这两个操作之间存在间接依赖关系。。由于编译器遵守间接依赖关系，因此编译器不会重排序这两个操作。大多数处理器也会遵守间接依赖，也不会重排序这两个操作。但有少数处理器允许对存在间接依赖关系的操作做重排序（比如alpha处理器），这个规则就是专门用来针对这种处理器的。
+reader()方法包含3个操作。</p>
+<ul>
+<li>初次读引用变量obj。</li>
+<li>初次读引用变量obj指向对象的普通域j。</li>
+<li>初次读引用变量obj指向对象的final域i。</li>
+</ul>
+<p>写线程A没有发生任何重排序，同时程序在不遵守间接依赖的处理器上执行，则会有下面这种情况：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221211111006408.png" alt="image-20221211111006408"/></p>
+<center>线程执行时序图</center>
+<p>读对象的普通域操作被处理器重排序到读对象引用之前。读普通域之前，该域还没有被写线程A写入，会得到一个错误的结果。读final域的重排序规则会把这个读对象final域的操作“限定”在读对象引用之后，此时该final域已经被A线程初始化过了，这是一个正确的读取操作。</p>
+<p>因此，读final域的重排序规则可以确保：</p>
+<p><font color="red">在读一个对象的final域之前，一定会先读包含这个final域的对象的引用。</font></p>
+<h3 id="final域为引用类型">final域为引用类型<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#final域为引用类型" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> FinalReferenceEscapeExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    final</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> FinalReferenceEscapeExample obj;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  FinalReferenceEscapeExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//写final域</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        obj </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//this引用在此逸出</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FinalReferenceEscapeExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (obj </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> temp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> obj.i;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>对于引用类型，写final域的重排序规则对编译器和处理器增加了如下约束：</p>
+<p><font color="red">在构造函数内对一个final引用的对象的成员域写入，与随后在构造函数外把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序。</font></p>
+<p>假设首先线程A执行writerOne()方法，执行完后线程B执行writerTwo()方法，执行完后线程C执行reader()方法。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221211113156852.png" alt="image-20221211113156852"/></p>
+<center>引用型final的执行时序图</center>
+<p>1是对final的写入，2是对这个final域引用的对象的成员域的写入，3是把被构造的对象的引用赋值给某个引用变量。1、3；2、3都不能重排序。</p>
+<p>JMM可以确保读线程C至少能看到写线程A在构造函数中对final引用对象的成员域的写入。即C至少能看到数组下标0的值为1。而写线程B对数组元素的写入，读线程C可能看得到，也可能看不到。JMM不保证线程B的写入对读线程C可见，因为写线程B和读线程C之间存在数据竞争，此时的执行结果不可预知。</p>
+<p>如果想要确保读线程C看到写线程B对数组元素的写入，写线程B和读线程C之间需要使用同步原语（lock或volatile）来确保内存可见性。</p>
+<h3 id="为什么final引用不能从构造函数内溢出">为什么final引用不能从构造函数内“溢出”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#为什么final引用不能从构造函数内溢出" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>final域的重排序规则可以确保：在引用变量为任意线程可见之前，该引用变量指向的对象的final域已经在构造函数中被正确初始化了。为了实现这个效果，还需要保证：在构造函数内部，不能让这个被构造对象的引用为其他线程所见，也就是对象引用不能在构造函数中“逸出”。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> FinalReferenceEscapeExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    final</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> i;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> FinalReferenceEscapeExample obj;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">  FinalReferenceEscapeExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;      </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        obj </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> writer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FinalReferenceEscapeExample</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> reader</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (obj </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> temp </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> obj.i; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//4</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设线程A执行writer()方法，线程B执行reader()方法。这里的操作2使得对象还未完成构造前就为线程可见。即使这里的操作2时构造函数的最后一步，且在程序中操作2排在操作1后面，执行reader()方法的线程仍然可能无法看到final域被初始化后的值，因为这里的操作1和操作2之间可能重排序。如下图所示：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212085641928.png" alt="image-20221212085641928"/></p>
+<center>多线程执行时序图</center>
+<p>在构造函数之返回前，被构造对象的引用不能为其他线程所见，因为此时的final域可能还没有被初始化。在构造函数返回后，任意线程都将保证能看到final域正确初始化后的值。</p>
+<h3 id="final语义在处理器中的实现">final语义在处理器中的实现<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#final语义在处理器中的实现" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>以x86为例，说明final语义在处理器中的具体实现。</p>
+<p>之前提过，写final域的重排序规则会要求编译器在final域的写之后，构造含税return之前插入一个StoreStore屏障。读final域的重排序规则要求编译器在读final域的操作前面插入一个LoadLoad屏障。</p>
+<p>由于x86处理器不存在写-写操作做重排序，也不会存在读-读操作重排序，因此，在x86处理器中，final域的读/写不会插入任何内存屏障。</p>
+<h3 id="jsr-133为什么要增强final语义">JSR-133为什么要增强final语义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jsr-133为什么要增强final语义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>原本的final域缺陷：县城可能看到final域的改变。</p>
+<p>增强：通过final域增加写和读重排序规则，可以为java程序员提供初始化安全保证：只要对象是正确构造的（被构造对象的引用在构造函数中没有“逸出”），那么不需要使用同步（指lock和volatile的使用）就能保证任意线程都能看到这个final域在构造函数中被初始化之后的值。</p>
+<h2 id="happens-before">happens-before<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#happens-before" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="jmm的设计">JMM的设计<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jmm的设计" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>设计JMM时，考虑两个关键因素：</p>
+<ol>
+<li>
+<p>程序员堆内存模型的使用。程序员希望内存模型易于理解、易于编程。程序员希望基于一个强内存模型来编写代码。</p>
+</li>
+<li>
+<p>编译器和处理器对内存模型的实现。编译器和处理器希望内存模型对它们的束缚越少越好，这样它们可以做尽可能多的优化来提高性能。编译器和处理器希望实现一个弱内存模型。</p>
+</li>
+</ol>
+<p>两点之间存在矛盾，在设计JMM时的核心目标就是找到一个好的平衡点：</p>
+<ul>
+<li>一方面，要为程序员提供足够强的可见性保证</li>
+<li>另一方面，对编译器和处理器的限制要尽可能地放松。</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">double</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> pi </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 3.14</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// A</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">double</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> r </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1.0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;　　　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// B</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">double</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> area </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> pi </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> r </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> r;　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// C</span></span></code></pre></figure>
+<p>上面是一个圆面积的实例代码存在happens-before关系：</p>
+<ol>
+<li>A happens before B</li>
+<li>B happens before C</li>
+<li>A happens before C</li>
+</ol>
+<p>上面三个happens before关系中，2和3是必需的，但1是不必要的。因此，JMM把happens-before要求禁止重排序分为以下两类：</p>
+<ol>
+<li>会改变程序执行结果的重排序。</li>
+<li>不会改变程序执行结果的重排序。</li>
+</ol>
+<p>JMM对这两种不同性质的重排序，采用不同的策略，如下：</p>
+<ol>
+<li>对于会改变程序执行结果的重排序，处理器和编译器必须禁止这种重排序。</li>
+<li>对于不会改变程序之字形结果的重排序，JMM对编译器和处理器不做要求。</li>
+</ol>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212092306827.png" alt="image-20221212092306827"/></p>
+<center>JMM的设计示意图</center>
+<p>从图中，可看出：</p>
+<ol>
+<li>JMM像程序员提供的happens-before规则能满足程序员的需求。</li>
+<li>JMM对对编译器和处理器的束缚已经尽可能地少。只要不改变程序结果，想怎么优化就怎么优化。</li>
+</ol>
+<h3 id="happens-before的定义">happens-before的定义<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#happens-before的定义" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>JSR-133使用happens-before的概念来指定两个操作之间的执行顺序。由于这连个操作可能在一个线程之内，也可能在不同线程之间。因此，JMM可以通过happens-before关系想程序员提供跨线程的内存可见性保证。（如果A线程的写操作a与B线程的读操作b之间存在happens before关系，尽管a操作和b操作在不同的线程中执行，但JMM向程序员保证a操作将对b操作可见）。</p>
+<p>因此，定义如下：</p>
+<ol>
+<li>如果一个操作happens before另一个操作，那么第一个操作的执行结果将对第二个操作可见，而且第一个操作的执行顺序排在第二个操作之前。</li>
+<li>两个操作之间存在happens-before关系，并不意味着要按照关系指定顺序来执行。如果重排序后的执行结果与按happens-before关系来执行的结果一致，那么这种操作不非法。</li>
+</ol>
+<p><font color="red">1是JMM对程序员的承诺</font>。从程序员的角度来说，可以这样理解happens-before关系：如果A happens-before B，那么Java内存模型将向程序员保证——A操作的结果将对B可见，且A的执行顺序排在B之前。注意，这只是Java内存模型向程序员做出的保证！</p>
+<p><font color="red">2是JMM对编译器和处理器重排序的约束原则。</font>即，happens-before关系本质上和as-if-serial语义是一回事。</p>
+<ul>
+<li>as-if-serial语义保证单线程内程序的执行结果不被改变，happens-before关系保证正确同步的多线程程序的执行结果不被改变。</li>
+<li>as-if-serial语义给编写单线程程序的程序员创造了一个幻境：单线程程序是按程序的顺序来执行的。happens-before关系给编写正确同步的多线程程序的程序员创造了一个幻境：正确同步的多线程程序是按happens-before指定的顺序来执行的。</li>
+</ul>
+<p>二者目的都是为了不改变程序执行结果的前提下，尽可能地提高程序执行的并行速度。</p>
+<h3 id="happens-before规则">happens-before规则<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#happens-before规则" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</li>
+<li>监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</li>
+<li>volatile变量规则：对一个volatile域的写，happens-before于任意后续对这个volatile域的读。</li>
+<li>传递性：如果A happens-before B，且B happens-before C，那么A happens-before C。</li>
+<li>start()规则：如果线程A执行操作ThreadB.start()（启动线程B），那么A线程的ThreadB.start()操作happens-before于线程B中的任意操作。</li>
+<li>join()规则：如果线程A执行操作ThreadB.join()并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回。</li>
+</ol>
+<p>下图是是volatile写-读建立的happens-before关系图。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212094140462.png" alt="image-20221212094140462"/></p>
+<center>happens-before关系的示意图</center>
+<p>分析如下：</p>
+<ol>
+<li>1 happens-before 2和3 happens-before 4由程序顺序规则产生。因此，可以把程序顺序规则看成是对as-if-serial语义的“封装”。</li>
+<li>2 happens-before 3是由volatile规则产生。对一个volatile变量的读，总是能看到(任意线程)之前这个volatile变量最后的写入。因此，volatile的这个特性可以保证实现volatile规则。</li>
+<li>1 happens-before 4是由传递性规则产生的。这里的传递性是由volatile的内存屏障插入策略和volatile的编译器重排序规则共同来保证的。</li>
+</ol>
+<p>下面我们来看start()规则。线程A执行时会调用ThreadB.start()来启动线程B；假设线程A在执行Thread.start()之前修改了一些共享变量，线程B在开始执行之后会读这些共享变量。下图时对应的happens-before关系图。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212100542849.png" alt="image-20221212100542849"/></p>
+<center>happens-before关系的示意图</center>
+<p>上图中，1 happens-before由顺序规则产生。2 happens-before 4由start()规则产生。根据传递性，将有1 happens-before 4。这实意味着，线程A在执行ThreadB.start()之前对共享变量所做的修改，接下来在线程B开始执行后都将确保对线程B可见。</p>
+<p>下面我们来看join()规则。假设线程A在执行的过程中，通过执行ThreadB.join()来等待线程B终止；同时，假设线程B在终止之前修改了一些共享变量，线程A从ThreadB.join()返回后会读这些共享变量。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212100843382.png" alt="image-20221212100843382"/></p>
+<center>happens-before关系的示意图</center>
+<p>上图中，2 happens-before 4由join()规则产生；4 happens-before 5由程序顺序规则产生。根据传递性规则，将有2 happens-before 5。这意味着，线程A执行操作ThreadB.join()并成功返回后，线程B中的任意操作都将对线程A可见。</p>
+<h2 id="双重检查锁定与延迟初始化">双重检查锁定与延迟初始化<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#双重检查锁定与延迟初始化" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>在java多线程程序中，有时候需要采用延迟初始化来降低初始化类和创建对象的开销。双重检查锁定是常见的延迟初始化技术，但它是一个错误的用法。本文将分析双重检查锁定的错误根源，以及两种线程安全的延迟初始化方案。</p>
+<h3 id="双重检查锁定的由来">双重检查锁定的由来<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#双重检查锁定的由来" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>为了实现懒加载。以单例模式举例：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> UnsafeLazyInitialization</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    private</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance instance;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">getInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1：A线程执行</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">            instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Instance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(); </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2：B线程执行</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> instance;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设A线程执行代码1的同时，B线程执行代码2。此时，线程A可能会看到instance引用的对象还没有完成初始化。</p>
+<p>对于UnsafeLazyInitialization类，我们可以对getInstance()方法做同步处理来实现线程安全的延迟初始化。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> SafeLazyInitialization</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    private</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance instance;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> synchronized</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">getInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        	instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Instance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> instance;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>由于对getInstance()方法做了同步处理，synchronized将导致性能开销。如果getInstance()方法被多个线程频繁的调用，将会导致程序执行性能的下降。反之，如果getInstance()方法不会被多个线程频繁的调用，那么这个延迟初始化方案将能提供令人满意的性能。</p>
+<p>在早期的JVM中，synchronized（甚至是无竞争的synchronized）存在巨大的性能开销。因此，人们想出了一个“聪明”的技巧：双重检查锁定（Double-Checked Locking）。人们想通过双重检查锁定来降低同步的开销。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> DoubleCheckedLocking</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    private</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance instance; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">getInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 4:第一次检查</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            synchronized</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (DoubleCheckedLocking.class) { </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 5:加锁</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        		if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 6:第二次检查</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        			instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Instance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(); </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 7:问题的根源出在这里</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        		} </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 8</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        } </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 9</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> instance; </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 10</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    } </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 11</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>如上面代码所示，多个线程试图在同一时间创建对象时，会通过加锁来保证只有一个线程能创建对象。在对象创建好之后，执行getInstance()方法将不需要获取锁，直接返回已创建好的对象。</p>
+<p><font color="red" size="6">这是错误的！！</font></p>
+<p>在线程执行到第4行，代码读取到instance不为null时，instance引用的对象有可能还没有完成初始化。</p>
+<h3 id="问题根源">问题根源<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#问题根源" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>前面的双重检查锁定示例代码的第7行（instance=new Singleton();)创建了一个对象。这一行代码可以分解为如下的3行伪代码。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">memory </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> allocate</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1：分配对象的内存空间</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ctorInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(memory);　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2：初始化对象</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> memory;　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3：设置instance指向刚分配的内存地址</span></span></code></pre></figure>
+<p>上面3行伪代码中的2和3之间，可能会被重排序。2和3之间重排序之后的执行时序如下。</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">memory </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> allocate</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 1：分配对象的内存空间</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> memory;　　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 3：设置instance指向刚分配的内存地址</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 注意，此时对象还没有被初始化！</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ctorInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(memory);　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2：初始化对象</span></span></code></pre></figure>
+<p>根据java语言规范，所有线程在执行java程序时必须要遵守intra-thread semantics。intra-thread semantics保证重排序不会改变单线程内的程序执行结果。换句话说，intra-thread semantics允许那些在单线程内，不会改变单线程程序执行结果的重排序。上面3行伪代码的2和3之间虽然被重排序了，但这个重排序并不会违反intra-thread semantics。</p>
+<p><img src="../../../image-20221212102443342.png" alt="image-20221212102443342"/></p>
+<center>线程执行时时序图</center>
+<p>只要保证2排在4的前面，即使2和3之间重排序了，也不会违反intra-thread semantics。</p>
+<p>对于多线程并发，则由下图所示的情况：</p>
+<p><img src="../../../image-20221212102556379.png" alt="image-20221212102556379"/></p>
+<center>多线程执行时序图</center>
+<p>当线程A和B按图中的时序执行时，B线程将看到一个还没有被初始化的对象。</p>
+<p>DoubleCheckedLocking示例代码的第7行(instance=new Singleton();)如果发生重排序，另一个并发执行的线程B就有可能在第4行判断instance不为null。线程B接下来将访问instance所引用的对象，但此时这个对象可能还没有被A线程初始化！</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程A</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>A1：分配对象的内存空间</td><td></td></tr><tr><td>t2</td><td>A3：设置instance指向内存空间</td><td></td></tr><tr><td>t3</td><td></td><td>B1：判断instance是否为空</td></tr><tr><td>t4</td><td></td><td>B2：由于instance不为null，线程B将访问instance引用的对象</td></tr><tr><td>t5</td><td>A2：初始化对象</td><td></td></tr><tr><td>t6</td><td>A4：反复问instance引用的对象</td><td></td></tr></tbody></table></div>
+<p>这里A2和A3虽然重排序了，但Java内存模型的intra-thread semantics将确保A2一定会排在A4前面执行。因此，线程A的intra-thread semantics没有改变，但A2和A3的重排序，将导致线程B在B1处判断出instance不为空，线程B接下来将访问instance引用的对象。此时，线程B将会访问到一个还未初始化的对象。</p>
+<p>因此，提出了连个办法来实现线程安全的延迟初始化。</p>
+<ol>
+<li>不允许2和3重排序。</li>
+<li>允许2和3重排序，但不允许其他线程“看到”这个排序。</li>
+</ol>
+<h3 id="基于volatile的解决方案">基于volatile的解决方案<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#基于volatile的解决方案" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> SafeDoubleCheckedLocking</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    private</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> volatile</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance instance;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">getInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            synchronized</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (SafeDoubleCheckedLocking.class) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> null</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">                instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Instance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(); </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// instance为volatile，现在没问题了</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">            }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> instance;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>注意：这个解决方案需要JDK 5或更高版本。</p>
+<p>当声明对象的引用为volatile后，3.8.2节中的3行伪代码中的2和3之间的重排序，在多线程环境中将会被禁止。上面示例代码将按如下的时序执行，如下图：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212103353314.png" alt="image-20221212103353314"/></p>
+<center>多线程执行时时序图</center>
+<p>这个方案本质上是通过禁止图3-39中的2和3之间的重排序，来保证线程安全的延迟初始化。</p>
+<h3 id="基于类初始化的解决方案">基于类初始化的解决方案<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#基于类初始化的解决方案" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><font color="red">JVM在类的初始化阶段（即在Class被加载后，且被线程使用之前），会执行类的初始化。在执行类的初始化期间，JVM会去获取一个锁。这个锁可以同步多个线程对同一个类的初始化。</font></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> InstanceFactory</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    private</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> InstanceHolder</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance instance </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Instance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    public</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> static</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword"> Instance </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">getInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    	return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> InstanceHolder.instance ;　　</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 这里将导致InstanceHolder类被初始化</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>假设两个线程并发执行getInstance()方法，下面是执行的示意图，如下：</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212103548813.png" alt="image-20221212103548813"/></p>
+<center>两个线程并发执行的示意图</center>
+<p>这个方案的实质是：允许3.8.2节中的3行伪代码中的2和3重排序，但不允许非构造线程（这里指线程B）“看到”这个重排序。</p>
+<p>初始化一个类，包括执行这个类的静态初始化和初始化在这个类中声明的静态字段。根据Java语言规范，在首次发生下列任意一种情况时，一个类或接口类型T将被立即初始化。</p>
+<ol>
+<li>T是一个类，而且一个T类型的实例被创建。</li>
+<li>T是一个类，且T中声明的一个静态方法被调用。</li>
+<li>T中生命的一个静态字段被赋值。</li>
+<li>T中声明的一个静态字段被使用，而且这个字段不是一个常量字段。</li>
+<li>T是一个顶级类，而且一个断言语句嵌套在T内部被执行。</li>
+</ol>
+<p>在InstanceFactory示例代码中，首次执行getInstance()方法的线程将导致InstanceHolder类被初始化。</p>
+<p>由于Java语言是多线程的，多个线程可能在同一时间尝试去初始化同一个类或接口（比如这里多个线程可能在同一时刻调用getInstance()方法来初始化InstanceHolder类）。因此，在Java中初始化一个类或者接口时，需要做细致的同步处理。</p>
+<p>Java语言规范规定，对于每一个类或接口C，都有一个唯一的初始化锁LC与之对应。从C到LC的映射，由JVM的具体实现去自由实现。JVM在类初始化期间会获取这个初始化锁，并且每个线程至少获取一次锁来确保这个类已经被初始化过了（事实上，Java语言规范允许JVM的具体实现在这里做一些优化，见后文的说明）。</p>
+<p>对于类或接口的初始化，Java语言规范制定了精巧而复杂的类初始化处理过程。Java初始化一个类或接口的处理过程如下（此处仅仅只说5个步骤，更详细的要看JVM）：</p>
+<ol>
+<li>
+<p>通过在Class对象上同步（即获取Class对象的初始化锁），来控制类或接口的初始化。这个获取锁的线程会一直等待，直到当前线程能够获取到这个初始化锁。</p>
+<p>假设Class对象当前还没有被初始化（初始化状态state，此时被标记为state=noInitialization），且有两个线程A和B试图同时初始化这个Class对象。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212104206212.png" alt="image-20221212104206212"/></p>
+<center>类初始化-第1阶段</center>
+<p>下表是示意图的说明。</p>
+<center>类初始化——第1阶段的执行时序表</center>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程A</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>A1：尝试获取Class对象的初始化锁。这里假设线程A获取到了初始化锁。</td><td>B1：尝试获取Class对象的初始化锁，由于线程A获取到了锁，线程B将一直等待获取锁的初始化</td></tr><tr><td>t2</td><td>A2：线程A看到线程还未初始化，线程设置state=initializing</td><td></td></tr><tr><td>t3</td><td>A3：线程A释放初始化锁</td><td></td></tr></tbody></table></div>
+</li>
+<li>
+<p>线程A执行类的初始化，同时线程B在初始化锁对应的condition上等待。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程A</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>A1：执行类的静态初始化和初始化类中声明的静态字段</td><td>B1：获取到初始化锁</td></tr><tr><td>t2</td><td></td><td>B2：读取到state：initializing</td></tr><tr><td>t3</td><td></td><td>B3：释放初始化锁</td></tr><tr><td>t4</td><td></td><td>B4：在初始化锁的condition中等待</td></tr></tbody></table></div>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212104920233.png" alt="image-20221212104920233"/></p>
+<center>类初始化-第二阶段</center>
+</li>
+<li>
+<p>线程A设置state=initialized，然后唤醒在condition中等待的所有线程。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212105120224.png" alt="image-20221212105120224"/></p>
+<center>类初始化-第3阶段</center>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程A</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>A1：执行类的静态初始化和初始化类中声明的静态字段</td><td>B1：获取到初始化锁</td></tr><tr><td>t2</td><td></td><td>B2：读取到state：initializing</td></tr><tr><td>t3</td><td></td><td>B3：释放初始化锁</td></tr><tr><td>t4</td><td></td><td>B4：在初始化锁的condition中等待</td></tr></tbody></table></div>
+</li>
+<li>
+<p>线程B结束类的初始化处理。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212105228135.png" alt="image-20221212105228135"/></p>
+<center>类初始化-第4阶段</center>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>B1：获取到初始化锁</td></tr><tr><td>t2</td><td>B2：读取到state：initialized</td></tr><tr><td>t3</td><td>B3：释放初始化锁</td></tr><tr><td>t4</td><td>B4：线程B的类初始化处理完成</td></tr></tbody></table></div>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212105527570.png" alt="image-20221212105527570"/></p>
+<center>多线程执行时序图</center>
+<p>多线程执行时序图线程A在第2阶段的A1执行类的初始化，并在第3阶段的A4释放初始化锁；线程B在第4阶段的B1获取同一个初始化锁，并在第4阶段的B4之后才开始访问这个类。根据Java内存模型规范的锁规则，这里将存在如下的happens-before关系。</p>
+<p>这个happens-before关系将保证：线程A执行类的初始化时的写入操作（执行类的静态初始化和初始化类中声明的静态字段），线程B一定能看到。</p>
+</li>
+<li>
+<p>线程C执行类的初始化的处理。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212110059131.png" alt="image-20221212110059131"/></p>
+</li>
+</ol>
+<center>类初始化-第5阶段</center>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>C1:获取初始化锁</td></tr><tr><td>t2</td><td>C2：读取到state=initalized</td></tr><tr><td>t3</td><td>C3：释放初始化锁</td></tr><tr><td>t4</td><td>C4：线程C的类初始化处理过程完成</td></tr></tbody></table></div>
+<p>在第3阶段之后，类已经完成了初始化。因此线程C在第5阶段的类初始化处理过程相对简单一些（前面的线程A和B的类初始化处理过程都经历了两次锁获取-锁释放，而线程C的类初始化处理只需要经历一次锁获取-锁释放）。</p>
+<p>线程A在第2阶段的A1执行类的初始化，并在第3阶段的A4释放锁；线程C在第5阶段的C1获取同一个锁，并在在第5阶段的C4之后才开始访问这个类。根据Java内存模型规范的锁规则，将存在如下的happens-before关系。</p>
+<p>这个happens-before关系将保证：线程A执行类的初始化时的写入操作，线程C一定能看到。</p>
+<blockquote>
+<p>注意：这里的condition和state标记是本文虚构出来的。Java语言规范并没有硬性规定一定要使用condition和state标记。JVM的具体实现只要实现类似功能即可。</p>
+<p>Java语言规范允许Java的具体实现，优化类的初始化处理过程（对这里的第5阶段做优化），具体细节参见Java语言规范的12.4.2节。</p>
+</blockquote>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212111053580.png" alt="image-20221212111053580"/></p>
+<center>多线程执行时序图</center>
+<p>通过对比基于volatile的双重检查锁定的方案和基于类初始化的方案，我们会发现基于类初始化的方案的实现代码更简洁。但基于volatile的双重检查锁定的方案有一个额外的优势：除了可以对静态字段实现延迟初始化外，还可以对实例字段实现延迟初始化。</p>
+<p>字段延迟初始化降低了初始化类或创建实例的开销，但增加了访问被延迟初始化的字段的开销。在大多数时候，正常的初始化要优于延迟初始化。如果确实需要对实例字段使用线程安全的延迟初始化，请使用上面介绍的基于volatile的延迟初始化的方案；如果确实需要对静态字段使用线程安全的延迟初始化，请使用上面介绍的基于类初始化的方案。</p>
+<h2 id="java内存模型综述">Java内存模型综述<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#java内存模型综述" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>下面对java内存模型的相关知识进行总结。</p>
+<h3 id="处理器的内存模型">处理器的内存模型<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#处理器的内存模型" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>顺序一致性内存模型是一个理论参考模型，JMM和处理器内存模型在设计时通常会以顺序一致性内存模型为参照。在设计时，JMM和处理器内存模型会对顺序一致性模型做一些放松，因为如果完全按照顺序一致性模型来实现处理器和JMM，那么很多的处理器和编译器优化都要被禁止，这对执行性能将会有很大的影响。</p>
+<p>根据对不同类型的读/写操作组合的执行顺序的放松，可以把常见处理器的内存模型划分为如下几种类型。</p>
+<ul>
+<li>放松程序中写-读操作的顺序，由此产生了Total Store Ordering内存模型（简称TSO）。</li>
+<li>在上面基础上，继续放松程序中写-写操作的顺序，由此产生了Partial Store Order内存模型（简称为PSO）。</li>
+<li>在前面两条的基础上，继续放松程序中读-写和读-读操作的顺序，由此产生了Relaxed Memory Order内存模型（简称为RMO）和PowerPC内存模型。</li>
+</ul>
+<p>这里处理器对读/写操作的放松，是以两个操作之间不存在数据依赖性为前提的。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>内存模型名称</th><th>对应的处理器</th><th>Store-Load重排序</th><th>Store-Store重排序</th><th>Load-Load和Load-Store重排序</th><th>可以更早读取到其它处理器的写</th><th>可以更早读取到当前处理器的写</th></tr></thead><tbody><tr><td>TSO</td><td>sparc-TSO X64</td><td>Y</td><td></td><td></td><td></td><td>Y</td></tr><tr><td>PSO</td><td>sparc-PSO</td><td>Y</td><td>Y</td><td></td><td></td><td>Y</td></tr><tr><td>RMO</td><td>ia64</td><td>Y</td><td>Y</td><td>Y</td><td></td><td>Y</td></tr><tr><td>PowerPC</td><td>PowerPC</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td></tr></tbody></table></div>
+<p>从表中可以看到，所有处理器内存模型都允许写-读重排序，原因在第1章已经说明过：它们都使用了写缓存区。写缓存区可能导致写-读操作重排序。同时，我们可以看到这些处理器内存模型都允许更早读到当前处理器的写，原因同样是因为写缓存区。由于写缓存区仅对当前处理器可见，这个特性导致当前处理器可以比其他处理器先看到临时保存在自己写缓存区中的写。</p>
+<p>表中的各种处理器内存模型，从上到下，模型由强变弱。越是追求性能的处理器，内存模型设计得会越弱。</p>
+<p>由于常见的处理器内存模型比JMM要弱，Java编译器在生成字节码时，会在执行指令序列的适当位置插入内存屏障来限制处理器的重排序。同时，由于各种处理器内存模型的强弱不同，为了在不同的处理器平台向程序员展示一个一致的内存模型，JMM在不同的处理器中需要插入的内存屏障的数量和种类也不相同。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212143507687.png" alt="image-20221212143507687"/></p>
+<center>JMM插入内存屏障的示意图</center>
+<h3 id="各种内存模型之间的关系">各种内存模型之间的关系<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#各种内存模型之间的关系" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212143618752.png" alt="image-20221212143618752"/></p>
+<center>各种CPU内存模型的强弱对比示意图</center>
+<p>从图中可以看出：常见的4种处理器内存模型比常用的3中语言内存模型要弱，处理器内存模型和语言内存模型都比顺序一致性内存模型要弱。同处理器内存模型一样，越是追求执行性能的语言，内存模型设计得会越弱。</p>
+<h3 id="jmm的内存可见性保证">JMM的内存可见性保证<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jmm的内存可见性保证" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>java程序的内存可见性保证可以分为下列3类。</p>
+<ul>
+<li>单线程程序。单线程程序不会出现内存可见性问题。</li>
+<li>正确同步的多线程程序。正确同步的多线程程序的执行将具有顺序一致性（程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同）。这是JMM关注的重点，JMM通过限制编译器和处理器的重排序来为程序员提供内存可见性保证。</li>
+<li>未同步/未正确同步的多线程程序。JMM为它们提供了最小安全性保障：线程执行时读取到的值，要么是之前某个线程写入的值，要么是默认值（0、null、false）。</li>
+</ul>
+<p>注意，最小安全性保障与64位数据的非原子性写并不矛盾。它们是两个不同的概念，它们“发生”的时间点也不同。最小安全性保证对象默认初始化之后（设置成员域为0、null或false），才会被任意线程使用。最小安全性“发生”在对象被任意线程使用之前。64位数据的非原子性写“发生”在对象被多个线程使用的过程中（写共享变量）。当发生问题时（处理器B看到仅仅被处理器A“写了一半”的无效值），这里虽然处理器B读取到一个被写了一半的无效值，但这个值仍然是处理器A写入的，只不过是处理器A还没有写完而已。最小安全性保证线程读取到的值，要么是之前某个线程写入的值，要么是默认值（0、null、false）。但最小安全性并不保证线程读取到的值，一定是某个线程写完后的值。最小安全性保证线程读取到的值不会无中生有的冒出来，但并不保证线程读取到的值一定是正确的。</p>
+<p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212144056504.png" alt="image-20221212144056504"/></p>
+<center>3类程序的执行结果的对比图</center>
+<p>只要多线程程序是正确同步的，JMM保证该程序在任意的处理器平台上的执行结果，与该程序在顺序一致性内存模型中的执行结果一致。</p>
+<h3 id="jsr-133对旧内存模型的修补">JSR-133对旧内存模型的修补<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jsr-133对旧内存模型的修补" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>增强volatile语义。旧内存模型允许volatile变量与普通变量重排序。JSR-133严格限制volatile变量与普通变量的重排序，使volatile的写-读和锁的释放-获取具有相同的内存语义。</li>
+<li>增强final语义。在旧内存模型中，多次读取同一个final变量的值可能会不相同。为此，JSR-133为final增加了两个重排序规则。在保证final引用不会从构造函数内逸出的情况下，final具有了初始化安全性。</li>
+</ul></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>关系图谱</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-34" aria-expanded="true"><h3>目录</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#java内存基础" data-for="java内存基础">Java内存基础</a></li><li class="depth-1"><a href="#并发编程模型的两个关键问题" data-for="并发编程模型的两个关键问题">并发编程模型的两个关键问题</a></li><li class="depth-1"><a href="#java内存模型的抽象结构" data-for="java内存模型的抽象结构">Java内存模型的抽象结构</a></li><li class="depth-1"><a href="#从源码到指令序列的重排序" data-for="从源码到指令序列的重排序">从源码到指令序列的重排序</a></li><li class="depth-1"><a href="#并发编程模型的分类" data-for="并发编程模型的分类">并发编程模型的分类</a></li><li class="depth-1"><a href="#happens-before简介" data-for="happens-before简介">happens-before简介</a></li><li class="depth-0"><a href="#重排序" data-for="重排序">重排序</a></li><li class="depth-1"><a href="#数据依赖性" data-for="数据依赖性">数据依赖性</a></li><li class="depth-1"><a href="#as-if-serial语义" data-for="as-if-serial语义">as-if-serial语义</a></li><li class="depth-1"><a href="#程序的顺序规则" data-for="程序的顺序规则">程序的顺序规则</a></li><li class="depth-1"><a href="#重排序对多线程的影响" data-for="重排序对多线程的影响">重排序对多线程的影响</a></li><li class="depth-0"><a href="#顺序一致性" data-for="顺序一致性">顺序一致性</a></li><li class="depth-1"><a href="#数据竞争与顺序一致性" data-for="数据竞争与顺序一致性">数据竞争与顺序一致性</a></li><li class="depth-1"><a href="#顺序一致性内存模型" data-for="顺序一致性内存模型">顺序一致性内存模型</a></li><li class="depth-1"><a href="#同步程序的顺序一致性效果" data-for="同步程序的顺序一致性效果">同步程序的顺序一致性效果</a></li><li class="depth-1"><a href="#未同步程序地执行特性" data-for="未同步程序地执行特性">未同步程序地执行特性</a></li><li class="depth-0"><a href="#volatile内存语义" data-for="volatile内存语义">volatile内存语义</a></li><li class="depth-1"><a href="#volatile的特性" data-for="volatile的特性">volatile的特性</a></li><li class="depth-1"><a href="#volatile写-读建立的happens-before关系" data-for="volatile写-读建立的happens-before关系">volatile写-读建立的happens-before关系</a></li><li class="depth-1"><a href="#volatile写-读的内存语义" data-for="volatile写-读的内存语义">volatile写-读的内存语义</a></li><li class="depth-1"><a href="#volatile语义实现" data-for="volatile语义实现">volatile语义实现</a></li><li class="depth-1"><a href="#jsr-133为什么要增强volatile的内存语义" data-for="jsr-133为什么要增强volatile的内存语义">JSR-133为什么要增强volatile的内存语义</a></li><li class="depth-0"><a href="#锁的内存语义" data-for="锁的内存语义">锁的内存语义</a></li><li class="depth-1"><a href="#锁的释放-获取建立的happens-before关系" data-for="锁的释放-获取建立的happens-before关系">锁的释放-获取建立的happens-before关系</a></li><li class="depth-1"><a href="#锁的释放和获取的内存语义" data-for="锁的释放和获取的内存语义">锁的释放和获取的内存语义</a></li><li class="depth-1"><a href="#锁内存语义的实现" data-for="锁内存语义的实现">锁内存语义的实现</a></li><li class="depth-1"><a href="#concurrent包的实现" data-for="concurrent包的实现">concurrent包的实现</a></li><li class="depth-0"><a href="#final域的内存语义" data-for="final域的内存语义">final域的内存语义</a></li><li class="depth-1"><a href="#final域的重排序规则" data-for="final域的重排序规则">final域的重排序规则</a></li><li class="depth-1"><a href="#写final域的重排序规则" data-for="写final域的重排序规则">写final域的重排序规则</a></li><li class="depth-1"><a href="#读final域的重排序规则" data-for="读final域的重排序规则">读final域的重排序规则</a></li><li class="depth-1"><a href="#final域为引用类型" data-for="final域为引用类型">final域为引用类型</a></li><li class="depth-1"><a href="#为什么final引用不能从构造函数内溢出" data-for="为什么final引用不能从构造函数内溢出">为什么final引用不能从构造函数内“溢出”</a></li><li class="depth-1"><a href="#final语义在处理器中的实现" data-for="final语义在处理器中的实现">final语义在处理器中的实现</a></li><li class="depth-1"><a href="#jsr-133为什么要增强final语义" data-for="jsr-133为什么要增强final语义">JSR-133为什么要增强final语义</a></li><li class="depth-0"><a href="#happens-before" data-for="happens-before">happens-before</a></li><li class="depth-1"><a href="#jmm的设计" data-for="jmm的设计">JMM的设计</a></li><li class="depth-1"><a href="#happens-before的定义" data-for="happens-before的定义">happens-before的定义</a></li><li class="depth-1"><a href="#happens-before规则" data-for="happens-before规则">happens-before规则</a></li><li class="depth-0"><a href="#双重检查锁定与延迟初始化" data-for="双重检查锁定与延迟初始化">双重检查锁定与延迟初始化</a></li><li class="depth-1"><a href="#双重检查锁定的由来" data-for="双重检查锁定的由来">双重检查锁定的由来</a></li><li class="depth-1"><a href="#问题根源" data-for="问题根源">问题根源</a></li><li class="depth-1"><a href="#基于volatile的解决方案" data-for="基于volatile的解决方案">基于volatile的解决方案</a></li><li class="depth-1"><a href="#基于类初始化的解决方案" data-for="基于类初始化的解决方案">基于类初始化的解决方案</a></li><li class="depth-0"><a href="#java内存模型综述" data-for="java内存模型综述">Java内存模型综述</a></li><li class="depth-1"><a href="#处理器的内存模型" data-for="处理器的内存模型">处理器的内存模型</a></li><li class="depth-1"><a href="#各种内存模型之间的关系" data-for="各种内存模型之间的关系">各种内存模型之间的关系</a></li><li class="depth-1"><a href="#jmm的内存可见性保证" data-for="jmm的内存可见性保证">JMM的内存可见性保证</a></li><li class="depth-1"><a href="#jsr-133对旧内存模型的修补" data-for="jsr-133对旧内存模型的修补">JSR-133对旧内存模型的修补</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>反向链接</h3><ul id="list-0" class="overflow"><li><a href="../../../3.-资源/_导航/后端开发-moc" class="internal">后端开发 MOC</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-551b937a.js" type="module" data-persist="true"></script></html>
