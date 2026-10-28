@@ -2878,9 +2878,11 @@ Agent以及Workflow都是一种模式，不是规范
 
 ### 工具-为模型提供功能
 
-函数或者工具
+函数或者工具高速模型他能访问的功能部分。当模型生成对提示的响应时，它可能决定需要工具提供的数据或功能来遵循提示的指令。
 
+### 工具调用-模型请求使用工具
 
+函数调用或工具调用
 
 
 
@@ -101858,9 +101860,11 @@ review_after: 2027-01-26   # = last_reviewed + 有效期，脚本算
 
 ### 4. 被搜索和 AI 引用
 
-站点：Quartz 静态站 → https://runqi-zhao.github.io （GitHub Pages 免费托管）
+站点：Quartz 静态站 → https://runqi-zhao.github.io （GitHub Pages 免费托管，仓库 `runqi-zhao/runqi-zhao.github.io`，Pages 源 `main:/docs`）
 
-- 发布：`python scripts/sync_site.py && cd E:/code/quartz-kb && npx quartz build` → 推送后 GitHub Pages 自动更新；
+- 发布一条命令：`python scripts/publish_site.py --push`（同步 → 构建 → 生成 llms → 推送），1～2 分钟后线上更新；
+- 只改笔记想先本地看：`python scripts/publish_site.py`，产物在 `E:/code/quartz-kb/docs`；
+- 凭据已存在 Windows 凭据管理器（GCM），`git push` 不需要再填 token；
 - 给 AI 的入口：站点根目录自动生成 `llms.txt`（全站目录 + 摘要）和 `llms-full.txt`（全文），ChatGPT / Perplexity / Claude 可以直接读；
 - 给搜索引擎的入口：`sitemap.xml`、RSS、语义化 HTML、每篇独立 URL；
 - 本地 AI（Hermes / OpenCode / Claude Code）直接读 vault 文件，不需要额外配置。
