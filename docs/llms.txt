@@ -2,7 +2,7 @@
 
 > 后端开发、计算机基础、AI 工程与个人方法论的长期笔记库。每条知识都标注了来源与有效期（frontmatter: source / kind / review_after）。
 
-共 452 篇笔记。以下为按路径排序的完整目录，每行格式：`[标题](绝对链接)：一句话摘要`。
+共 453 篇笔记。以下为按路径排序的完整目录，每行格式：`[标题](绝对链接)：一句话摘要`。
 
 - [2024 新年建议 - 陈思远](https://runqi-zhao.github.io/-1.-捕获/2024-新年建议---陈思远)：大家都快开工了，总结了几条实质性的建议，希望在新的一年，所有关注我的朋友们都能变的越来越好。
 - [硅谷顶尖 AI 大佬如何搭建个人AI知识库？从0开始用Claude Code + Obsidian搭建Karpathy的LLM Wiki知识库](https://runqi-zhao.github.io/-1.-捕获/20261028-硅谷顶尖-ai-大佬如何搭建个人ai知识库？从0开始用claude-code-+-obsidian搭建karpathy的)：用 Claude Code + Obsidian 搭建硅谷顶尖AI大佬的 LLM Wiki 知识库，让 AI 帮你持续整理、学习和进化知识。
@@ -449,6 +449,7 @@
 - [<% tp.file.title %>](https://runqi-zhao.github.io/templates/剪藏-视频)：- `00:00`
 - [<% tp.file.title %>](https://runqi-zhao.github.io/templates/捕获-碎片)：<% tp.file.cursor() %>
 - [<% tp.file.title %>](https://runqi-zhao.github.io/templates/知识卡)：-
+- [标题](https://runqi-zhao.github.io/templates/知识笔记)：-
 - [任务](https://runqi-zhao.github.io/任务)：返回 首页
 - [待整理清单](https://runqi-zhao.github.io/待整理清单)：返回 首页
 - [知识库整理报告（2026-09-27）](https://runqi-zhao.github.io/整理报告-2026-09-27)：返回 首页
