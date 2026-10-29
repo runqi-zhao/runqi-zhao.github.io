@@ -7,7 +7,7 @@
 <span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">redis</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> OBJECT ENCODING lst</span></span>
 <span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;ziplist&quot;</span></span></code></pre></figure>
 <p>列表键里面包含的都是1、3、5、10086这样的小整数值，以及”hello”、“world”这样的短字符串。</p>
-<p>另外，当一个哈希键只包含少量键值对，比且每个键值对的键和值要么就是小整数值，要么就是长度比较短的字符串，那么Redis就会使用压缩列表来做哈希键的底层实现。</p>
+<p>另外，当一个哈希键只包含少量键值对，并且每个键值对的键和值要么就是小整数值，要么就是长度比较短的字符串，那么Redis就会使用压缩列表来做哈希键的底层实现。</p>
 <p>举个例子，执行以下命令将创建一个压缩列表实现的哈希键：</p>
 <figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="shell" data-theme="github-light github-dark"><code data-language="shell" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">redis</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">> </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">HMSET</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> profile</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;name&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Jack&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;age&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 28</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;job&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Programmer&quot;</span></span>
 <span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">OK</span></span>
@@ -15,7 +15,7 @@
 <span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">&quot;ziplist&quot;</span></span></code></pre></figure>
 <p>哈希键里面包含的所有键和值都是小整数值或者短字符串。</p>
 <h2 id="压缩列表的结构">压缩列表的结构<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#压缩列表的结构" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<p>压缩列表时Redis为了节约内存而开发的，是由一系列特殊编码的连续内存块组成的的顺序型(Sequential)数据结构。</p>
+<p>压缩列表是Redis为了节约内存而开发的，是由一系列特殊编码的连续内存块组成的顺序型(Sequential)数据结构。</p>
 <p>一个压缩列表可以包含任意多个节点（entry），每个节点可以保存一个字节数组或者一个整数值。</p>
 <p>下图展示了压缩列表的各个组成部分：</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230423195159.png" alt/></p>
@@ -61,7 +61,7 @@
 
 
 
-<div class="table-container"><table><thead><tr><th>属性</th><th>类型</th><th>长度</th><th>用途</th></tr></thead><tbody><tr><td>zlbytes</td><td>unint32_t</td><td>4字节</td><td>记录整个压缩列表占用的内存字节数：在对压缩列表进行内存重分配，或者计算zlend的位置时使用</td></tr><tr><td>zltail</td><td>unint32_t</td><td>4字节</td><td>记录压缩列表表尾节点距离压缩列表的起始地址有多少字节：通过这个偏移量，程序无须遍历整个压缩列表就可以确定表尾节点的地址</td></tr><tr><td>zllen</td><td>unint16_t</td><td>2字节</td><td>记录了压缩列表包含的节点数量：当这个属性的值小于UINT16MAX(65535)时，这个属性的值就是压缩列表包含节点的数量；当这个值等于UINT16MAX时，节点的真实数量需要遍历整个压缩列表才能计算得出</td></tr><tr><td>enttryx</td><td>列表节点</td><td>不定</td><td>压缩列表包含的各个节点，节点的长度由节点保存的内容决定</td></tr><tr><td>zlend</td><td>uint8_t</td><td>1字节</td><td>特殊值0xFF（十进制255)，用于标记压缩列表的末端</td></tr></tbody></table></div>
+<div class="table-container"><table><thead><tr><th>属性</th><th>类型</th><th>长度</th><th>用途</th></tr></thead><tbody><tr><td>zlbytes</td><td>uint32_t</td><td>4字节</td><td>记录整个压缩列表占用的内存字节数：在对压缩列表进行内存重分配，或者计算zlend的位置时使用</td></tr><tr><td>zltail</td><td>uint32_t</td><td>4字节</td><td>记录压缩列表表尾节点距离压缩列表的起始地址有多少字节：通过这个偏移量，程序无须遍历整个压缩列表就可以确定表尾节点的地址</td></tr><tr><td>zllen</td><td>uint16_t</td><td>2字节</td><td>记录了压缩列表包含的节点数量：当这个属性的值小于UINT16MAX(65535)时，这个属性的值就是压缩列表包含节点的数量；当这个值等于UINT16MAX时，节点的真实数量需要遍历整个压缩列表才能计算得出</td></tr><tr><td>entryX</td><td>列表节点</td><td>不定</td><td>压缩列表包含的各个节点，节点的长度由节点保存的内容决定</td></tr><tr><td>zlend</td><td>uint8_t</td><td>1字节</td><td>特殊值0xFF（十进制255），用于标记压缩列表的末端</td></tr></tbody></table></div>
 <p>下图展示了一个压缩列表示例：</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230423195718.png" alt/></p>
 <ul>
@@ -69,7 +69,7 @@
 <li>列表zltail属性的值为0x3c（十进制60），这表示如果我们有一个指向压缩列表起始地址的指针p，那么只要用指针p加上偏移量60，就可以计算出表尾节点entry3的地址。</li>
 <li>列表zllen属性的值为0x3（十进制3），表示压缩列表包含三个节点。</li>
 </ul>
-<p>下图展示了零杠一个压缩列表的示例：</p>
+<p>下图展示了另一个压缩列表的示例：</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230423195831.png" alt/></p>
 <ul>
 <li>列表zlbytes属性的值为0xd2（十进制210），表示压缩列表的总长为210字节。</li>
@@ -103,7 +103,7 @@
 </ul>
 <p>下图展示了一个包含一字节长previous_entry_length属性的压缩列表节点，属性的值为0x05，表示前一节点的长度为5字节。</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230423200133.png" alt/></p>
-<p>下图展示了一个包含五字节长previous_entry_length属性的压缩节点，属性的值为0xFE00002766，其中值的最高位字节0xFE表示这是一个五字节长的previous_entry_length属性，而之后的四字节0x00002766（十进制值10086）才是前一节点的实际长度。</p>
+<p>下图展示了一个包含五字节长previous_entry_length属性的压缩列表节点，属性的值为0xFE00002766，其中值的最高位字节0xFE表示这是一个五字节长的previous_entry_length属性，而之后的四字节0x00002766（十进制值10086）才是前一节点的实际长度。</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230423200158.png" alt/></p>
 <p>因为节点的previous_entry_length属性记录了前一个节点的长度，所以程序可以通过指针运算，根据当前节点的起始地址来计算出前一个节点的起始地址。</p>
 <p>举个例子，如果我们有一个指向当前节点起始地址的指针c，那么我们只要用指针c减去当前节点previous_entry_length属性的值，就可以得出一个指向前一个节点起始地址的指针p，如下图所示：</p>

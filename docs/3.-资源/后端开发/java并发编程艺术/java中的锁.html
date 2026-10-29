@@ -4,10 +4,10 @@
 <p>与synchronized的区别：</p>
 <ol>
 <li>
-<p>Lock在进行使用时需要<font color="red">显示</font>地获取和释放锁。synchronized关键字会隐式地获取锁，但是将锁地获取和释放<font color="red">固化</font>了。</p>
+<p>Lock在进行使用时需要<font color="red">显式</font>地获取和释放锁。synchronized关键字会隐式地获取锁，但是将锁的获取和释放<font color="red">固化</font>了。</p>
 </li>
 <li>
-<p>Lock拥有了锁获取与释放地可操作性。</p>
+<p>Lock拥有了锁获取与释放的可操作性。</p>
 <ol>
 <li>
 <p>尝试非阻塞获取锁；</p>
@@ -40,12 +40,12 @@
 
 
 
-<div class="table-container"><table><thead><tr><th>特性</th><th>描述</th></tr></thead><tbody><tr><td>尝试非阻塞地获取锁</td><td>当前线程尝试获取锁，如果这一时刻没有被其他线程获取到，则成功获取并持有锁</td></tr><tr><td>能被中断地获取锁</td><td>与synchronized不同，获取到锁的线程能够响应中断，当获取线程被中断时，终端一场将会被抛出，同时索贿被释放。</td></tr><tr><td>超时获取锁</td><td>在指定截止时间之前获取锁，如果截至时间到了仍旧无法获取锁，则返回</td></tr></tbody></table></div>
+<div class="table-container"><table><thead><tr><th>特性</th><th>描述</th></tr></thead><tbody><tr><td>尝试非阻塞地获取锁</td><td>当前线程尝试获取锁，如果这一时刻没有被其他线程获取到，则成功获取并持有锁</td></tr><tr><td>能被中断地获取锁</td><td>与synchronized不同，获取到锁的线程能够响应中断，当获取线程被中断时，中断异常将会被抛出，同时锁会被释放。</td></tr><tr><td>超时获取锁</td><td>在指定截止时间之前获取锁，如果截止时间到了仍旧无法获取锁，则返回</td></tr></tbody></table></div>
 </li>
 </ol>
 </li>
 </ol>
-<p>举例说明Lock与synchrized的区别：</p>
+<p>举例说明Lock与synchronized的区别：</p>
 <ul>
 <li>在某个场景中，手把手进行获取和释放；
 <ol>
@@ -54,7 +54,7 @@
 <li>当锁C获得后，在释放B同时获取D，以此类推。</li>
 </ol>
 </li>
-<li>Lock可以手动（显示）得释放，在释放时相对容易很多。</li>
+<li>Lock可以手动（显式）地释放，在释放时相对容易很多。</li>
 </ul>
 <p>Lock的使用的方式代码如下：</p>
 <figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="java" data-theme="github-light github-dark"><code data-language="java" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="keyword">Lock lock </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> ReentrantLock</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
@@ -66,7 +66,7 @@
 <p><font size="6">请注意：</font></p>
 <ol>
 <li>在finally块中释放锁，<font color="red">目的是保证在获取到锁之后，最终能够被释放。</font></li>
-<li>不要将锁得获取放在try之中，如果在获取锁时发生了异常，异常抛出得同时，会导致锁释放。</li>
+<li>不要将锁的获取放在try之中，如果在获取锁时发生了异常，异常抛出的同时，会导致锁释放。</li>
 </ol>
 <p>Lock是一个接口，它定义了锁获取和释放的基本操作，Lock的API如下所示</p>
 
@@ -98,12 +98,12 @@
 
 
 
-<div class="table-container"><table><thead><tr><th>方法名称</th><th>描述</th></tr></thead><tbody><tr><td>void lock()</td><td>获取锁，调用该方法当前线程将会获取锁，当锁获得后，从该方法返回</td></tr><tr><td>void lockInterruptibly() throw InterruptedException</td><td>可中断地获取锁，调用该方法立刻返回，如果获取则返回true，否则返回false</td></tr><tr><td>boolean tryLock(long time,TimeUnit unit)throws InterruptedException</td><td>超时的获取锁，当前线程在以下3种情况会返回：<br/>①当前线程在超时时间内获得了锁<br/>②当前线程在超时时间内被中断<br/>③超时时间结束，返回false</td></tr><tr><td>void unlock</td><td>释放锁</td></tr><tr><td>Condition newCondition()</td><td>获取等待通知组件，该组件和当前的锁绑定，当前线程只有获得了锁，才能调用该组件的wait()方法。而调用之后，当前线程将释放锁。</td></tr></tbody></table></div>
+<div class="table-container"><table><thead><tr><th>方法名称</th><th>描述</th></tr></thead><tbody><tr><td>void lock()</td><td>获取锁，调用该方法当前线程将会获取锁，当锁获得后，从该方法返回</td></tr><tr><td>void lockInterruptibly() throws InterruptedException</td><td>可中断地获取锁，调用该方法立刻返回，如果获取则返回true，否则返回false</td></tr><tr><td>boolean tryLock(long time,TimeUnit unit)throws InterruptedException</td><td>超时的获取锁，当前线程在以下3种情况会返回：<br/>①当前线程在超时时间内获得了锁<br/>②当前线程在超时时间内被中断<br/>③超时时间结束，返回false</td></tr><tr><td>void unlock</td><td>释放锁</td></tr><tr><td>Condition newCondition()</td><td>获取等待通知组件，该组件和当前的锁绑定，当前线程只有获得了锁，才能调用该组件的wait()方法。而调用之后，当前线程将释放锁。</td></tr></tbody></table></div>
 <p>随后的章节会详细介绍同步器
 AbstractQueuedSynchronizer以及常用<strong>Lock接口的实现ReentrantLock。Lock接口的实现基本都是</strong>
 <strong>通过聚合了一个同步器的子类来完成线程访问控制的。</strong></p>
 <h2 id="队列同步器">队列同步器<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#队列同步器" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<p>队列同步器（AbstractQueueSynchronizer），是用于构建锁或者其他同步组件的基础框架。具有以下特性：</p>
+<p>队列同步器（AbstractQueuedSynchronizer），是用于构建锁或者其他同步组件的基础框架。具有以下特性：</p>
 <ol>
 <li>使用一个int成员变量表示同步状态；</li>
 <li>通过内置的FIFO队列来完成资源获取线程的排队工作。</li>
@@ -112,23 +112,23 @@ AbstractQueuedSynchronizer以及常用<strong>Lock接口的实现ReentrantLock�
 <ul>
 <li>getState()</li>
 <li>setState()</li>
-<li>compareAndSetSate()</li>
+<li>compareAndSetState()</li>
 </ul>
 <p>以上三个方法，<font color="red">都能保证线程是安全的。</font></p>
-<p>子类推荐定义为自定义同步组建的静态内部类。</p>
-<p>队列同步器是实现锁的关键，在锁的实现种聚合同步器，利用同步器实现锁的语义。</p>
+<p>子类推荐定义为自定义同步组件的静态内部类。</p>
+<p>队列同步器是实现锁的关键，在锁的实现中聚合同步器，利用同步器实现锁的语义。</p>
 <p>锁与队列同步器的关系：</p>
 <ol>
 <li>锁是面向使用者的，定义了使用者与锁交互的接口（比如可以允许两个线程并行访问），隐藏实现细节；</li>
-<li>队列同步器面向的 的是锁的实现者，简化了锁的实现方式，屏蔽了同步状态管理、线程的排队、等待与唤醒等底层操作。</li>
+<li>队列同步器面向的是锁的实现者，简化了锁的实现方式，屏蔽了同步状态管理、线程的排队、等待与唤醒等底层操作。</li>
 </ol>
 <h3 id="队列同步器的接口与示例">队列同步器的接口与示例<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#队列同步器的接口与示例" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>同步器的设计基于模板方法(Template Method)模式。</p>
 <p>重写同步器指定的方法时，需要使用同步器提供的如下3个方法来访问或修改同步状态。</p>
 <ul>
 <li>getState()：获取同步器状态；</li>
-<li>setSate()：设置当前同步状态；</li>
-<li>compareAndSetSate(int expect, int update)：使用CAS设置当前状态，该方法能够保证状态设置的原子性。</li>
+<li>setState()：设置当前同步状态；</li>
+<li>compareAndSetState(int expect, int update)：使用CAS设置当前状态，该方法能够保证状态设置的原子性。</li>
 </ul>
 <p>同步器可重写的方法与描述如表5-3所示。</p>
 
@@ -160,7 +160,7 @@ AbstractQueuedSynchronizer以及常用<strong>Lock接口的实现ReentrantLock�
 
 
 
-<div class="table-container"><table><thead><tr><th>方法名称</th><th>描述</th></tr></thead><tbody><tr><td>protected boolean tryAcquire(int arg)</td><td>独占获取同步状态，实现该方法需要查询当前状态并且判断同步状态是否符合预期，然后在进行CAS</td></tr><tr><td>protected boolean tryRelease(int arg)</td><td>独占式释放同步状态，等待获取同步状态的线程将有机会获取同步状态</td></tr><tr><td>protected int tryAcquireShared(int arg)</td><td>共享式获取同步状态，返回大于等于0地值，表示获取成功，反之，</td></tr><tr><td>protected boolean tryReleaseSgared(int arg)</td><td>共享式获取同步状态，返回大于等于0的值，表示获取成功，反之获取失败</td></tr><tr><td>protected boolean isHeldExclusively()</td><td>当前同步器是否在独占模式下被线程占用，一般该方法表示是否呗房前线程所独占</td></tr></tbody></table></div>
+<div class="table-container"><table><thead><tr><th>方法名称</th><th>描述</th></tr></thead><tbody><tr><td>protected boolean tryAcquire(int arg)</td><td>独占获取同步状态，实现该方法需要查询当前状态并且判断同步状态是否符合预期，然后在进行CAS</td></tr><tr><td>protected boolean tryRelease(int arg)</td><td>独占式释放同步状态，等待获取同步状态的线程将有机会获取同步状态</td></tr><tr><td>protected int tryAcquireShared(int arg)</td><td>共享式获取同步状态，返回大于等于0的值，表示获取成功，反之，</td></tr><tr><td>protected boolean tryReleaseShared(int arg)</td><td>共享式获取同步状态，返回大于等于0的值，表示获取成功，反之获取失败</td></tr><tr><td>protected boolean isHeldExclusively()</td><td>当前同步器是否在独占模式下被线程占用，一般该方法表示是否被当前线程所独占</td></tr></tbody></table></div>
 <p>实现自定义同步组件时，将会调用同步器提供的模板方法，这些（部分）模板方法与描述如表所示:</p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>关系图谱</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
                 s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
                 c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562

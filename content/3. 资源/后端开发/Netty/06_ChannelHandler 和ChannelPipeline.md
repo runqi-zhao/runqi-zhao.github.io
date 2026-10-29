@@ -11,7 +11,7 @@ last_reviewed: 2026-09-27
 
 ### Channel的生命周期
 
-Interface Channel 定义了一组和ChannelInboundHandler API 密切相关的简单但功能强大的状态模型，表1列出了Channel的4中状态。
+Interface Channel 定义了一组和ChannelInboundHandler API 密切相关的简单但功能强大的状态模型，表1列出了Channel的4种状态。
 
 | 状态                | 描述                                                         |
 | ------------------- | ------------------------------------------------------------ |
@@ -28,13 +28,13 @@ Channel 的正常生命周期如图1所示。当这些状态发生改变时，�
 
 ### ChannelHandler的生命周期
 
-表2类出了interfaceChannelHandelre定义的生命周期操作，在ChannelHandeler北天极到ChannelPipeline中或者被错那个ChannekPipeline中一出事回答调用这些操作。
+表2列出了 interface ChannelHandler 定义的生命周期操作，在 ChannelHandler 被添加到 ChannelPipeline 中或者被从 ChannelPipeline 中移除时会调用这些操作。
 
 | 类型            | 描述                                               |
 | --------------- | -------------------------------------------------- |
-| hadlerrAdded    | 当把ChannelHandeler添加到ChannelPipeline总时被调用 |
-| handlerRemoved  | 当从ChannelPipeline中日出ChannelHandeler时被调用   |
-| exceptionCaught | 当处理过程中ChannelPipeline中有错误产生式被调用    |
+| handlerAdded    | 当把 ChannelHandler 添加到 ChannelPipeline 中时被调用 |
+| handlerRemoved  | 当从 ChannelPipeline 中移除 ChannelHandler 时被调用   |
+| exceptionCaught | 当处理过程中 ChannelPipeline 中有错误产生时被调用    |
 
 Netty 定义了下面两个重要的ChannelHandler 子接口：
 
@@ -54,7 +54,7 @@ Netty 定义了下面两个重要的ChannelHandler 子接口：
 | channelReadComplete       | 当Channel上的一个读操作完成时被调用                          |
 | channelRead               | 当从Channel 读取数据时被调用                                 |
 | ChannelWritabilityChanged | 当Channel 的可写状态发生改变时被调用。用户可以确保写操作不会完成得太快（以避免发生OutOfMemoryError）或者可以在Channel 变为再次可写时恢复写入。可以通过调用Channel 的isWritable()方法来检测Channel 的可写性。与可写性相关的阈值可以通过Channel.config().setWriteHighWaterMark()和Channel.config().setWriteLowWaterMark()方法来设置 |
-| userEventTriggered        | 当ChannelnboundHandler.fireUserEventTriggered()方法被调用时被调用，因为一个POJO 被传经了ChannelPipeline |
+| userEventTriggered        | 当 ChannelInboundHandler.fireUserEventTriggered() 方法被调用时被调用，因为一个 POJO 被传递过了 ChannelPipeline |
 
 当某个ChannelInboundHandler 的实现重写channelRead()方法时，它将负责显式地释放与池化的ByteBuf 实例相关的内存。Netty 为此提供了一个实用方法ReferenceCountUtil.release()。
 
@@ -83,7 +83,7 @@ ChannelOutboundHandler 的一个强大的功能是可以按需推迟操作或者
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230608145046.png)
 
-<center> 图2 ChannelHandleAdapter类的层次结构 </center>
+<center> 图2 ChannelHandlerAdapter类的层次结构 </center>
 
 ChannelHandlerAdapter 还提供了实用方法isSharable()。如果其对应的实现被标注为Sharable，那么这个方法将返回true，表示它可以被添加到多个ChannelPipeline中。
 
@@ -121,11 +121,11 @@ Netty 目前定义了4 种泄漏检测级别，如表5所示：
 
 ### 修改ChannelPipeline
 
-ChannelHandler 可以通过添加、删除或者替换其他的ChannelHandler 来实时地修改ChannelPipeline 的布局。）这是ChannelHandler 最重要的能力之一，下表展示了相关方法：
+ChannelHandler 可以通过添加、删除或者替换其他的ChannelHandler 来实时地修改ChannelPipeline 的布局。这是ChannelHandler 最重要的能力之一，下表展示了相关方法：
 
 | 名 称                             | 描 述                                                        |
 | --------------------------------- | ------------------------------------------------------------ |
-| AddFirstaddBefore addAfteraddLast | 将一个ChannelHandler 添加到ChannelPipeline 中                |
+| addFirst、addBefore、addAfter、addLast | 将一个ChannelHandler 添加到ChannelPipeline 中                |
 | remove                            | 将一个ChannelHandler 从ChannelPipeline 中移除                |
 | replace                           | 将ChannelPipeline 中的一个ChannelHandler 替换为另一个ChannelHandler |
 
@@ -141,9 +141,9 @@ ChannelHandler 可以通过添加、删除或者替换其他的ChannelHandler �
 | context | 返回和ChannelHandler 绑定的ChannelHandlerContext |
 | names   | 返回ChannelPipeline 中所有ChannelHandler 的名称  |
 
-### 触发时间
+### 触发事件
 
-ChannelPipeline 的API 公开了用于调用入站和出站操作的附加方法。表8类列出入栈操作。用于通知ChannelInboundHandler 在ChannelPipeline 中所发生的事件。
+ChannelPipeline 的API 公开了用于调用入站和出站操作的附加方法。表8列出了入站操作。用于通知ChannelInboundHandler 在ChannelPipeline 中所发生的事件。
 
 | 方法名称                      | 描 述                                                        |
 | ----------------------------- | ------------------------------------------------------------ |
@@ -165,7 +165,7 @@ ChannelPipeline 的API 公开了用于调用入站和出站操作的附加方法
 - ChannelPipeline 可以根据需要，通过添加或者删除ChannelHandler 来动态地修改；
 - ChannelPipeline 有着丰富的API 用以被调用，以响应入站和出站事件。
 
-## ChannelHandelrContext接口
+## ChannelHandlerContext接口
 
 ChannelHandlerContext 代表了ChannelHandler 和ChannelPipeline 之间的关联，每当有ChannelHandler 添加到ChannelPipeline 中时，都会创建ChannelHandlerContext。ChannelHandlerContext 的主要功能是管理它所关联的ChannelHandler 和在同一个ChannelPipeline 中的其他ChannelHandler 之间的交互。
 
@@ -177,7 +177,7 @@ ChannelHandlerContext 代表了ChannelHandler 和ChannelPipeline 之间的关联
 
 <center> 图4 Channel、ChannelPipeline、ChannelHandler 以及ChannelHandlerContext 之间的关系 </center>
 
-下图展示了Channel或者CHnanelPieline进行的事件传播
+下图展示了Channel或者ChannelPipeline进行的事件传播
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230608151703.png)
 
@@ -185,14 +185,14 @@ ChannelHandlerContext 代表了ChannelHandler 和ChannelPipeline 之间的关联
 
 为什么会想要从ChannelPipeline 中的某个特定点开始传播事件呢？
 
-- 为了减少将事件传经对它不感兴趣的ChannelHandler 所带来的开销。
-- 为了避免将事件传经那些可能会对它感兴趣的ChannelHandler。
+- 为了减少将事件传递过对它不感兴趣的ChannelHandler 所带来的开销。
+- 为了避免将事件传递给那些可能会对它感兴趣的ChannelHandler。
 
 要想调用从某个特定的ChannelHandler 开始的处理过程，必须获取到在（ChannelPipeline）该ChannelHandler 之前的ChannelHandler 所关联的ChannelHandlerContext。这个ChannelHandlerContext 将调用和它所关联的ChannelHandler 之后的ChannelHandler。下图展示了这种用法。
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230608151929.png)
 
-<center> 通过ChannelHandlerContext出发的操作的事件流 </center>
+<center> 通过ChannelHandlerContext触发的操作的事件流 </center>
 
 ### ChannelHandler 和ChannelHandlerContext 的高级用法
 

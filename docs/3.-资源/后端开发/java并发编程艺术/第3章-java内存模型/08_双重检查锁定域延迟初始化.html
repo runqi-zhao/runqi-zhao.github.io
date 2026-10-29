@@ -50,7 +50,7 @@
 <span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ctorInstance</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(memory);　 </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 2：初始化对象</span></span></code></pre></figure>
 <p>根据java语言规范，所有线程在执行java程序时必须要遵守intra-thread semantics。intra-thread semantics保证重排序不会改变单线程内的程序执行结果。换句话说，intra-thread semantics允许那些在单线程内，不会改变单线程程序执行结果的重排序。上面3行伪代码的2和3之间虽然被重排序了，但这个重排序并不会违反intra-thread semantics。</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212102443342.png" alt="image-20221212102443342"/></p>
-<center>线程执行时时序图</center>
+<center>线程执行时序图</center>
 <p>只要保证2排在4的前面，即使2和3之间重排序了，也不会违反intra-thread semantics。</p>
 <p>对于多线程并发，则由下图所示的情况：</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212102556379.png" alt="image-20221212102556379"/></p>
@@ -97,9 +97,9 @@
 
 
 
-<div class="table-container"><table><thead><tr><th>时间</th><th>线程A</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>A1：分配对象的内存空间</td><td></td></tr><tr><td>t2</td><td>A3：设置instance指向内存空间</td><td></td></tr><tr><td>t3</td><td></td><td>B1：判断instance是否为空</td></tr><tr><td>t4</td><td></td><td>B2：由于instance不为null，线程B将访问instance引用的对象</td></tr><tr><td>t5</td><td>A2：初始化对象</td><td></td></tr><tr><td>t6</td><td>A4：反复问instance引用的对象</td><td></td></tr></tbody></table></div>
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程A</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>A1：分配对象的内存空间</td><td></td></tr><tr><td>t2</td><td>A3：设置instance指向内存空间</td><td></td></tr><tr><td>t3</td><td></td><td>B1：判断instance是否为空</td></tr><tr><td>t4</td><td></td><td>B2：由于instance不为null，线程B将访问instance引用的对象</td></tr><tr><td>t5</td><td>A2：初始化对象</td><td></td></tr><tr><td>t6</td><td>A4：访问instance引用的对象</td><td></td></tr></tbody></table></div>
 <p>这里A2和A3虽然重排序了，但Java内存模型的intra-thread semantics将确保A2一定会排在A4前面执行。因此，线程A的intra-thread semantics没有改变，但A2和A3的重排序，将导致线程B在B1处判断出instance不为空，线程B接下来将访问instance引用的对象。此时，线程B将会访问到一个还未初始化的对象。</p>
-<p>因此，提出了连个办法来实现线程安全的延迟初始化。</p>
+<p>因此，提出了两个办法来实现线程安全的延迟初始化。</p>
 <ol>
 <li>不允许2和3重排序。</li>
 <li>允许2和3重排序，但不允许其他线程“看到”这个排序。</li>
@@ -120,7 +120,7 @@
 <p>注意：这个解决方案需要JDK 5或更高版本。</p>
 <p>当声明对象的引用为volatile后，3.8.2节中的3行伪代码中的2和3之间的重排序，在多线程环境中将会被禁止。上面示例代码将按如下的时序执行，如下图：</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212103353314.png" alt="image-20221212103353314"/></p>
-<center>多线程执行时时序图</center>
+<center>多线程执行时序图</center>
 <p>这个方案本质上是通过禁止图3-39中的2和3之间的重排序，来保证线程安全的延迟初始化。</p>
 <h2 id="基于类初始化的解决方案">基于类初始化的解决方案<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#基于类初始化的解决方案" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p><font color="red">JVM在类的初始化阶段（即在Class被加载后，且被线程使用之前），会执行类的初始化。在执行类的初始化期间，JVM会去获取一个锁。这个锁可以同步多个线程对同一个类的初始化。</font></p>
@@ -140,7 +140,7 @@
 <ol>
 <li>T是一个类，而且一个T类型的实例被创建。</li>
 <li>T是一个类，且T中声明的一个静态方法被调用。</li>
-<li>T中生命的一个静态字段被赋值。</li>
+<li>T中声明的一个静态字段被赋值。</li>
 <li>T中声明的一个静态字段被使用，而且这个字段不是一个常量字段。</li>
 <li>T是一个顶级类，而且一个断言语句嵌套在T内部被执行。</li>
 </ol>
@@ -323,9 +323,9 @@
 
 
 
-<div class="table-container"><table><thead><tr><th>时间</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>C1:获取初始化锁</td></tr><tr><td>t2</td><td>C2：读取到state=initalized</td></tr><tr><td>t3</td><td>C3：释放初始化锁</td></tr><tr><td>t4</td><td>C4：线程C的类初始化处理过程完成</td></tr></tbody></table></div>
+<div class="table-container"><table><thead><tr><th>时间</th><th>线程B</th></tr></thead><tbody><tr><td>t1</td><td>C1:获取初始化锁</td></tr><tr><td>t2</td><td>C2：读取到state=initialized</td></tr><tr><td>t3</td><td>C3：释放初始化锁</td></tr><tr><td>t4</td><td>C4：线程C的类初始化处理过程完成</td></tr></tbody></table></div>
 <p>在第3阶段之后，类已经完成了初始化。因此线程C在第5阶段的类初始化处理过程相对简单一些（前面的线程A和B的类初始化处理过程都经历了两次锁获取-锁释放，而线程C的类初始化处理只需要经历一次锁获取-锁释放）。</p>
-<p>线程A在第2阶段的A1执行类的初始化，并在第3阶段的A4释放锁；线程C在第5阶段的C1获取同一个锁，并在在第5阶段的C4之后才开始访问这个类。根据Java内存模型规范的锁规则，将存在如下的happens-before关系。</p>
+<p>线程A在第2阶段的A1执行类的初始化，并在第3阶段的A4释放锁；线程C在第5阶段的C1获取同一个锁，并在第5阶段的C4之后才开始访问这个类。根据Java内存模型规范的锁规则，将存在如下的happens-before关系。</p>
 <p>这个happens-before关系将保证：线程A执行类的初始化时的写入操作，线程C一定能看到。</p>
 <blockquote>
 <p>注意：这里的condition和state标记是本文虚构出来的。Java语言规范并没有硬性规定一定要使用condition和state标记。JVM的具体实现只要实现类似功能即可。</p>

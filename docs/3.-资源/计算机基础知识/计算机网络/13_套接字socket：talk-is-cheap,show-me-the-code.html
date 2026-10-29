@@ -23,7 +23,7 @@
 <p>整个数据结构我也画了一张图。</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/602d09290bd4f9e0183f530e9653348c.jpg" alt="img"/></p>
 <h2 id="基于udp协议的socket程序函数调用过程">基于UDP协议的Socket程序函数调用过程<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#基于udp协议的socket程序函数调用过程" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
-<p>对于UDP来讲，过程有些不一样。UDP是没有连接的，所以不需要三次握手，也就不需要调用listen和connect，但是，UDP的的交互仍然需要IP和端口号，因而也需要bind。UDP是没有维护连接状态的，因而不需要每对连接建立一组Socket，而是只要有一个Socket，就能够和多个客户端通信。也正是因为没有连接状态，每次通信的时候，都调用sendto和recvfrom，都可以传入IP地址和端口。</p>
+<p>对于UDP来讲，过程有些不一样。UDP是没有连接的，所以不需要三次握手，也就不需要调用listen和connect，但是，UDP的交互仍然需要IP和端口号，因而也需要bind。UDP是没有维护连接状态的，因而不需要每对连接建立一组Socket，而是只要有一个Socket，就能够和多个客户端通信。也正是因为没有连接状态，每次通信的时候，都调用sendto和recvfrom，都可以传入IP地址和端口。</p>
 <p>这个图的内容就是基于UDP协议的Socket程序函数调用过程。</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/778687d1a02ffc0c24078c33be2ac1ef.jpg" alt="img"/></p>
 <h2 id="服务器如何接更多的项目">服务器如何接更多的项目？<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#服务器如何接更多的项目" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
@@ -33,7 +33,7 @@
 <p>我们先来算一下理论值，也就是<strong>最大连接数</strong>，系统会用一个四元组来标识一个TCP连接。</p>
 <pre><code>{本机IP, 本机端口, 对端IP, 对端端口}
 </code></pre>
-<p>服务器通常固定在某个本地端口上监听，等待客户端的连接请求。因此，服务端端TCP连接四元组中只有对端IP, 也就是客户端的IP和对端的端口，也即客户端的端口是可变的，因此，最大TCP连接数=客户端IP数×客户端端口数。对IPv4，客户端的IP数最多为2的32次方，客户端的端口数最多为2的16次方，也就是服务端单机最大TCP连接数，约为2的48次方。</p>
+<p>服务器通常固定在某个本地端口上监听，等待客户端的连接请求。因此，服务端的TCP连接四元组中只有对端IP, 也就是客户端的IP和对端的端口，也即客户端的端口是可变的，因此，最大TCP连接数=客户端IP数×客户端端口数。对IPv4，客户端的IP数最多为2的32次方，客户端的端口数最多为2的16次方，也就是服务端单机最大TCP连接数，约为2的48次方。</p>
 <p>当然，服务端最大并发TCP连接数远不能达到理论上限。首先主要是<strong>文件描述符限制</strong>，按照上面的原理，Socket都是文件，所以首先要通过ulimit配置文件描述符的数目；另一个限制是<strong>内存</strong>，按上面的数据结构，每个TCP连接都要占用一定内存，操作系统是有限的。</p>
 <p>所以，作为老板，在资源有限的情况下，要想接更多的项目，就需要降低每个项目消耗的资源数目。</p>
 <h3 id="方式一将项目外包给其他公司多进程方式">方式一：将项目外包给其他公司（多进程方式）<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#方式一将项目外包给其他公司多进程方式" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
@@ -46,19 +46,19 @@
 <p>接下来，子进程就可以通过这个已连接Socket和客户端进行互通了，当通信完毕之后，就可以退出进程，那父进程如何知道子进程干完了项目，要退出呢？还记得fork返回的时候，如果是整数就是父进程吗？这个整数就是子进程的ID，父进程可以通过这个ID查看子进程是否完成项目，是否需要退出。</p>
 <h3 id="方式二将项目转包给独立的项目组多线程方式">方式二：将项目转包给独立的项目组（多线程方式）<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#方式二将项目转包给独立的项目组多线程方式" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>上面这种方式你应该也能发现问题，如果每次接一个项目，都申请一个新公司，然后干完了，就注销掉这个公司，实在是太麻烦了。毕竟一个新公司要有新公司的资产，有新的办公家具，每次都买了再卖，不划算。</p>
-<p>于是你应该想到了，我们可以使用<strong>线程</strong>。相比于进程来讲，这样要轻量级的多。如果创建进程相当于成立新公司，购买新办公家具，而创建线程，就相当于在同一个公司成立项目组。一个项目做完了，那这个项目组就可以解散，组成另外的项目组，办公家具可以共用。</p>
+<p>于是你应该想到了，我们可以使用<strong>线程</strong>。相比于进程来讲，这样要轻量级得多。如果创建进程相当于成立新公司，购买新办公家具，而创建线程，就相当于在同一个公司成立项目组。一个项目做完了，那这个项目组就可以解散，组成另外的项目组，办公家具可以共用。</p>
 <p>在Linux下，通过pthread_create创建一个线程，也是调用do_fork。不同的是，虽然新的线程在task列表会新创建一项，但是很多资源，例如文件描述符列表、进程空间，还是共享的，只不过多了一个引用而已。</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/ab6e0ecfee5e21f7a563999a94bd8bd7.jpg" alt="img"/></p>
 <p>新的线程也可以通过已连接Socket处理请求，从而达到并发处理的目的。</p>
 <p>上面基于进程或者线程模型的，其实还是有问题的。新到来一个TCP连接，就需要分配一个进程或者线程。一台机器无法创建很多进程或者线程。有个<strong>C10K</strong>，它的意思是一台机器要维护1万个连接，就要创建1万个进程或者线程，那么操作系统是无法承受的。如果维持1亿用户在线需要10万台服务器，成本也太高了。</p>
-<p>其实C10K问题就是，你接项目接的太多了，如果每个项目都成立单独的项目组，就要招聘10万人，你肯定养不起，那怎么办呢？</p>
+<p>其实C10K问题就是，你接项目接得太多了，如果每个项目都成立单独的项目组，就要招聘10万人，你肯定养不起，那怎么办呢？</p>
 <h3 id="方式三一个项目组支撑多个项目io多路复用一个线程维护多个socket">方式三：一个项目组支撑多个项目（IO多路复用，一个线程维护多个Socket）<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#方式三一个项目组支撑多个项目io多路复用一个线程维护多个socket" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>当然，一个项目组可以看多个项目了。这个时候，每个项目组都应该有个项目进度墙，将自己组看的项目列在那里，然后每天通过项目墙看每个项目的进度，一旦某个项目有了进展，就派人去盯一下。</p>
 <p>由于Socket是文件描述符，因而某个线程盯的所有的Socket，都放在一个文件描述符集合fd_set中，这就是<strong>项目进度墙</strong>，然后调用select函数来监听文件描述符集合是否有变化。一旦有变化，就会依次查看每个文件描述符。那些发生变化的文件描述符在fd_set对应的位都设为1，表示Socket可读或者可写，从而可以进行读写操作，然后再调用select，接着盯着下一轮的变化。</p>
 <h3 id="方式四一个项目组支撑多个项目io多路复用从派人盯着到有事通知">方式四：一个项目组支撑多个项目（IO多路复用，从“派人盯着”到“有事通知”）<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#方式四一个项目组支撑多个项目io多路复用从派人盯着到有事通知" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
 <p>上面select函数还是有问题的，因为每次Socket所在的文件描述符集合中有Socket发生变化的时候，都需要通过轮询的方式，也就是需要将全部项目都过一遍的方式来查看进度，这大大影响了一个项目组能够支撑的最大的项目数量。因而使用select，能够同时盯的项目数量由FD_SETSIZE限制。</p>
 <p>如果改成事件通知的方式，情况就会好很多，项目组不需要通过轮询挨个盯着这些项目，而是当项目进度发生变化的时候，主动通知项目组，然后项目组再根据项目进展情况做相应的操作。</p>
-<p>能完成这件事情的函数叫epoll，它在内核中的实现不是通过轮询的方式，而是通过注册callback函数的方式，当某个文件描述符发送变化的时候，就会主动通知。</p>
+<p>能完成这件事情的函数叫epoll，它在内核中的实现不是通过轮询的方式，而是通过注册callback函数的方式，当某个文件描述符发生变化的时候，就会主动通知。</p>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/cff688ede147809da4d65fe4152ffb19.jpg" alt="img"/></p>
 <p>如图所示，假设进程打开了Socket m, n, x等多个文件描述符，现在需要通过epoll来监听是否这些Socket都有事件发生。其中epoll_create创建一个epoll对象，也是一个文件，也对应一个文件描述符，同样也对应着打开文件列表中的一项。在这项里面有一个红黑树，在红黑树里，要保存这个epoll要监听的所有Socket。</p>
 <p>当epoll_ctl添加一个Socket的时候，其实是加入这个红黑树，同时红黑树里面的节点指向一个结构，将这个结构挂在被监听的Socket的事件列表中。当一个Socket来了一个事件的时候，可以从这个列表中得到epoll对象，并调用call back通知它。</p>

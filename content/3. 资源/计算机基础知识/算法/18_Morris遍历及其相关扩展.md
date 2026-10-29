@@ -8,7 +8,7 @@ review_after: 2026-12-26
 last_reviewed: 2026-09-27
 ---
 
-一种遍历二叉树的方式，并且时间复杂度O(N)，额外空间复杂度O(1)通过利用原树中大量空闲指针的方式，达到节省空间的目的
+一种遍历二叉树的方式，并且时间复杂度O(N)，额外空间复杂度O(1)。通过利用原树中大量空闲指针的方式，达到节省空间的目的
 
 ## 流程
 
@@ -18,7 +18,7 @@ last_reviewed: 2026-09-27
 2. cur有左树，找到左树最右的节点，记为mostRight
    1. mostRight的右指针指向null，mostRight.right =cur, cur = cur.left
    2. mostRight的右指针指向当前节点，mostRight.right = null, cur = cur.right
-3. 当`cur==cur.right`时候，停止
+3. 当`cur==null`时，停止
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20220719173001103.png)
 
@@ -113,7 +113,7 @@ public static void morrisIn(Node head) {
     }
 ```
 
-后序的话， 找到第二次出现的位置，逆序打印这个值的左树的右边界，在所有的过程完成之后，单独打印如现在Mirrors遍历的序列是1，2，4，2，5，1，3，6，3，7；现在逆序打印2的左树的右边界，打印出4，然后找到1，逆序打印左树的右边界就是5，2，然后找到3，逆序打印左边界就是6，最后单独打印一下整个树的右边界7，3，1
+后序的话， 找到第二次出现的位置，逆序打印这个节点的左树的右边界，在所有的过程完成之后，单独打印。现在Morris遍历的序列是1，2，4，2，5，1，3，6，3，7；现在逆序打印2的左树的右边界，打印出4，然后找到1，逆序打印左树的右边界就是5，2，然后找到3，逆序打印左边界就是6，最后单独打印一下整个树的右边界7，3，1
 
 逆序打印可以使用单链表反转进行实现
 
@@ -221,7 +221,7 @@ public static int minHeight1(Node head) {
 
 #### Morris遍历
 
-上面的的思路在进行遍历的时候，空间复杂度高。可以优化。
+上面的思路在进行遍历的时候，空间复杂度高。可以优化。
 
 Morris遍历，时间复杂度O(n)，需要遍历所有的节点。空间复杂度为O(1)。
 
@@ -235,20 +235,20 @@ morris遍历的规则:
 
 1. 如果cur没有左子树，cur向右移动（cur = cur.right），那么下一个节点就是cur的右孩子，深度：level+1。
 2. 如果cur有左子树，找到cur左子树上最右的节点，记mostRight。
-   1. 如果 mostRight 的 right 指针指向null，让其指向cur（mostRight.right = cur），cur向左移动（cur =.cur.left），那么下一个节点就是cur的左孩子，深度：level+1。
+   1. 如果 mostRight 的 right 指针指向null，让其指向cur（mostRight.right = cur），cur向左移动（cur = cur.left），那么下一个节点就是cur的左孩子，深度：level+1。
    2. 如果 mostRight 的right 指针指向 cur，让其指向空（ mostRight.right = null），cur向右移动（cur= cur.right）假设下一个节点记为next,根据 morris遍历可知，cur是next左子树上最右的节点。next 的深度 = level - next左子树的右边界的节点数。
 
 利用以上策略，就能在morris遍历中得到每一个节点的深度。
 
 其次，解决如何在morris遍历中发现每一个叶节点
 
-- 因为在morris遍历中，我们会人为修改某些节点的 right 指针，让其指向上级的某个节点。这样，当用morris遍历到某个节点×的时候，也许×原本是叶节点，但此时却发现不了，因为此时X的 right 指针指向上级了(不满足X.left == null && X.right = null)。
+- 因为在morris遍历中，我们会人为修改某些节点的 right 指针，让其指向上级的某个节点。这样，当用morris遍历到某个节点X的时候，也许X原本是叶节点，但此时却发现不了，因为此时X的 right 指针指向上级了(不满足X.left == null && X.right = null)。
 
 - 所以，为了发现所有的叶节点，我们把发现叶节点的时机放在morris遍历中回到自己两次，且第二次回到这个节点的时候。
 
 ![在这里插入图片描述](https://img-1312072469.cos.ap-nanjing.myqcloud.com/4f72928fab7f9bf57607322c6877cce6.png)
 
-比如，使用Mirror遍历二叉树时（上图所示）：
+比如，使用Morris遍历二叉树时（上图所示）：
 
 - 当第二次回到2的时候，看看1是不是叶节点;
 - 当第二次回到4的时候，看看3是不是叶节点;
@@ -309,4 +309,4 @@ morris遍历的规则:
 
 什么时候使用Morris遍历？
 
-当我们不需要左右两个树的信息时，可以使用此遍历
+当我们不需要左右两棵子树的信息时，可以使用此遍历

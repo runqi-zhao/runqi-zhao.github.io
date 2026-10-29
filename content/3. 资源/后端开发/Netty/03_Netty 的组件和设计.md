@@ -38,7 +38,7 @@ last_reviewed: 2026-09-27
 
 ### EventLoop接口
 
-EventLoop 定义了Netty 的核心抽象，用于处理连接的生命周期中所发生的事件。图1在高层次上说米国了Channel、EventLoop、Thread以及EventLoopGroup之间的关系。
+EventLoop 定义了Netty 的核心抽象，用于处理连接的生命周期中所发生的事件。图1在高层次上说明了Channel、EventLoop、Thread以及EventLoopGroup之间的关系。
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230606192743.png)
 
@@ -63,7 +63,7 @@ ChannelFuture 接口，其addListener()方法注册了一个ChannelFutureListene
 
 ## ChannelHandler和ChannelPipeline
 
-### CahnnelHandler接口
+### ChannelHandler接口
 
 从应用程序开发人员的角度来看，Netty 的主要组件是ChannelHandler，它充当了所有处理入站和出站数据的应用程序逻辑的容器。这是可行的，因为ChannelHandler 的方法是由网络事件（其中术语“事件”的使用非常广泛）触发的。事实上，ChannelHandler 可专门用于几乎任何类型的动作，例如将数据从一种格式转换为另外一种格式，或者处理转换过程中所抛出的异常。
 
@@ -79,17 +79,15 @@ ChannelHandler 安装到ChannelPipeline 中的过程如下所示：
 - 当ChannelInitializer.initChannel()方法被调用时，ChannelInitializer将在ChannelPipeline 中安装一组自定义的ChannelHandler；
 - ChannelInitializer 将它自己从ChannelPipeline 中移除。
 
-ChannelHandler 是专为支持广泛的用途而设计的，可以将它看作是处理往来Channel-Pipeline 事件（包括数据）的任何代码的通用容器。图2说明了这一点，，其展示了从Channel
-Handler 派生的ChannelInboundHandler 和ChannelOutboundHandler 接口。
+ChannelHandler 是专为支持广泛的用途而设计的，可以将它看作是处理往来Channel-Pipeline 事件（包括数据）的任何代码的通用容器。图2说明了这一点，其展示了从ChannelHandler 派生的ChannelInboundHandler 和ChannelOutboundHandler 接口。
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230606193824.png)
 
 <center> 图2 ChannelHandler类的层次结构</center>
 
-使得事件流经ChannelPipeline 是ChannelHandler 的工作，它们是在应用程序的初始化或者引导阶段被安装的。这些对象接收事件、执行它们所实现的处理逻辑，并将数据传递给
-链中的下一个ChannelHandler。它们的执行顺序是由它们被添加的顺序所决定的。实际上，被我们称为ChannelPipeline 的是这些ChannelHandler 的编排顺序。
+使得事件流经ChannelPipeline 是ChannelHandler 的工作，它们是在应用程序的初始化或者引导阶段被安装的。这些对象接收事件、执行它们所实现的处理逻辑，并将数据传递给链中的下一个ChannelHandler。它们的执行顺序是由它们被添加的顺序所决定的。实际上，被我们称为ChannelPipeline 的是这些ChannelHandler 的编排顺序。
 
-图3说明了一个Nettty应用程序总入站和出站数据之间的区别。从一个客户端应用程序的角度来看，如果事件的运动方向是从客户端到服务器端，那么我们称这些事件为出站的，反之则称为入站的。
+图3说明了一个Netty应用程序中入站和出站数据之间的区别。从一个客户端应用程序的角度来看，如果事件的运动方向是从客户端到服务器端，那么我们称这些事件为出站的，反之则称为入站的。
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230606194016.png)
 
@@ -103,12 +101,11 @@ Handler 派生的ChannelInboundHandler 和ChannelOutboundHandler 接口。
 >
 > 通过使用作为参数传递到每个方法的ChannelHandlerContext，事件可以被传递给当前ChannelHandler 链中的下一个ChannelHandler。因为你有时会忽略那些不感兴趣的事件，所以Netty提供了抽象基类ChannelInboundHandlerAdapter 和ChannelOutboundHandlerAdapter。通过调用ChannelHandlerContext 上的对应方法，每个都提供了简单地将事件传递给下一个ChannelHandler的方法的实现。随后，你可以通过重写你所感兴趣的那些方法来扩展这些类。
 
-鉴于出站操作和入站操作是不同的，你可能会想知道如果将两个类别的ChannelHandler都混合添加到同一个ChannelPipeline 中会发生什么。虽然ChannelInboundHandle 和ChannelOutboundHandle 都扩展自ChannelHandler，但是Netty 能区分ChannelInboundHandler实现和ChannelOutboundHandler 实现，并确保数据只会在具有相同定向类型的两个ChannelHandler 之间传递。
+鉴于出站操作和入站操作是不同的，你可能会想知道如果将两个类别的ChannelHandler都混合添加到同一个ChannelPipeline 中会发生什么。虽然ChannelInboundHandler 和ChannelOutboundHandler 都扩展自ChannelHandler，但是Netty 能区分ChannelInboundHandler实现和ChannelOutboundHandler 实现，并确保数据只会在具有相同定向类型的两个ChannelHandler 之间传递。
 
 当ChannelHandler 被添加到ChannelPipeline 时，它将会被分配一个ChannelHandlerContext，其代表了ChannelHandler 和ChannelPipeline 之间的绑定。虽然这个对象可以被用于获取底层的Channel，但是它主要还是被用于写出站数据。
 
-在Netty 中，有两种发送消息的方式。你可以直接写到Channel 中，也可以写到和ChannelHandler相关联的ChannelHandlerContext 对象中。前一种方式将会导致消息从Channel-
-Pipeline 的尾端开始流动，而后者将导致消息从ChannelPipeline 中的下一个ChannelHandler 开始流动。
+在Netty 中，有两种发送消息的方式。你可以直接写到Channel 中，也可以写到和ChannelHandler相关联的ChannelHandlerContext 对象中。前一种方式将会导致消息从ChannelPipeline 的尾端开始流动，而后者将导致消息从ChannelPipeline 中的下一个ChannelHandler 开始流动。
 
 ### 更加深入的了解ChannelHandler
 
@@ -120,9 +117,9 @@ Pipeline 的尾端开始流动，而后者将导致消息从ChannelPipeline 中�
 
 什么是编码和解码？
 
-编码：讲消息转换为字节。
+编码：将消息转换为字节。
 
-解码：讲字节转换为可阅读的消息。
+解码：将字节转换为可阅读的消息。
 
 编码字节与解码字节之间如何互相转换？
 
@@ -133,7 +130,7 @@ Netty是如何实现编码器与解码器的？
 对应于特定的需要，Netty 为编码器和解码器提供了不同类型的抽象类。例如，你的应用程序可能使用了一种中间格式，而不需要立即将消息转换成字节。你将仍然需要一个编码器，但是
 它将派生自一个不同的超类。为了确定合适的编码器类型，你可以应用一个简单的命名约定。
 
-请你具体说说Neety中可以使用哪些类实现编码解码？
+请你具体说说Netty中可以使用哪些类实现编码解码？
 
 通常来说，这些基类的名称将类似于ByteToMessageDecoder 或MessageToByteEncoder。对于特殊的类型，你可能会发现类似于ProtobufEncoder 和ProtobufDecoder这样的名称——预置的用来支持Google 的Protocol Buffers。
 
@@ -141,7 +138,7 @@ Netty是如何实现编码器与解码器的？
 
 #### 抽象类SimpleChannelInboundHandler
 
-抽下各类SimpleChannelInboundHandler的作用是什么？
+抽象类SimpleChannelInboundHandler的作用是什么？
 
 最常见的情况是，你的应用程序会利用一个ChannelHandler 来接收解码消息，并对该数据应用业务逻辑。要创建一个这样的ChannelHandler，你只需要扩展基类SimpleChannelInboundHandler<T>，其中T 是你要处理的消息的Java 类型。在这个ChannelHandler 中，你将需要重写基类的一个或者多个方法，并且获取一个到ChannelHandlerContext 的引用，这个引用将作为输入参数传递给ChannelHandler 的所有方法。
 
@@ -158,7 +155,7 @@ Netty 的引导类为应用程序的网络层配置提供了容器，这涉及�
 1. 用于客户端（Bootstrap）
 2. 用于服务器（ServerBootstrap）
 
-无论使用哪种协议或者哪种类型，唯一决定是哪种类的是看他是是服务器还是客户端，下表展示了这两种引导类型
+无论使用哪种协议或者哪种类型，唯一决定是哪种类的是看它是服务器还是客户端，下表展示了这两种引导类型
 
 <center> 表1 比较Bootstrap 类 </center>
 
@@ -175,10 +172,10 @@ Netty 的引导类为应用程序的网络层配置提供了容器，这涉及�
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230606200534.png)
 
-<center> 图4  具有两个EvventLooopGroup的服务器 </center>
+<center> 图4  具有两个EventLoopGroup的服务器 </center>
 
 与ServerChannel 相关联的EventLoopGroup 将分配一个负责为传入连接请求创建Channel 的EventLoop。一旦连接被接受，第二个EventLoopGroup 就会给它的Channel分配一个EventLoop。
 
 ## 总结
 
-本章中，从技术与体系上面介绍了Neety的重要性。
+本章中，从技术与体系上面介绍了Netty的重要性。

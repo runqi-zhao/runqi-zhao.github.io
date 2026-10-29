@@ -11,7 +11,7 @@ last_reviewed: 2026-09-27
 
 设计JMM时，考虑两个关键因素：
 
-1. 程序员堆内存模型的使用。程序员希望内存模型易于理解、易于编程。程序员希望基于一个强内存模型来编写代码。
+1. 程序员对内存模型的使用。程序员希望内存模型易于理解、易于编程。程序员希望基于一个强内存模型来编写代码。
 
 2. 编译器和处理器对内存模型的实现。编译器和处理器希望内存模型对它们的束缚越少越好，这样它们可以做尽可能多的优化来提高性能。编译器和处理器希望实现一个弱内存模型。
 
@@ -40,7 +40,7 @@ double area = pi * r * r;　 // C
 JMM对这两种不同性质的重排序，采用不同的策略，如下：
 
 1. 对于会改变程序执行结果的重排序，处理器和编译器必须禁止这种重排序。
-2. 对于不会改变程序之字形结果的重排序，JMM对编译器和处理器不做要求。
+2. 对于不会改变程序执行结果的重排序，JMM对编译器和处理器不做要求。
 
 ![image-20221212092306827](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212092306827.png)
 
@@ -48,12 +48,12 @@ JMM对这两种不同性质的重排序，采用不同的策略，如下：
 
 从图中，可看出：
 
-1. JMM像程序员提供的happens-before规则能满足程序员的需求。
-2. JMM对对编译器和处理器的束缚已经尽可能地少。只要不改变程序结果，想怎么优化就怎么优化。
+1. JMM向程序员提供的happens-before规则能满足程序员的需求。
+2. JMM对编译器和处理器的束缚已经尽可能地少。只要不改变程序结果，想怎么优化就怎么优化。
 
 ## happens-before的定义
 
-JSR-133使用happens-before的概念来指定两个操作之间的执行顺序。由于这连个操作可能在一个线程之内，也可能在不同线程之间。因此，JMM可以通过happens-before关系想程序员提供跨线程的内存可见性保证。（如果A线程的写操作a与B线程的读操作b之间存在happens before关系，尽管a操作和b操作在不同的线程中执行，但JMM向程序员保证a操作将对b操作可见）。
+JSR-133使用happens-before的概念来指定两个操作之间的执行顺序。由于这两个操作可能在一个线程之内，也可能在不同线程之间。因此，JMM可以通过happens-before关系向程序员提供跨线程的内存可见性保证。（如果A线程的写操作a与B线程的读操作b之间存在happens before关系，尽管a操作和b操作在不同的线程中执行，但JMM向程序员保证a操作将对b操作可见）。
 
 因此，定义如下：
 
@@ -78,7 +78,7 @@ JSR-133使用happens-before的概念来指定两个操作之间的执行顺序�
 5. start()规则：如果线程A执行操作ThreadB.start()（启动线程B），那么A线程的ThreadB.start()操作happens-before于线程B中的任意操作。
 6. join()规则：如果线程A执行操作ThreadB.join()并成功返回，那么线程B中的任意操作happens-before于线程A从ThreadB.join()操作成功返回。
 
-下图是是volatile写-读建立的happens-before关系图。
+下图是volatile写-读建立的happens-before关系图。
 
 ![image-20221212094140462](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212094140462.png)
 
@@ -90,13 +90,13 @@ JSR-133使用happens-before的概念来指定两个操作之间的执行顺序�
 2.  2 happens-before 3是由volatile规则产生。对一个volatile变量的读，总是能看到(任意线程)之前这个volatile变量最后的写入。因此，volatile的这个特性可以保证实现volatile规则。
 3.  1 happens-before 4是由传递性规则产生的。这里的传递性是由volatile的内存屏障插入策略和volatile的编译器重排序规则共同来保证的。
 
-下面我们来看start()规则。线程A执行时会调用ThreadB.start()来启动线程B；假设线程A在执行Thread.start()之前修改了一些共享变量，线程B在开始执行之后会读这些共享变量。下图时对应的happens-before关系图。
+下面我们来看start()规则。线程A执行时会调用ThreadB.start()来启动线程B；假设线程A在执行Thread.start()之前修改了一些共享变量，线程B在开始执行之后会读这些共享变量。下图是对应的happens-before关系图。
 
 ![image-20221212100542849](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212100542849.png)
 
 <center>happens-before关系的示意图</center>
 
-上图中，1 happens-before由顺序规则产生。2 happens-before 4由start()规则产生。根据传递性，将有1 happens-before 4。这实意味着，线程A在执行ThreadB.start()之前对共享变量所做的修改，接下来在线程B开始执行后都将确保对线程B可见。
+上图中，1 happens-before 2由顺序规则产生。2 happens-before 4由start()规则产生。根据传递性，将有1 happens-before 4。这意味着，线程A在执行ThreadB.start()之前对共享变量所做的修改，接下来在线程B开始执行后都将确保对线程B可见。
 
 下面我们来看join()规则。假设线程A在执行的过程中，通过执行ThreadB.join()来等待线程B终止；同时，假设线程B在终止之前修改了一些共享变量，线程A从ThreadB.join()返回后会读这些共享变量。
 

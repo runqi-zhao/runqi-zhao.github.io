@@ -13,7 +13,7 @@ last_reviewed: 2026-09-27
 
 ## EventLoop接口
 
-运行任务来处理在连接的生命周期内发生的事件是任何网络框架的基本功能。与之相应的编程上的构造通常被称为事件循环—一个Netty 使用了interface io.netty.channel.EventLoop 来适配的术语。
+运行任务来处理在连接的生命周期内发生的事件是任何网络框架的基本功能。与之相应的编程上的构造通常被称为事件循环——这是 Netty 用 interface io.netty.channel.EventLoop 来适配的一个术语。
 
 Netty 的EventLoop 是协同设计的一部分，它采用了两个基本的API：并发和网络编程。首先，io.netty.util.concurrent 包构建在JDK 的java.util.concurrent 包上，用来提供线程执行器。其次，io.netty.channel 包中的类，为了与Channel 的事件进行交互，扩展了这些接口/类。图1展示了生成类的层次结构。
 
@@ -39,14 +39,14 @@ Netty 的EventLoop 是协同设计的一部分，它采用了两个基本的API�
 
 ### JDK 的任务调度API
 
-在Java 5 之前，任务调度是建立在java.util.Timer 类之上的，其使用了一个后台Thread，并且具有与标准线程相同的限制。随后，JDK 提供了java.util.concurrent 包，它定义了interface ScheduledExecutorService。下标定义了java.util.cocurrent,Executors的相关工厂方法。
+在Java 5 之前，任务调度是建立在java.util.Timer 类之上的，其使用了一个后台Thread，并且具有与标准线程相同的限制。随后，JDK 提供了java.util.concurrent 包，它定义了interface ScheduledExecutorService。下表定义了 java.util.concurrent.Executors 的相关工厂方法。
 
 | 方法                                                         | 描述                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | newScheduledThreadPool(int corePoolSize)<br/>newScheduledThreadPool(int corePoolSize,ThreadFactorythreadFactory) | 创建一个ScheduledThreadExecutorService，用于调度命令在指定延迟之后运行或者周期性地执行。它使用corePoolSize 参数来计算线程数 |
 | newSingleThreadScheduledExecutor()<br/>newSingleThreadScheduledExecutor(ThreadFactorythreadFactory) | 创建一个ScheduledThreadExecutorService，用于调度命令在指定延迟之后运行或者周期性地执行。它使用一个线程来执行被调度的任务 |
 
-### 使用EventLooop执行任务调度
+### 使用EventLoop执行任务调度
 
 ScheduledExecutorService 的实现具有局限性，例如，事实上作为线程池管理的一部分，将会有额外的线程创建。如果有大量任务被紧凑地调度，那么这将成为一个瓶颈。
 
@@ -75,7 +75,7 @@ Netty线程模型的卓越性能取决于对于当前执行的Thread的身份的
 
 异步传输实现只使用了少量的EventLoop（以及和它们相关联的Thread），而且在当前的线程模型中，它们可能会被多个Channel 所共享。这使得可以通过尽可能少量的Thread 来支撑大量的Channel，而不是每个Channel 分配一个Thread。
 
-下图显示了一个EventLoopGroup，具有3个固定大小的EventLoop。在船舰EventLoopGroup时直接分配了EventLoop，一起确保在需要的时候时可用的。
+下图显示了一个EventLoopGroup，具有3个固定大小的EventLoop。在创建 EventLoopGroup 时就直接分配了 EventLoop，以确保它们在需要的时候是可用的。
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230608162511.png)
 
@@ -88,7 +88,7 @@ EventLoopGroup 负责为每个新创建的Channel 分配一个EventLoop。在当
 
 ### 阻塞传输
 
-下图展示了阻塞传输的的EventLoop的分配方式。
+下图展示了阻塞传输的 EventLoop 的分配方式。
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/20230608162748.png)
 

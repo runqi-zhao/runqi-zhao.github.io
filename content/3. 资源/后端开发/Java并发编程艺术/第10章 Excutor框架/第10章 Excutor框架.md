@@ -28,7 +28,7 @@ HotSpot VM模型中，Java线程被一对一映射为本地操作系统线程，
 1. 在上层，java多线程程序通常把应用程序分解为若干个任务，然后使用用户级的调度器（Executor框架）将这些任务映射为固定数量的线程；
 2. 在底层，操作系统内核将这些线程映射到硬件处理器上。
 3. 应用程序通过Executor框架控制上层的调度；
-4. 下层的调度有操作系统内核控制，下层的调度不受应用程序的控制。
+4. 下层的调度由操作系统内核控制，下层的调度不受应用程序的控制。
 
 ### Executor框架的结构与成员
 
@@ -40,7 +40,7 @@ HotSpot VM模型中，Java线程被一对一映射为本地操作系统线程，
 
 - 任务。包括执行任务所需要实现的接口：Runnable接口或Callable接口。
 - 任务的执行。包括任务执行机制的核心接口Executor，以及继承自Executor的ExecutorService接口。Executor框架有两个关键类实现了ExecutorService接口（ThreadPoolExecutor和ScheduledThreadPoolExecutor）。
-- 异步计算的结果。括接口Future和实现Future接口的FutureTask类。
+- 异步计算的结果。包括接口Future和实现Future接口的FutureTask类。
 
 Executor框架包含的主要的类与接口如下：
 
@@ -50,7 +50,7 @@ Executor框架包含的主要的类与接口如下：
 
 - Executor是一个接口，他是Executor框架的基础，将任务的提交与任务的执行分离开来；
 - ThreadPoolExecutor是线程池的核心实现类，用来执行被提交的任务；
-- ScheduleThreadPoolExecutor是一个实现类，可以在给定的延迟后运行命令，或者定期执行命令；ScheduledThreadPoolExecutor比Timer更灵活，功能更强大。
+- ScheduledThreadPoolExecutor是一个实现类，可以在给定的延迟后运行命令，或者定期执行命令；ScheduledThreadPoolExecutor比Timer更灵活，功能更强大。
 - Future接口和实现Future接口的FutureTask类，代表异步计算的结果。
 - Runnable接口和Callable接口的实现类，都可以被ThreadPoolExecutor或Scheduled-ThreadPoolExecutor执行。
 
@@ -60,7 +60,7 @@ Executor框架的使用示意图如下：
 
 <center>Executor框架的使用示意图</center>
 
-1. 常见实现Runnable或者Callable接口的任务对象。工具类Executors可以把一个Runnable对象封装为一个Callable对象(Executors.callable(Runnable task)或Executors.callable(Runnable task，Object resule))；
+1. 创建实现Runnable或者Callable接口的任务对象。工具类Executors可以把一个Runnable对象封装为一个Callable对象(Executors.callable(Runnable task)或Executors.callable(Runnable task，Object result))；
 2. 把Runnable对象直接交给ExecutorService执行(ExecutorService.execute(Runnable command))；或者把Runnable对象或Callable对象提交给ExecutorService执行`(Executor-Service.submit(Runnable task)ExecutorService.submit(Callable<T> task))；`
 3. 如果执行ExecutorService.submit(…)，ExecutorService将返回一个实现Future接口的对象（到目前为止的JDK中，返回的是FutureTask对象）。由于FutureTask实现了Runnable，程序员也可以创建FutureTask，然后直接交给ExecutorService执行。
 4. 主线程可以执行FutureTask.get()方法来等待任务执行完成。主线程也可以执行FutureTask.cancel(boolean mayInterruptIfRunning)来取消任务的执行。
@@ -265,7 +265,7 @@ SingleThreadExecutor的运行示意图如下：
 
 ### CachedThreadPool详解
 
-CachedThreadPool是一个会根**据需要创建新线程**的线程池。下面是创建CachedThreadPool的源代码。
+CachedThreadPool是一个会**根据需要创建新线程**的线程池。下面是创建CachedThreadPool的源代码。
 
 ```java
 public static ExecutorService newCachedThreadPool() {
@@ -319,7 +319,7 @@ DelayQueue是一个无界队列，所以ThreadPoolExecutor的maximumPoolSize在S
 
 ScheduledThreadPoolExecutor的执行主要分为两大部分。
 
-1. 当调用ScheduledThreadPoolExecutor的scheduleAtFixedRate()方法或者scheduleWith-FixedDelay()方法时，会向ScheduledThreadPoolExecutor的DelayQueue添加一个实现了RunnableScheduledFutur接口的ScheduledFutureTask。
+1. 当调用ScheduledThreadPoolExecutor的scheduleAtFixedRate()方法或者scheduleWith-FixedDelay()方法时，会向ScheduledThreadPoolExecutor的DelayQueue添加一个实现了RunnableScheduledFuture接口的ScheduledFutureTask。
 2. 线程池中的线程从DelayQueue中获取ScheduledFutureTask，然后执行任务。
 
 ScheduledThreadPoolExecutor为了实现周期性的执行任务，对ThreadPoolExecutor做了如下的修改。
@@ -396,115 +396,7 @@ DelayQueue.take()的执行示意图如下：
 
    ScheduledThreadPoolExecutor在一个循环中执行步骤2，直到线程从PriorityQueue获取到一个元素之后（执行2.3.1之后），才会退出无限循环（结束步骤2）。
 
-SheduledThreadPoolExecutor中的线程执行任务的步骤4，把ScheduledFutureTask放入DelayQueue中的过程。下面是DelayQueue.add()的源代码实现。
-
-```java
-public boolean offer(E e) {
-    final ReentrantLock lock = this.lock;
-    lock.lock();　　　　　　　　　　      // 1
-    try {
-        E first = q.peek();
-        q.offer(e);　　　　　　　　      // 2.1
-        if (first == null || e.compareTo(first) < 0)
-            available.signalAll();　　　 // 2.2
-        return true;
-    } finally {
-        lock.unlock();　　　　　　　　   // 3
-    }
-}
-```
-
-DelayQueue.add()的执行示意图如下：
-
-### ScheduledThreadPoolExecutor的实现
-
-前面我们提到过，ScheduledThreadPoolExecutor会把待调度的任务（ScheduledFutureTask）放到一个DelayQueue中。
-
-ScheduledFutureTask主要包含3个成员变量，如下。
-
-·long型成员变量time，表示这个任务将要被执行的具体时间。
-
-·long型成员变量sequenceNumber，表示这个任务被添加到ScheduledThreadPoolExecutor中的序号。
-
-·long型成员变量period，表示任务执行的间隔周期。
-
-DelayQueue封装了一个PriorityQueue，这个PriorityQueue会对队列中的Scheduled-FutureTask进行排序。排序时，time小的排在前面（时间早的任务将被先执行）。如果两个ScheduledFutureTask的time相同，就比较sequenceNumber，sequenceNumber小的排在前面（也就是说，如果两个任务的执行时间相同，那么先提交的任务将被先执行）。
-
-首先，让我们看看ScheduledThreadPoolExecutor中的线程执行周期任务的过程。图10-9是ScheduledThreadPoolExecutor中的线程1执行某个周期任务的4个步骤。
-
-![img](http://localhost:8000/a30c0ffa-f156-4c56-af72-937457825515/OEBPS/Image00128.jpg)
-
-图10-9　ScheduledThreadPoolExecutor的任务执行步骤
-
-下面是对这4个步骤的说明。
-
-1）线程1从DelayQueue中获取已到期的ScheduledFutureTask（DelayQueue.take()）。到期任务是指ScheduledFutureTask的time大于等于当前时间。
-
-2）线程1执行这个ScheduledFutureTask。
-
-3）线程1修改ScheduledFutureTask的time变量为下次将要被执行的时间。
-
-4）线程1把这个修改time之后的ScheduledFutureTask放回DelayQueue中（Delay-Queue.add()）。
-
-接下来，让我们看看上面的步骤1）获取任务的过程。下面是DelayQueue.take()方法的源代码实现。
-
-------
-
-```
-public E take() throws InterruptedException {
-    final ReentrantLock lock = this.lock;
-    lock.lockInterruptibly();　　　　　　　　　　　　          // 1
-    try {
-        for (;;) {
-            E first = q.peek();
-            if (first == null) {
-                available.await();　　　　　　　　　　         // 2.1
-            } else {
-                long delay =  first.getDelay(TimeUnit.NANOSECONDS);
-                if (delay > 0) {
-                    long tl = available.awaitNanos(delay);　　 // 2.2
-                } else {
-                    E x = q.poll();　　　　　　　　　　        // 2.3.1
-                    assert x != null;
-                    if (q.size() != 0)
-                        available.signalAll();　　　　　　　　 // 2.3.2
-                    return x;
-                }
-            }
-        }
-    } finally {
-        lock.unlock();　　　　　　　　　　　　　　              // 3
-    }
-}
-```
-
-------
-
-图10-10是DelayQueue.take()的执行示意图。
-
-![img](http://localhost:8000/a30c0ffa-f156-4c56-af72-937457825515/OEBPS/Image00129.jpg)
-
-图10-10　ScheduledThreadPoolExecutor获取任务的过程
-
-如图所示，获取任务分为3大步骤。
-
-1）获取Lock。
-
-2）获取周期任务。
-
-·如果PriorityQueue为空，当前线程到Condition中等待；否则执行下面的2.2。
-
-·如果PriorityQueue的头元素的time时间比当前时间大，到Condition中等待到time时间；否则执行下面的2.3。
-
-·获取PriorityQueue的头元素（2.3.1）；如果PriorityQueue不为空，则唤醒在Condition中等待的所有线程（2.3.2）。
-
-3）释放Lock。
-
-ScheduledThreadPoolExecutor在一个循环中执行步骤2，直到线程从PriorityQueue获取到一个元素之后（执行2.3.1之后），才会退出无限循环（结束步骤2）。
-
-最后，让我们看看ScheduledThreadPoolExecutor中的线程执行任务的步骤4，把ScheduledFutureTask放入DelayQueue中的过程。下面是DelayQueue.add()的源代码实现。
-
-------
+ScheduledThreadPoolExecutor中的线程执行任务的步骤4，把ScheduledFutureTask放入DelayQueue中的过程。下面是DelayQueue.add()的源代码实现。
 
 ```java
 public boolean offer(E e) {
@@ -634,7 +526,7 @@ FutureTask的设计示意图如图10-15所示。
 
 <center>FutureTask的设计示意图</center>
 
-Sync是FutureTask的内部私有类，它继承自AQS。创建FutureTask时会创建内部私有的成员对象Sync，FutureTask所有的的公有方法都直接委托给了内部私有的Sync。
+Sync是FutureTask的内部私有类，它继承自AQS。创建FutureTask时会创建内部私有的成员对象Sync，FutureTask所有的公有方法都直接委托给了内部私有的Sync。
 
 FutureTask.get()方法会调用AQS.acquireSharedInterruptibly（int arg）方法，这个方法的执行过程如下。
 

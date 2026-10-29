@@ -69,7 +69,7 @@
 <h2 id="各种内存模型之间的关系">各种内存模型之间的关系<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#各种内存模型之间的关系" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p><img src="https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221212143618752.png" alt="image-20221212143618752"/></p>
 <center>各种CPU内存模型的强弱对比示意图</center>
-<p>从图中可以看出：常见的4种处理器内存模型比常用的3中语言内存模型要弱，处理器内存模型和语言内存模型都比顺序一致性内存模型要弱。同处理器内存模型一样，越是追求执行性能的语言，内存模型设计得会越弱。</p>
+<p>从图中可以看出：常见的4种处理器内存模型比常用的3种语言内存模型要弱，处理器内存模型和语言内存模型都比顺序一致性内存模型要弱。同处理器内存模型一样，越是追求执行性能的语言，内存模型设计得会越弱。</p>
 <h2 id="jmm的内存可见性保证">JMM的内存可见性保证<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jmm的内存可见性保证" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
 <p>java程序的内存可见性保证可以分为下列3类。</p>
 <ul>

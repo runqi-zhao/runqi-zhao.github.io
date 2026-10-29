@@ -10,26 +10,26 @@ last_reviewed: 2026-09-27
 
 ## Visitor模式
 
-在Visitor模式中，数据结构预处理分离开来。
+在Visitor模式中，数据结构和处理分离开来。
 
 ## 例子
 
-用[[11_Composite模式]]中用到的那个文件和文件夹的例子作为访问者要访问的数据结构。访问者和访问由文件和文件夹构成的而数据结构，然后显示出文件和文件夹的一览。
+用[[11_Composite模式]]中用到的那个文件和文件夹的例子作为访问者要访问的数据结构。访问者访问由文件和文件夹构成的数据结构，然后显示出文件和文件夹的一览。
 
 | 名字                    | 说明                                                       |
 | ----------------------- | ---------------------------------------------------------- |
 | Visitor                 | 表示访问者的抽象类，他访问文件和文件夹                     |
 | Element                 | 表示数据结构的接口，他接受访问者的访问                     |
-| ListVisitor             | Visotor类的子类，显示文件和文件夹一览                      |
+| ListVisitor             | Visitor类的子类，显示文件和文件夹一览                      |
 | Entry                   | File类和Directory类的父类，它是抽象类（实现了Element接口） |
 | File                    | 表示文件的类                                               |
 | Directory               | 表示文件夹的类                                             |
-| FileTreatementException | 表示文件中add时发生的异常的类                              |
+| FileTreatmentException | 表示文件中add时发生的异常的类                              |
 | Main                    | 测试程序行为的类                                           |
 
 ![image-20221017102909546](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221017102909546.png)
 
-Visitor类时表示访问者的类。访问者依赖于她所访问的数据结构（即File类和Directory类）。
+Visitor类是表示访问者的类。访问者依赖于它所访问的数据结构（即File类和Directory类）。
 
 ```java
 public abstract class Visitor {
@@ -38,7 +38,7 @@ public abstract class Visitor {
 }
 ```
 
-Element接口时接受访问者的访问的接口。
+Element接口是接受访问者的访问的接口。
 
 ```java
 public interface Element {
@@ -98,7 +98,7 @@ public class File extends Entry {
 }
 ```
 
-Directory类是表示文件夹的方法。与Composite模式中的Directory类相比，本章中的Directory类中增加了下面两个方法。
+Directory类是表示文件夹的类。与Composite模式中的Directory类相比，本章中的Directory类中增加了下面两个方法。
 
 第一个方法是 iterator 方法。iterator方法会返回Iterator，我们可以使用它遍历文件夹中的所有目录条目（文件和文件夹）。
 
@@ -147,12 +147,12 @@ public class Directory extends Entry {
 
 ListVisitor类是Visitor类的子类，它的作用是访问数据结构并显示元素的一览。因为ListVisitor类是Visitor类的子类，所以它实现了visit(File）方法和visit(Directory）方法。
 
-currentdir字段中保存的是现在正在访问的文件夹名字。visit（File）方法在访问者访问文件时会被File类的accept 方法调用，参数 file是所访问的File类的实例。也就是说.visit(File）方法是用来实现“**对File类的实例要进行的处理**”的。在本例中，我们实现的处
+currentdir字段中保存的是现在正在访问的文件夹名字。visit（File）方法在访问者访问文件时会被File类的accept 方法调用，参数 file是所访问的File类的实例。也就是说，visit(File）方法是用来实现“**对File类的实例要进行的处理**”的。在本例中，我们实现的处
 理是先显示当前文件夹的名字(currentdir)，然后显示间隔符号"/"，最后显示文件名。visit(Directory)方法在访问者访问文件夹时会被Directory类的accept方法调用，参数 directory是所访问的Directory类的实例。
 
 在visit(Directory）方法中实现了“**对Directory类的实例要进行的处理**”。
 
-本例中我们是如何实现的呢? 与visit（File）方法一样，我们先显示当前文件夹的名字，接着调用 iterator 方法获取文件夹的工terator，然后通过 Iterator遍历文件夹中的所有目录条目并调用它们各自的accept方法。由于文件夹中可能存在着许多目录条目，逐一访问会非常困难。accept方法调用visit方法,visit方法又会调用accept方法，这样就形成」非常复杂的递归调用。通常的递归调用是某个方法调用自身，在Visitor模式中，则是**accept方法与visit方法之间相互递归调用**。
+本例中我们是如何实现的呢? 与visit（File）方法一样，我们先显示当前文件夹的名字，接着调用 iterator 方法获取文件夹的Iterator，然后通过 Iterator遍历文件夹中的所有目录条目并调用它们各自的accept方法。由于文件夹中可能存在着许多目录条目，逐一访问会非常困难。accept方法调用visit方法,visit方法又会调用accept方法，这样就形成了非常复杂的递归调用。通常的递归调用是某个方法调用自身，在Visitor模式中，则是**accept方法与visit方法之间相互递归调用**。
 
 ```java
 public class ListVisitor extends Visitor {
@@ -231,7 +231,7 @@ public class Main {
 }
 ```
 
-### Visotr与Element之间的相互调用
+### Visitor与Element之间的相互调用
 
 这里我们再结合时序图来学习一下示例程序的处理流程
 
@@ -258,15 +258,15 @@ public class Main {
 
 ### Visitor（访问者）
 
-负责对数据结构中每个具体的元素，声明一个用于访问XXXX的visit(XXXX)方法。visit(XXXX)适用于处理XXXX的方法，负责实现该方法的是ConcreteVisitor角色。
+负责对数据结构中每个具体的元素，声明一个用于访问XXXX的visit(XXXX)方法。visit(XXXX)是用于处理XXXX的方法，负责实现该方法的是ConcreteVisitor角色。
 
 ### ConcreteVisitor
 
-负责实现Visitor角色所定义的接口(API)。实现所有的visit(XXXX)方法，及实现如何处理每个ConcreteElement角色。
+负责实现Visitor角色所定义的接口(API)。实现所有的visit(XXXX)方法，即实现如何处理每个ConcreteElement角色。
 
 ### Element
 
-表示Visitor角色的访问对象。声明了接受访问这的accept方法。
+表示Visitor角色的访问对象。声明了接受访问者的accept方法。
 
 ### ConcreteElement
 

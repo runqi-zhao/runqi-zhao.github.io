@@ -12,11 +12,11 @@ last_reviewed: 2026-09-27
 
 Abstract Factory模式的工作是将“抽象零件”组装成“抽象产品”。
 
-面向对象编程中“抽象”这个词的具体含义是“补考看v具体怎样实现，而是仅关注接口（API）”的状态，例如，抽象方法并不定义放到发的具体实现，而是仅仅只确定了放啊的名字和签名（参数的类型和个数）。
+面向对象编程中“抽象”这个词的具体含义是“不考虑具体怎样实现，而是仅关注接口（API）”的状态，例如，抽象方法并不定义方法的具体实现，而是仅仅只确定了方法的名字和签名（参数的类型和个数）。
 
 我们并不关心零件的具体实现，而是只关心接口（API）。我们仅使用该接口（API）将零件组装成为产品。
 
-在Tempate Method模式和Builder模式中，子类这一层负责方法的具体实现。在Abstract Factory模式中也是一样的。在子类这一层中有具体的工厂，它负责将具体的零件组常称为具体的产品。
+在Template Method模式和Builder模式中，子类这一层负责方法的具体实现。在Abstract Factory模式中也是一样的。在子类这一层中有具体的工厂，它负责将具体的零件组装成具体的产品。
 
 ## 例子
 
@@ -35,9 +35,9 @@ Abstract Factory模式的工作是将“抽象零件”组装成“抽象产品�
 | factory     | Link        | 抽象零件：表示HTML的链接的类                         |
 | factory     | Tray        | 抽象零件：表示含有Link和Tray的类                     |
 | factory     | Page        | 抽象零件：表示HTML页面的类                           |
-| 无名        | Main        | 测试成行为的类                                       |
+| 无名        | Main        | 测试程序行为的类                                     |
 | listfactory | ListFactory | 表示具体工厂的类（制作ListLink、ListTray、ListPage） |
-| listfactory | ListLink    | 具体零件：表示含有HTML的连接类                       |
+| listfactory | ListLink    | 具体零件：表示HTML的链接类                           |
 | listfactory | ListTray    | 具体零件：表示含有Link和Tray的类                     |
 | listfactory | ListPage    | 具体零件：表示HTML页面的类                           |
 
@@ -86,7 +86,7 @@ public abstract class Link extends Item {
 }
 ```
 
-Tray类表示将一个含有多个Link类和Tray类的容器
+Tray类表示一个含有多个Link类和Tray类的容器
 
 ```java
 public abstract class Tray extends Item {
@@ -103,7 +103,7 @@ public abstract class Tray extends Item {
 
 Page类是抽象地表示HTML页面的类。如果将Link和Tray比喻成抽象的“零件”，那么Page类就是抽象的“产品”。title和author分别是表示页面标题和页面作者的字段。作者名字通过参数传递给Page类的构造函数。
 
-可以使用add方法向页面中增加Item(即工ink或Tray)。增加的Item将会在页面中显示出来。output方法首先根据页面标题确定文件名，接着调用makeHTML方法将自身保存的HTML内容写入到文件中。
+可以使用add方法向页面中增加Item(即Link或Tray)。增加的Item将会在页面中显示出来。output方法首先根据页面标题确定文件名，接着调用makeHTML方法将自身保存的HTML内容写入到文件中。
 
 其中，我们可以去掉如下语句(1)中的this,将其写为如下语句(2)那样。
 writer.write(this.makeHTML());	(1)
@@ -144,9 +144,9 @@ public abstract class Page {
 
 Factory类是抽象工厂，其中的getFactory方法可以根据指定的类名生成具体工厂的实例。
 
-getFactory方法通过**调用Class类的forName方法来动态地读取类信息，接着使用newInstance方法生成该类地实例**，并将其作为返回值返回给调用者。
+getFactory方法通过**调用Class类的forName方法来动态地读取类信息，接着使用newInstance方法生成该类的实例**，并将其作为返回值返回给调用者。
 
-Class类属于java.lang包，是用来表示类的类。Class类包含于Java的标准类库中。forName是java.lang.Class的类方法（静态方法），newInstance则是java.lang.Class的实例方法。（关于这里，运用到了反射地机制，这里的话请看我的另一篇博文总结，很重要一个点）。
+Class类属于java.lang包，是用来表示类的类。Class类包含于Java的标准类库中。forName是java.lang.Class的类方法（静态方法），newInstance则是java.lang.Class的实例方法。（关于这里，运用到了反射的机制，这里的话请看我的另一篇博文总结，很重要一个点）。
 
 createLink、createTray、createPage等方法是用于在抽象工厂中生成零件和产品的方法。这些方法都是抽象方法，具体的实现被交给了Factory类的子类。不过，这里确定了方法的名字和签名。
 
@@ -220,7 +220,7 @@ public class Main {
 
 之前都是抽象类，现在将目光转向具体类，来看listfactory包中的工厂-ListFactory类。
 
-ListFactory类实现了Factory类的createLink方法、createTray方法以及createPage方法。当然，各个方法的内部只是分别简单地new出ListLink实例、ListTray实例以及ListPag类地实例（根据实际要求，这里可能需要使用Prototype模式来进行clone）。
+ListFactory类实现了Factory类的createLink方法、createTray方法以及createPage方法。当然，各个方法的内部只是分别简单地new出ListLink实例、ListTray实例以及ListPage类的实例（根据实际要求，这里可能需要使用Prototype模式来进行clone）。
 
 ```java
 public class ListFactory extends Factory {
@@ -242,7 +242,7 @@ public class ListFactory extends Factory {
 
 ```
 
-ListLink是Link地子类，事先声明的makeHTML方法。
+ListLink是Link的子类，实现了Link类中声明的makeHTML方法。
 
 ```java
 public class ListLink extends Link {
@@ -261,9 +261,9 @@ ListTray类（代码清单8-9）是Tray类的子类。这里我们重点看一�
 
 makeHTML方法首先使用`<li>`标签输出标题(caption),接着使用`<ul>`和`<li>`标签输出每个Item。输出的结果先暂时保存在StringBuffer中，最后再通过toString方法将输出结果转换为String类型并返回给调用者。
 
-那么，每个Item又是如何输出为HTML格式的呢？当然就是调用每个Item的makeHTML方法了。请注意，这里并不关心变量item中保存的实例究竞是ListLink的实例还是ListTray的实例，只是简单地调用了item.makeHTM()语句而已。这里**不能使用switch语句或if语句去判断变量item中保存的实例的类型，否则就是非面向对象编程了**。变量item是Item类型的，而Item类又声明了makeHTML方法，而且ListLink类和ListTray类都是Item类的子类，因此可以放心地调用。之后item会帮我们进行处理。至于item究竟进行了什么样的处理只有item的实例（对象）才知道。这就是面向对象的优点。
+那么，每个Item又是如何输出为HTML格式的呢？当然就是调用每个Item的makeHTML方法了。请注意，这里并不关心变量item中保存的实例究竟是ListLink的实例还是ListTray的实例，只是简单地调用了item.makeHTML()语句而已。这里**不能使用switch语句或if语句去判断变量item中保存的实例的类型，否则就是非面向对象编程了**。变量item是Item类型的，而Item类又声明了makeHTML方法，而且ListLink类和ListTray类都是Item类的子类，因此可以放心地调用。之后item会帮我们进行处理。至于item究竟进行了什么样的处理只有item的实例（对象）才知道。这就是面向对象的优点。
 
-这里使用的java.util.Iterator类与我们在Iterator模式一章中所学习的迭代器在功能上是相同的，不过它是Java类库中自带的。为了从java,util.ArrayList类中得到java.util.Iterator,我们调用iterator方法。
+这里使用的java.util.Iterator类与我们在Iterator模式一章中所学习的迭代器在功能上是相同的，不过它是Java类库中自带的。为了从java.util.ArrayList类中得到java.util.Iterator，我们调用iterator方法。
 
 ```java
 public class ListTray extends Tray {
@@ -292,7 +292,7 @@ public class ListTray extends Tray {
 
 ### 增加另一个例子
 
-当我们只有一个具体工厂的时候，完全没有必要使用“抽象类”与“具体类”如此划分接下来，我们增加另一个工厂类，使用表格将里面具体内容展示出来。
+当我们只有一个具体工厂的时候，完全没有必要使用“抽象类”与“具体类”如此划分。接下来，我们增加另一个工厂类，使用表格将里面具体内容展示出来。
 
 | 包           | 名字         | 说明                                                    |
 | ------------ | ------------ | ------------------------------------------------------- |
@@ -376,7 +376,7 @@ public class TablePage extends Page {
 
 - Client（委托者）
 
-  进会调用AbstractFactory角色和AbstractProduct角色的接口（API）来进行工作，对于具体的零件、产品和工厂一无所知。
+  仅会调用AbstractFactory角色和AbstractProduct角色的接口（API）来进行工作，对于具体的零件、产品和工厂一无所知。
 
   ![image-20221012194000597](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221012194000597-1665574804099-5.png)
 
@@ -394,7 +394,7 @@ public class TablePage extends Page {
 
 在Abstract Factory模式中增加具体的工厂是非常容易的。这里说的“容易”指的是需要编写哪些类和需要实现哪些方法都非常清楚。
 
-假设现在我们要在示例程序中增加新的具体工厂，那么需要做的就是编写Factory、工ink、Tray、Page这4个类的子类，并实现它们定义的抽象方法。也就是说将factory包中的抽象部分全部具体化即可
+假设现在我们要在示例程序中增加新的具体工厂，那么需要做的就是编写Factory、Link、Tray、Page这4个类的子类，并实现它们定义的抽象方法。也就是说将factory包中的抽象部分全部具体化即可
 
 这样一来，无论要增加多少个具体工厂（或是要修改具体工厂的Bug),都无需修改抽象工厂和Main部分。
 
@@ -402,7 +402,7 @@ public class TablePage extends Page {
 
 请试想一下要在Abstract Factory模式中增加新的零件时应当如何做。例如，我们要在factory包中增加一个表示图像的Picture零件。这时，我们必须要对所有的具体工厂进行相应的修改才行。例如，在listfactory包中，我们必须要做以下修改。
 
-- 在ListFactory中加入createpicture方法
+- 在ListFactory中加入createPicture方法
 - 新增ListPicture类
 
 已经编写完成的具体工厂越多，修改的工作量就会越大。
@@ -419,7 +419,7 @@ public class TablePage extends Page {
   Something obj new Something();
   ```
 
-  这时，类名（此处的Something)会出现在代码中（即为请耦合关系）。
+  这时，类名（此处的Something)会出现在代码中（即为强耦合关系）。
 
 - clone
 
@@ -429,7 +429,7 @@ public class TablePage extends Page {
 
 - newInstance
 
-  使用本章中学习过的java.lang.class类的newInstance方法可以通过class类的实例生成出c1ass类所表示的类②的实例（会调用无参构造函数）。
+  使用本章中学习过的java.lang.Class类的newInstance方法可以通过Class类的实例生成出Class类所表示的类②的实例（会调用无参构造函数）。
 
   在本章的示例程序中，我们已经展示过如何使用newInstance了。下面我们再看一个例子。假设我们现在已经有了Something类的实例someobj,通过下面的表达式可以生成另外一个Something类的实例。
 

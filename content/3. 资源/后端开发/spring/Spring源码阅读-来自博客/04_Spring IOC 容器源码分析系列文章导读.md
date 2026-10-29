@@ -76,7 +76,7 @@ public class ApplicationContextTest {
 
 ### 4.2 autowire
 
-本小节，我们来了解一下 autowire 这个特性。autowire 即自动注入的意思，通过使用 autowire 特性，我们就不用再显示的配置 bean 之间的依赖了。把依赖的发现和注入都交给 Spring 去处理，省时又省力。autowire 几个可选项，比如 byName、byType 和 constructor 等。autowire 是一个常用特性，相信大家都比较熟悉了，所以本节我们就 byName 为例，快速结束 autowire 特性的介绍。
+本小节，我们来了解一下 autowire 这个特性。autowire 即自动注入的意思，通过使用 autowire 特性，我们就不用再显式地配置 bean 之间的依赖了。把依赖的发现和注入都交给 Spring 去处理，省时又省力。autowire 有几个可选项，比如 byName、byType 和 constructor 等。autowire 是一个常用特性，相信大家都比较熟悉了，所以本节我们就以 byName 为例，快速结束 autowire 特性的介绍。
 
 当 bean 配置中的 autowire = byName 时，Spring 会首先通过反射获取该 bean 所依赖 bean 的名字（beanName），然后再通过调用 BeanFactory.getName(beanName) 方法即可获取对应的依赖实例。autowire = byName 原理大致就是这样，接下来我们来演示一下。
 
@@ -131,7 +131,7 @@ System.out.println("service-with-autowire -> " + applicationContext.getBean("ser
 测试结果如下：
 ![img](https://img-1312072469.cos.ap-nanjing.myqcloud.com/15276394476647.jpg)
 
-从测试结果可以看出，两种方式配置方式都能完成解决 bean 之间的依赖问题。只不过使用 autowire 会更加省力一些，配置文件也不会冗长。这里举的例子比较简单，假使一个 bean 依赖了十几二十个 bean，再手动去配置，恐怕就很难受了。
+从测试结果可以看出，两种配置方式都能解决 bean 之间的依赖问题。只不过使用 autowire 会更加省力一些，配置文件也不会冗长。这里举的例子比较简单，假使一个 bean 依赖了十几二十个 bean，再手动去配置，恐怕就很难受了。
 
 ### 4.3 FactoryBean
 
@@ -187,7 +187,7 @@ public class ApplicationContextTest {
 
 ### 4.4 factory-method
 
-介绍完 FactoryBean，本节再来看看了一个和工厂相关的特性 – factory-method。factory-method 可用于标识静态工厂的工厂方法（工厂方法是静态的），直接举例说明吧：
+介绍完 FactoryBean，本节再来看看一个和工厂相关的特性 – factory-method。factory-method 可用于标识静态工厂的工厂方法（工厂方法是静态的），直接举例说明吧：
 
 ```java
 public class StaticHelloFactory {
@@ -304,7 +304,7 @@ public class NewsProvider implements ApplicationContextAware {
 配置和测试代码同上，测试结果如下：
 ![img](https://img-1312072469.cos.ap-nanjing.myqcloud.com/15275709329463.jpg)
 
-这里两次获取的 news 并就不是同一个 bean 了，满足了我们的需求。
+这里两次获取的 news 就不是同一个 bean 了，满足了我们的需求。
 
 #### 4.5.2 使用 lookup-method 特性
 
@@ -335,7 +335,7 @@ System.out.println("news 2 -> " + newsProvider.getNews());
 
 ### 4.6 depends-on
 
-当一个 bean 直接依赖另一个 bean，可以使用 `<ref/>` 标签进行配置。不过如某个 bean 并不直接依赖于其他 bean，但又需要其他 bean 先实例化好，这个时候就需要使用 depends-on 特性了。depends-on 特性比较简单，就不演示了。仅贴一下配置文件的内容，如下：
+当一个 bean 直接依赖另一个 bean，可以使用 `<ref/>` 标签进行配置。不过如果某个 bean 并不直接依赖于其他 bean，但又需要其他 bean 先实例化好，这个时候就需要使用 depends-on 特性了。depends-on 特性比较简单，就不演示了。仅贴一下配置文件的内容，如下：
 
 这里有两个简单的类，其中 Hello 需要 World 在其之前完成实例化。相关配置如下：
 
@@ -410,7 +410,7 @@ public class ApplicationContextTest {
 
 ### 4.8 BeanFactoryAware
 
-Spring 中定义了一些列的 Aware 接口，比如这里的 BeanFactoryAware，以及 BeanNameAware 和 BeanClassLoaderAware 等等。通过实现这些 Aware 接口，我们可以在运行时获取一些配置信息或者其他一些信息。比如实现 BeanNameAware 接口，我们可以获取 bean 的配置名称（beanName）。通过实现 BeanFactoryAware 接口，我们可以在运行时获取 BeanFactory 实例。关于 Aware 类型接口的使用，可以参考`4.5.1 实现 ApplicationContextAware 接口`一节中的叙述，这里就不演示了。
+Spring 中定义了一系列的 Aware 接口，比如这里的 BeanFactoryAware，以及 BeanNameAware 和 BeanClassLoaderAware 等等。通过实现这些 Aware 接口，我们可以在运行时获取一些配置信息或者其他一些信息。比如实现 BeanNameAware 接口，我们可以获取 bean 的配置名称（beanName）。通过实现 BeanFactoryAware 接口，我们可以在运行时获取 BeanFactory 实例。关于 Aware 类型接口的使用，可以参考`4.5.1 实现 ApplicationContextAware 接口`一节中的叙述，这里就不演示了。
 
 ## 5. 阅读源码的一些建议
 
@@ -429,7 +429,7 @@ Spring 中定义了一些列的 Aware 接口，比如这里的 BeanFactoryAware�
 
 ## 6. 写在最后
 
-在本文的最后一章，我来说说我为什么阅读 Spring 的源码吧。对我个人而言，有两个原因。第一，作为 Java Web 开发人员，我们基本上绕不过 Spring 技术栈。当然除了 Spring，还有很多其他的选择（比如有些公司自己封装框架）。但不可否认，Spring 现在仍是主流。对于这样一个经常打交道的框架，弄懂实现原理，还有很有必要的。起码在它出错输出一大堆异常时，你不会很心慌，可以从容的 debug。第二，我去年的这个时候，工作差不多快满一年。我在写第一年的工作总结时，觉得很心慌。感觉第一年好像只学到了一点开发的皮毛，技术方面，没什么积累。加上后来想换工作，心里想着就自己现在的水平恐怕要失业了。所以为了平复自己焦虑的情绪，于是在去年的八月份的时候，我开始写博客了。到现在写了近30篇博客（比较少），其中有两篇文章被博客平台作为优秀文章推荐过。现在，又快到7月份了，工龄马上又要+1了。所以我现在在抓紧写 Spring 相关的文章，希望在六月份多写几篇。算是对自己工作满两年的一个阶段性技术总结，也是一个纪念吧。
+在本文的最后一章，我来说说我为什么阅读 Spring 的源码吧。对我个人而言，有两个原因。第一，作为 Java Web 开发人员，我们基本上绕不过 Spring 技术栈。当然除了 Spring，还有很多其他的选择（比如有些公司自己封装框架）。但不可否认，Spring 现在仍是主流。对于这样一个经常打交道的框架，弄懂实现原理，还是很有必要的。起码在它出错输出一大堆异常时，你不会很心慌，可以从容的 debug。第二，我去年的这个时候，工作差不多快满一年。我在写第一年的工作总结时，觉得很心慌。感觉第一年好像只学到了一点开发的皮毛，技术方面，没什么积累。加上后来想换工作，心里想着就自己现在的水平恐怕要失业了。所以为了平复自己焦虑的情绪，于是在去年的八月份的时候，我开始写博客了。到现在写了近30篇博客（比较少），其中有两篇文章被博客平台作为优秀文章推荐过。现在，又快到7月份了，工龄马上又要+1了。所以我现在在抓紧写 Spring 相关的文章，希望在六月份多写几篇。算是对自己工作满两年的一个阶段性技术总结，也是一个纪念吧。
 
 当然，看懂源码并不是什么很了不起的事情，毕竟写这些源码的人才是真正的大神。我在大学的时候，自学 MFC（没错，就是微软早已淘汰的东西）。并读过侯捷老师著的[《深入浅出MFC》](https://book.douban.com/subject/1094852/)一书，这本书中的一句话对我影响至深 - “**勿在浮沙筑高台**”。勿在浮沙筑高台，对于一个程序员来说，基础很重要。所以我现在也在不断的学习，希望能把基础打好，这样以后才能进入更高的层次。
 
