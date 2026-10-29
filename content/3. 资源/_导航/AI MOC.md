@@ -74,7 +74,7 @@ Agent 领域变化很快。当前更值得投入的不是老式“角色扮演�
 
 - [x] 区分 chatbot、workflow、agent、multi-agent。 ✅ 2026-10-29
 - [x] 理解 agent 的基本循环：observe -> think -> act -> observe。 ✅ 2026-10-29
-- [ ]  明白什么时候不该用 agent：任务可预测、流程稳定、普通脚本能解决时，agent 反而增加不确定性。
+- [x] 明白什么时候不该用 agent：任务可预测、流程稳定、普通脚本能解决时，agent 反而增加不确定性。 ✅ 2026-10-29
 - [x] 读完 [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)。 ✅ 2026-10-29
 - [x] 读完 [OpenAI: A practical guide to building agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/)。 ✅ 2026-10-29
 
