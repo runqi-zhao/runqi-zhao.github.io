@@ -68,8 +68,6 @@ Class文件结构中只有常量池的容量计数是从1开始，对于其他�
 
 <center>常量池结构</center>
 
-
-
 常量池中主要存放两大类常量：字面量（Literal）和符号引用（Symbolic References）。
 
 - 字面量比较接近于Java语言层面的常量概念，如文本字符串、被声明为final的常量值等。

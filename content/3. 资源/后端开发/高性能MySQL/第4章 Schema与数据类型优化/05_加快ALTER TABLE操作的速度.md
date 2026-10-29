@@ -87,7 +87,6 @@ mysql> ALTER TABLE sakila.film_new
 
 最后需要做的是删除为完成这个操作而创建的辅助表：
 
-
 ```sql
 mysql> DROP TABLE sakila.film_new;
 ```

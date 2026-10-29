@@ -41,8 +41,6 @@ getId() 得到Session 的会话id 值。
 
 ## Session域数据的存取
 
-
-
 ```java
  /**
      * 往Session种保存数据

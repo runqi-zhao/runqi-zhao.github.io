@@ -97,6 +97,3 @@ public static String getPalindrome1(String s) {
 ## 总结
 
 其实动态规划并不难，主要是要掌握对应的模型，就能解出
-
-## 相关题目
-

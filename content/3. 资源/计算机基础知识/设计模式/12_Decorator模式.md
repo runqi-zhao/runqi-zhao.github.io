@@ -25,7 +25,7 @@ last_reviewed: 2026-09-27
 | StringDisplay | 用于显示单行字符串的类   |
 | Border        | 用于显示装饰边框的抽象类 |
 | SideBorder    | 用于只显示左右边框的类   |
-| FullBodrder   | 用于显示上下左右边框的类 |
+| FullBorder    | 用于显示上下左右边框的类 |
 | Main          | 测试程序                 |
 
 ![image-20221016101946932](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221016101946932-1665886787928-1.png)
@@ -294,6 +294,10 @@ Reader reader = new LineNumberReader(new BufferedReader(new InputstreamReader(so
 除了iava.io包以外，我们还在 iavax.swing.b o r der 包中使用了Decorator模式javax.swing.border包为我们提供了可以为界面中的控件添加装饰边框的类。
 
 ### 导致增加功能相似且小的类
+
+每增加一种功能就要新写一个装饰类，类的数量随功能种类线性增长，而且这些类外观相似、只差一点行为。
+
+java.io 里的 BufferedReader、LineNumberReader、PushbackInputStream 就是这类小类。单独看职责清楚，组合起来要靠构造函数层层嵌套才能还原实际行为。
 
 ## 拓展
 

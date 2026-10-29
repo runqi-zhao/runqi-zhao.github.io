@@ -183,8 +183,6 @@ public class AtomicReferenceTest {
 }
 ```
 
-
-
 1. 构建一个user对象；
 2. 把user对象设置进AtomicReferenc中；
 3. 调用compareAndSet方法进行原子更新操作，实现原理同AtomicInteger里的compareAndSet方法。

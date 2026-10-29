@@ -22,8 +22,6 @@ last_reviewed: 2026-09-27
 
 ![](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20220719173001103.png)
 
-
-
 ```java
 public static void morris(Node head) {
         if (head == null) {
@@ -249,7 +247,6 @@ morris遍历的规则:
 - 所以，为了发现所有的叶节点，我们把发现叶节点的时机放在morris遍历中回到自己两次，且第二次回到这个节点的时候。
 
 ![在这里插入图片描述](https://img-1312072469.cos.ap-nanjing.myqcloud.com/4f72928fab7f9bf57607322c6877cce6.png)
-
 
 比如，使用Mirror遍历二叉树时（上图所示）：
 

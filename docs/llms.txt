@@ -2,11 +2,11 @@
 
 > 后端开发、计算机基础、AI 工程与个人方法论的长期笔记库。每条知识都标注了来源与有效期（frontmatter: source / kind / review_after）。
 
-共 453 篇笔记。以下为按路径排序的完整目录，每行格式：`[标题](绝对链接)：一句话摘要`。
+共 454 篇笔记。以下为按路径排序的完整目录，每行格式：`[标题](绝对链接)：一句话摘要`。
 
 - [2024 新年建议 - 陈思远](https://runqi-zhao.github.io/-1.-捕获/2024-新年建议---陈思远)：大家都快开工了，总结了几条实质性的建议，希望在新的一年，所有关注我的朋友们都能变的越来越好。
 - [硅谷顶尖 AI 大佬如何搭建个人AI知识库？从0开始用Claude Code + Obsidian搭建Karpathy的LLM Wiki知识库](https://runqi-zhao.github.io/-1.-捕获/20261028-硅谷顶尖-ai-大佬如何搭建个人ai知识库？从0开始用claude-code-+-obsidian搭建karpathy的)：用 Claude Code + Obsidian 搭建硅谷顶尖AI大佬的 LLM Wiki 知识库，让 AI 帮你持续整理、学习和进化知识。
-- [Electronics Lab Bench Setup Guide](https://runqi-zhao.github.io/-1.-捕获/electronics-lab-bench-setup-guide)：April 30, 2023
+- [Electronics Lab Bench Setup Guide](https://runqi-zhao.github.io/-1.-捕获/electronics-lab-bench-setup-guide)：^03s62j
 - [捕获箱](https://runqi-zhao.github.io/-1.-捕获/readme)：返回 首页 · 规则见 知识库使用指南
 - [The Linux Boot Process  From Power Button to Kernel](https://runqi-zhao.github.io/-1.-捕获/the-linux-boot-process-from-power-button-to-kernel)：^smrnjn
 - [The Reluctant Sysadmin's Guide to Securing a Linux Server](https://runqi-zhao.github.io/-1.-捕获/the-reluctant-sysadmin's-guide-to-securing-a-linux-server)：_I wrote a  to this guide, which you should probably consider along with this article._
@@ -16,6 +16,7 @@
 - [巧用过滤器和标签整理你的gmail邮件](https://runqi-zhao.github.io/-1.-捕获/巧用过滤器和标签整理你的gmail邮件)：我一直是google产品的忠实爱好者，因此我的主邮箱是gmail邮箱。由于这个邮箱使用频率比较高，所以邮件也就越来越多，界面看起来也很混乱。我在想作为一款成熟的产品，gmail应该有想outlook里面的那种分组和过滤功能。今天仔细研究了一下（其实是我老婆研究的，^_^）,发现其实gmail的这个功能还是很不错的。下面
 - [编程十年的感悟](https://runqi-zhao.github.io/-1.-捕获/编程十年的感悟)
 - [高盛的 2024 宏观经济预测](https://runqi-zhao.github.io/-1.-捕获/高盛的-2024-宏观经济预测)：其实高盛这类的金融投资机构，每年都会在年前出一份宏观经济预测报告。我个人是充分相信从业者的专业性的，而且读了几年发现他们的预测大体上都比较准确，除了一些不可预料的黑天鹅事件。   ^41ee4c16
+- [社区速递 163  金豪 59 调整版钢笔与九月派友剁手清单 - 少数派](https://runqi-zhao.github.io/-1.捕获/社区速递-163-金豪-59-调整版钢笔与九月派友剁手清单---少数派)：除了首页时间流和侧栏的精选展位，少数派 Matrix 社区还有很多优秀内容因条件所限无法得到有效曝光，因此我们决定重启 Matrix 周报，并在此基础上添加更多社区内容、作者投稿新玩意呈现给大家。
 - [Apache Seata 多client API设计-废版1](https://runqi-zhao.github.io/1.-项目/apache-seata/apache-seata-多client-api设计-废版1)：目前，Seata 框架的实践主要基于单 Client 模式，在这种模式下，服务发现、序列化、压缩等功能都以单例形式存在，提供了全局唯一的配置管理能力。然而，随着业务的发展以及 Seata 自身单元测试和基准测试的隔离性要求，全局单例配置的修改会影响整个系统的稳定性和可控性。因此，提升 Seata 多 Client 能力
 - [Apache Seata 多client API设计](https://runqi-zhao.github.io/1.-项目/apache-seata/apache-seata-多client-api设计)：首先查看现有的配置文件：
 - [项目工作](https://runqi-zhao.github.io/1.-项目/readme)：返回 首页
@@ -36,7 +37,7 @@
 - [后端开发 MOC](https://runqi-zhao.github.io/3.-资源/_导航/后端开发-moc)：返回 首页 · 相关 计算机基础 MOC · 分布式系统 MOC · AI MOC
 - [计算机基础 MOC](https://runqi-zhao.github.io/3.-资源/_导航/计算机基础-moc)：返回 首页 · 相关 后端开发 MOC · 分布式系统 MOC
 - [01_FastAPI](https://runqi-zhao.github.io/3.-资源/人工智能/01_fastapi)
-- [工具调用](https://runqi-zhao.github.io/3.-资源/人工智能/agent基本概念)：5个基本概念
+- [Agent 基本概念](https://runqi-zhao.github.io/3.-资源/人工智能/agent基本概念)：两份材料的合并稿：Anthropic《Building effective agents》给的是 Workflow 五种模式和 Agent 三原则，OpenAI《A practical guide to building AI agents》给的是模型 / 工具 / 指令、单多智能体编排、护栏。两篇讲同一件事的地方只留
 - [Python 基础](https://runqi-zhao.github.io/3.-资源/人工智能/python基础/python-基础)：返回 AI MOC
 - [函数调用基本概念](https://runqi-zhao.github.io/3.-资源/人工智能/函数调用基本概念)
 - [1.1 分布式系统的驱动力和挑战](https://runqi-zhao.github.io/3.-资源/分布式/mit6.824/01-introduction/1.1-分布式系统的驱动力和挑战)：首先，我们需要知道为什么出现了分布式系统。

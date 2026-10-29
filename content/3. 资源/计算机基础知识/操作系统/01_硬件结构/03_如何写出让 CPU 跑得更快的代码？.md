@@ -9,7 +9,7 @@ last_reviewed: 2026-09-27
 ---
 ![img](https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost3@main/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/CPU%E7%BC%93%E5%AD%98/CPUCache%E6%8F%90%E7%BA%B2.png)
 
-##  CPU Cache 有多快？
+## CPU Cache 有多快？
 
 你可能会好奇为什么有了内存，还需要 CPU Cache？根据摩尔定律，CPU 的访问速度每 18 个月就会翻倍，相当于每年增长 60% 左右，内存的速度当然也会不断增长，但是增长的速度远小于 CPU，平均每年只增长 7% 左右。于是，CPU 与内存的访问性能的差距不断拉大。
 

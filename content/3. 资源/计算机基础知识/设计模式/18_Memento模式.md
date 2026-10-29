@@ -291,5 +291,3 @@ Caretaker角色只能通过窄接口（API)来操作Memento角色。如果Careta
 
 而如果Caretaker角色只能使用窄接口（API),只要不修改那个接口(API),就可以自由地修改Originator角色和Memento角色。
 
-
-

@@ -252,7 +252,3 @@ java由自动回收机制，因此我们并不需要实现deleteIterator方法�
 - [[11_Composite模式]]
 - [[04_Factory_Method模式]]
 
-
-
-
-

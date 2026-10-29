@@ -73,8 +73,6 @@ jsp 的小结：
    a.html 页面访问地址是=> http://ip:port/工程路径/a.html
    b.jsp 页面访问地址是=> http://ip:port/工程路径/b.jsp
 
-
-
 ## 本质
 
 jsp 页面本质上是一个Servlet 程序。

@@ -458,8 +458,6 @@ list_length记录了列表的长度，它记录列表保存了多少个项（ite
 
 <center>更详细的HT编码哈希表对象的保存结构</center>
 
-
-
 #### 有序表集合对象
 
 如果TYPE的值为REDIS_RDB_TYPE_ZSET，那么value保存的就是一个REDIS_ENCODING_SKIPLIST编码的有序集合对象，RDB文件保存这种对象的结构如图所示：

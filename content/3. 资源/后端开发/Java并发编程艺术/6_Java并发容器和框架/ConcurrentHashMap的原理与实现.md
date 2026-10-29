@@ -38,9 +38,7 @@ Segment是可重入锁，在ConcurrentHashMap中扮演可重入锁的角色（Re
 
 Segment的结构与HashMap可u苏，是一种数组和链表结构。
 
-
-
-###  HashEntry结构
+### HashEntry结构
 
 键值对结构；
 

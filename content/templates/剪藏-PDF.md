@@ -5,8 +5,8 @@ created: <% tp.date.now("YYYY-MM-DD") %>
 source: 
 moc: 
 kind: tech
-review_after: <% tp.date.now("YYYY-MM-DD", 90) %>
-last_reviewed: <% tp.date.now("YYYY-MM-DD") %>
+review_after: 2027-01-26
+last_reviewed: 2026-10-28
 ---
 # <% tp.file.title %>
 

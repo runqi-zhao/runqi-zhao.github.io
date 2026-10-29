@@ -11,8 +11,6 @@ last_reviewed: 2026-09-27
 
 Spring 是一个轻量级的企业级应用开发框架，于 2004 年由 [Rod Johnson](https://en.wikipedia.org/wiki/Rod_Johnson_(programmer)) 发布了 1.0 版本。经过十几年的迭代，现在的 Spring 框架已经非常成熟了。Spring 包含了众多模块，包括但不限于 Core、Bean、Context、AOP 和 Web 等。在今天，我们完全可以使用 Spring 所提供的一站式解决方案开发出我们所需要的应用。作为 Java 程序员，我们会经常和 Spring 框架打交道，所以还是很有必要弄懂 Spring 的原理。
 
-
-
 本文是 Spring IOC 容器源码分析系列文章的第一篇文章，将会着重介绍 Spring 的一些使用方法和特性，为后续的源码分析文章做铺垫。另外需要特别说明一下，本系列的源码分析文章是基于`Spring 4.3.17.RELEASE`版本编写的，而非最新的`5.0.6.RELEASE`版本。好了，关于简介先说到这里，继续来说说下面的内容。
 
 ## 2. 文章编排

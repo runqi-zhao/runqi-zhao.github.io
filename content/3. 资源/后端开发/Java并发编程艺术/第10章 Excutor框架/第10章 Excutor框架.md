@@ -416,7 +416,7 @@ public boolean offer(E e) {
 
 DelayQueue.add()的执行示意图如下：
 
-###  ScheduledThreadPoolExecutor的实现
+### ScheduledThreadPoolExecutor的实现
 
 前面我们提到过，ScheduledThreadPoolExecutor会把待调度的任务（ScheduledFutureTask）放到一个DelayQueue中。
 
@@ -614,7 +614,7 @@ private String executionTask(final String taskName)
 <center>代码的执行示意图</center>
 
 当两个线程试图同时执行同一个任务时，如果Thread 1执行1.3后Thread 2执行2.1，那么接下来Thread 2将在2.2等待，直到Thread 1执行完1.4后Thread 2才能从2.2（FutureTask.get()）返回。
-###  FutureTask的实现
+### FutureTask的实现
 
 FutureTask的实现基于AbstractQueuedSynchronizer（以下简称为AQS）。java.util.concurrent中的很多可阻塞类（比如ReentrantLock）都是基于AQS来实现的。AQS是一个同步框架，它提供通用机制来原子性管理同步状态、阻塞和唤醒线程，以及维护被阻塞线程的队列。JDK 6中AQS被广泛使用，基于AQS实现的同步器包括：ReentrantLock、Semaphore、ReentrantReadWriteLock、CountDownLatch和FutureTask。
 

@@ -242,7 +242,7 @@ public class Main {
 3. Directory类的实例调用接收到的参数 ListVisitor 的visit（Directory)方法
 4. 接下来，ListVisitor类的实例会访问文件夹，并调用找到的第一个文件的accept 方法。传递的参数是自身(this）。
 5. File的实例调用接收到的参数 ListVisitor的visit（File）方法。请注意，这时ListVisitor的visit（Directory).还在执行中(并非多线程执行，而是表示visit(Directory)还存在于调用堆栈(callstack）中的意思。在时序图中，表示生命周期的长方形的右侧发生了重叠就说明了这一点）。
-6. 从Visit(File) 返回到 accept，接看义从acept☑返回出来，然后调用另外一个File的实例（同一文件夹下的第二个文件）的accept 方法。传递的参数是 ListVisitor的实例 this。
+6. 从visit(File) 返回到 accept，接着又从accept返回出来，然后调用另外一个File的实例（同一文件夹下的第二个文件）的accept 方法。传递的参数是 ListVisitor的实例 this。
 7. 与前面一样，File的实例调用visit(File）方法。所有的处理完成后，逐步返回，最后回到Main类中的调用 accept 方法的地方。
 
 ![image-20221017105619869](https://img-1312072469.cos.ap-nanjing.myqcloud.com/image-20221017105619869-1665975381585-1.png)
@@ -302,9 +302,9 @@ visitor.visit(element);
 
 ### 为何搞复杂
 
-Visitor模式的目的就是奖处理从数据结构中分离出来。数据结构很重要，它能将元素集合和关联在一起。但是，需要注意的是，保存数据结构与以数据结构为基础进行处理是两种不同的东西。
+Visitor模式的目的就是把处理从数据结构中分离出来。数据结构很重要，它能把元素集合关联在一起。但是，需要注意的是，保存数据结构与以数据结构为基础进行处理是两种不同的东西。
 
-在示例程序中，我们创建了 ListVisitor类作为显示文件夹内容的ConcreteVisitor角色。通常，ConcreteVisitor角色的开发可以种方干 File类和Directory类。Visitor模式提高了File类和Directory类作为组件的独立性。如果将进行处理的方法定义在File类和Directory类中，当每次要扩展功能 增加新的“外理”时 就不得不修改File类和Directoy类。
+在示例程序中，我们创建了 ListVisitor类作为显示文件夹内容的ConcreteVisitor角色。通常，ConcreteVisitor角色的开发可以独立于 File类和Directory类。Visitor模式提高了File类和Directory类作为组件的独立性。如果将进行处理的方法定义在File类和Directory类中，当每次要扩展功能、增加新的“处理”时，就不得不修改File类和Directory类。
 
 ### 开闭原则-对扩展开放，对修改关闭
 
@@ -317,15 +317,19 @@ Visitor模式的目的就是奖处理从数据结构中分离出来。数据结�
 
 ### 易于增加ConcreteVisitor角色
 
-### 难以增加ContereElement角色
+新增一种处理逻辑时，只要写一个 ConcreteVisitor 子类，Element 侧一行都不用改。
 
-增加时，我们选哟在Visitor类以及对应的子类都进行修改
+示例里加一个按扩展名收集文件的 FileFindVisitor，File 和 Directory 的 accept 方法保持原样，这就是对扩展开放、对修改关闭。
+
+### 难以增加ConcreteElement角色
+
+增加时，需要在Visitor类以及对应的子类都进行修改
 
 ### Visitor工作所需条件
 
-Element角色必须想Visitor角色公开足够多的条件。例如，在例子中，visit方法需要使用目录条目的eaccept方法，为此，Directory类必须提供用于获取每个目录条目的iterator方法。
+Element角色必须向Visitor角色公开足够多的条件。例如，在例子中，visit方法需要使用目录条目的accept方法，为此，Directory类必须提供用于获取每个目录条目的iterator方法。
 
-但是如果公开了不应当被公开的信息，将来需要修改数据结构是就会变得很困难。
+但是如果公开了不应当被公开的信息，将来需要修改数据结构时就会变得很困难。
 
 ## 相关设计模式
 

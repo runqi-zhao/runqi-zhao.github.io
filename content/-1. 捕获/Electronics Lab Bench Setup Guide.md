@@ -5,7 +5,7 @@ kind: method
 review_after: 2027-09-27
 last_reviewed: 2026-09-27
 ---
-[Electronics Lab Bench Setup Guide – Badar Jahangir Kayani](https://badar.tech/2023/04/30/electronics-lab-bench-setup-guide/)
+[Electronics Lab Bench Setup Guide – Badar Jahangir Kayani](https://badar.tech/2023/04/30/electronics-lab-bench-setup-guide/) ^03s62j
 
 April 30, 2023
 
